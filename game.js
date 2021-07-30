@@ -1,7 +1,13 @@
 var val = 0;
+
+var player = {
+  money:　new Decimal(0)
+};
+
 function update(){
-  val = val + 1;
-  document.getElementById("coinamount").textContent = val
+  player.money = player.money.add(1)
+  document.getElementById("coinamount").textContent = player.money
+  setTimeout(update, 1000)
 }
-update()
-update()
+
+setTimeout(update, 1000)
