@@ -10,6 +10,12 @@ var player = {
 function update(){
   player.money = player.money.add(1)
   document.getElementById("coinamount").textContent = 'ポイント: '+player.money
+  if(player.money%100==0){
+    $("#coinamount").css({ 'color' : 'red' , 'font-size' : '100px' } );
+  }
+  else{
+    $("#coinamount").css({ 'color' : 'black' , 'font-size' : '48px' } );
+  }
 
   //ツイートボタン壊して付ける
   while (tweetbutton.firstChild){
@@ -19,6 +25,9 @@ function update(){
   anchor.setAttribute('data-hashtags', '新しい放置ゲーム');
   anchor.className = 'twitter-hashtag-button';
   anchor.setAttribute('data-text','ポイント:'+player.money+'\n'+'dem08656775.github.io/newincrementalgame'+'\n');
+  if(player.money%100==0){
+    anchor.setAttribute('data-text','ポイント:'+player.money+"!!!!!"+'\n'+'dem08656775.github.io/newincrementalgame'+'\n');
+  }
   anchor.innerText = 'Tweet #新しい放置ゲーム';
   tweetbutton.appendChild(anchor);
 
