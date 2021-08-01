@@ -7,17 +7,22 @@
 </head>
 <body>
   <div id="coinamount">ポイント: 1.000e+0</div>
+  <div id="tickspeed">間隙: 1000毛秒</div>
   <div>
     <span class="generator" id="generator1">発生器1: 0</span>
-    <button type="button" id="button1">購入　コスト: 1.0e+1</button>
+    <button type="button" class="gbutton" id="button1">購入　コスト: 1.0e+1</button>
   </div>
-  <div>
-    <span class="generator" id="generator2">発生器2: 0</span>
+  <div class="generator">
+    <span id="generator2">発生器2: 0</span>
     <button type="button" id="button2">購入　コスト: 1.0e+4</button>
+    <span id="generator2mode">モード: 1</span>
+    <button type="button" id="modebutton2">変更</button>
   </div>
-  <div>
-    <span class="generator" id="generator3">発生器3: 0</span>
+  <div class="generator">
+    <span id="generator3">発生器3: 0</span>
     <button type="button" id="button3">購入　コスト: 1.0e+9</button>
+    <span id="generator3mode">モード: 2</span>
+    <button type="button" id="modebutton3">変更</button>
   </div>
   <div>
     <span class="generator" id="generator4">発生器4: 0</span>
@@ -39,6 +44,12 @@
     <span class="generator" id="generator8">発生器8: 0</span>
     <button type="button" id="button8">購入　コスト: 工事中</button>
   </div>
+  <div>
+    <span class="accelerator" id="accelerator1">時間加速器1: 0</span>
+    <button type="button" class="abutton" id="abutton1">購入　コスト: 1.0e+1</button>
+  </div>
+
+
 
   <button type="button" id="resetbutton">リセット</button>
   <div id="tweet"></div>

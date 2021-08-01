@@ -3,9 +3,23 @@
   font-size: 48px
 }
 
+#tickspeed{
+  text-align: center;
+  font-size: 16px;
+  color: gray;
+}
+
 .generator{
   font-size: 24px;
   vertical-align: middle;
+}
+
+.accelerator{
+  font-size: 24px;
+  text-align: right;
+  vertical-align: middle;
+  color: red;
+
 }
 
 button{
@@ -17,6 +31,12 @@ button{
   color: black;
   border-radius: 10px;
   vertical-align: middle;
+}
+
+.abutton{
+  border-color: gray;
+  background: black;
+  color: white
 }
 
 #tweet{
