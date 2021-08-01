@@ -112,6 +112,7 @@ function load() {
   player.generator3 = new Decimal(player.generator3)
   player.generator3bought =  new Decimal(player.generator3bought)
   player.generator3cost = new Decimal(player.generator3cost)
+  player.generator3mode = parseInt(player.generator3mode)
   player.generator4 = new Decimal(player.generator4)
   player.generator5 = new Decimal(player.generator5)
   player.generator6 = new Decimal(player.generator6)
