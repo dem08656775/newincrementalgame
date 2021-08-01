@@ -47,10 +47,10 @@ var player = $.extend(true,{},firstplayer)
 
 function update(){
   player.money = player.money.add(player.generator1)
-  if(player.generator2mode == 0)player.money = player.money.add(player.generator2.mul(1e4))
+  if(player.generator2mode == 0)player.money = player.money.add(player.generator2.mul(1e2))
   if(player.generator2mode == 1)player.generator1 = player.generator1.add(player.generator2)
-  if(player.generator3mode == 0)player.money = player.money.add(player.generator3.mul(1e9))
-  if(player.generator3mode == 1)player.generator1 = player.generator1.add(player.generator3.mul(1e4))
+  if(player.generator3mode == 0)player.money = player.money.add(player.generator3.mul(1e6))
+  if(player.generator3mode == 1)player.generator1 = player.generator1.add(player.generator3.mul(1e3))
   if(player.generator3mode == 2)player.generator2 = player.generator2.add(player.generator3)
   player.generator3 = player.generator3.add(player.generator4)
   player.generator4 = player.generator4.add(player.generator5)
