@@ -20,15 +20,13 @@ button{
 }
 
 #tweet{
+   margin: 20px 0px;
+ }
 
-  margin: 20px 0px;
-}
-
-.twitter-hashtag-button{
-  color: white;
-  padding: 8px 12px;
-  background: #1DA1F2;
-  border-radius: 3px;
-  text-decoration: none;
-}
-
+ .twitter-hashtag-button{
+   color: white;
+   padding: 8px 12px;
+   background: #1DA1F2;
+   border-radius: 3px;
+   text-decoration: none;
+ }
