@@ -82,10 +82,10 @@ function updatetext(){
     let cost = "player.generator" + i + "cost";
     if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
       // 買えない
-      $(obj).css("background-color", "#B3E5FC");
+      $(obj).css("background-color", '#B0B0B0');
     }else{
       // 買える
-      $(obj).css("background-color", "#03A9F4");
+      $(obj).css("background-color", '#FFFFFF');
     }
   }
 
@@ -94,10 +94,10 @@ function updatetext(){
     let cost = "player.accelerator" + i + "cost";
     if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
       // 買えない
-      $(obj).css("background-color", "#CFD8DC");
+      $(obj).css("background-color", "#808080");
     }else{
       // 買える
-      $(obj).css("background-color", "#37474F");
+      $(obj).css("background-color", "#000000");
     }
   }
 
@@ -136,7 +136,6 @@ function load() {
   player.generator3 = new Decimal(player.generator3)
   player.generator3bought =  new Decimal(player.generator3bought)
   player.generator3cost = new Decimal(player.generator3cost)
-  player.generator3mode = parseInt(player.generator3mode)
   player.generator4 = new Decimal(player.generator4)
   player.generator5 = new Decimal(player.generator5)
   player.generator6 = new Decimal(player.generator6)

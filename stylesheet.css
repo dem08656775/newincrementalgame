@@ -34,12 +34,13 @@ button{
 }
 
 .gbutton{
-  background: #B3E5FC;
-  color: white
+  background: #B0B0B0;
+  color: black
 }
 
 .abutton{
   background: black;
+  border-color: black;
   color: white
 }
 
