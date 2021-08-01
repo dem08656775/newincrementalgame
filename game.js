@@ -26,19 +26,15 @@ function updatetext(){
   $("#coinamount").text('ポイント: '+ player.money.toExponential(3))
   $("#generator1").text('発生器1: ' + player.generator1)
   $("#button1").text('購入　コスト: ' + player.generator1cost.toExponential(1))
-  while (tweetbutton.firstChild){
-    tweetbutton.removeChild(tweetbutton.firstChild);
-  }
-  const anchor = document.createElement('a');
-  anchor.setAttribute('data-hashtags', '新しい放置ゲーム');
-  anchor.className = 'twitter-hashtag-button';
-  anchor.setAttribute('data-text','ポイント:'+player.money+'\n'+'dem08656775.github.io/newincrementalgame'+'\n');
-  anchor.innerText = 'Tweet #新しい放置ゲーム';
-  tweetbutton.appendChild(anchor);
 
-  const script = document.createElement('script');
-  script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
-  tweetbutton.appendChild(script);
+  if (!tweetbutton.firstChild){
+    const anchor = document.createElement('a');
+    anchor.className = 'twitter-hashtag-button';
+    anchor.innerText = 'Tweet #新しい放置ゲーム';
+    tweetbutton.appendChild(anchor);
+  }
+
+  tweetbutton.firstChild.setAttribute('href','https://twitter.com/intent/tweet?text=ポイント:'+player.money+'%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム');
 }
 
 function save(){
