@@ -27,15 +27,17 @@ function updatetext(){
   $("#generator1").text('発生器1: ' + player.generator1)
   $("#button1").text('購入　コスト: ' + player.generator1cost.toExponential(1))
 
+  $("#button2").text('購入　コスト: ' + player.generator2cost.toExponential(1))
+  $("#button3").text('購入　コスト: ' + player.generator3cost.toExponential(1))
   if (!tweetbutton.firstChild){
     const anchor = document.createElement('a');
     anchor.className = 'twitter-hashtag-button';
     anchor.innerText = 'Tweet #新しい放置ゲーム';
     tweetbutton.appendChild(anchor);
   }
-
   tweetbutton.firstChild.setAttribute('href','https://twitter.com/intent/tweet?text=ポイント:'+player.money+'%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム');
 }
+
 
 function save(){
   localStorage.setItem("playerStored", JSON.stringify(player));
