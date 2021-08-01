@@ -77,6 +77,30 @@ function updatetext(){
   $("#generator2mode").text('モード: '+player.generator2mode)
   $("#generator3mode").text('モード: '+player.generator3mode)
 
+  for (let i = 1; i <= 8; i++){
+    let obj = "#button" + i;
+    let cost = "player.generator" + i + "cost";
+    if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
+      // 買えない
+      $(obj).css("background-color", "#B3E5FC");
+    }else{
+      // 買える
+      $(obj).css("background-color", "#03A9F4");
+    }
+  }
+
+  for (let i = 1; i <= 1; i++){
+    let obj = "#abutton" + i;
+    let cost = "player.accelerator" + i + "cost";
+    if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
+      // 買えない
+      $(obj).css("background-color", "#CFD8DC");
+    }else{
+      // 買える
+      $(obj).css("background-color", "#37474F");
+    }
+  }
+
   if (!tweetbutton.firstChild){
     const anchor = document.createElement('a');
     anchor.className = 'twitter-hashtag-button';
