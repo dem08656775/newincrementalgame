@@ -146,7 +146,8 @@ function updatetext(){
     anchor.innerText = 'Tweet #新しい放置ゲーム';
     tweetbutton.appendChild(anchor);
   }
-  tweetbutton.firstChild.setAttribute('href','https://twitter.com/intent/tweet?text=ポイント:'+player.money+'%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム');
+  tweetbutton.firstChild.setAttribute('href','https://twitter.com/intent/tweet?text=ポイント:'+player.money+'('+player.money.toExponential().replace('+', '%2B')+')'
+                                      +'%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム');
 }
 
 function calcbought(){
