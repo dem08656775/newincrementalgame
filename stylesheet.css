@@ -48,6 +48,10 @@ button{
   display: none;
 }
 
+#levelreset{
+  display: none;
+}
+
 .levelrcontents{
   display: none;
 }
