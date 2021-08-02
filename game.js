@@ -188,6 +188,7 @@ function load() {
   player.accelerator2bought = new Decimal(player.accelerator2bought)
   player.accelerator2cost = new Decimal('1e10').pow(player.accelerator2bought.add(1).mul(player.accelerator2bought.add(2)).div(2))
   player.saveversion = version
+  calcbought()
 
 
 }
