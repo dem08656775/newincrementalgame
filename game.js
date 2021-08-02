@@ -77,9 +77,9 @@ Vue.createApp({
           this.player.generators[to - 1] = this.player.generators[to - 1].add(this.player.generators[i].mul(mult))
         }
       }
-      tickspeed = 1000 / this.player.accelerators[0].add(10).log10()
+      this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).log10()
       for (let i = 1; i < 2; i++) {
-        this.player.accelerators[i] = this.player.accelerators[i].add(this.player.accelerators[i + 1])
+        this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
       }
     },
     calcbought() {
@@ -122,8 +122,8 @@ Vue.createApp({
         this.player.generators[index] = this.player.generators[index].add(1)
         this.player.generatorsBought[index] = this.player.generatorsBought[index].add(1)
         this.player.generatorsCost[index] = index === 0 ?
-          new Decimal(10).pow(player.generatorsBought[0]) :
-          new Decimal(10).pow(player.generatorsBought[index].add(index + 1).mul(index + 1))
+          new Decimal(10).pow(this.player.generatorsBought[0]) :
+          new Decimal(10).pow(this.player.generatorsBought[index].add(index + 1).mul(index + 1))
       }
     },
     buyAccelerator(index) {
