@@ -8,45 +8,67 @@
 <body>
   <div id="coinamount">ポイント: 1.000e+0</div>
   <div id="tickspeed">間隙: 1000毛秒</div>
-  <div>
-    <span class="generator" id="generator1">発生器1: 0</span>
-    <button type="button" class="gbutton" id="button1">購入　コスト: 1.0e+1</button>
+  <div class="levelrcontents" id="level">
+    段位: 0
+    段位リセット: 0回
+  </div>
+  <div class="softreset">
+    <div id="levelreset">
+      <button type="button">昇段リセット</button>
+    </div>
+  </div>
+  <div class="generator">
+    <span id="generator1">発生器1: 0</span>
+    <button type="button" class="gbutton" id="button1">購入　コスト: 1.0e+0</button>
+    <span id="generator1bought">購入数: 0</span>
   </div>
   <div class="generator">
     <span id="generator2">発生器2: 0</span>
     <button type="button" class="gbutton" id="button2">購入　コスト: 1.0e+4</button>
+    <span id="generator2bought">購入数: 0</span>
     <span id="generator2mode">モード: 1</span>
     <button type="button" id="modebutton2">変更</button>
   </div>
   <div class="generator">
     <span id="generator3">発生器3: 0</span>
     <button type="button" class="gbutton" id="button3">購入　コスト: 1.0e+9</button>
+    <span id="generator3bought">購入数: 0</span>
     <span id="generator3mode">モード: 2</span>
     <button type="button" id="modebutton3">変更</button>
   </div>
-  <div>
-    <span class="generator" id="generator4">発生器4: 0</span>
-    <button type="button" class="gbutton" id="button4">購入　コスト: 工事中</button>
+  <div class="generator">
+    <span id="generator4">発生器4: 0</span>
+    <button type="button" class="gbutton" id="button4">購入　コスト: 1.0e+16</button>
+    <span id="generator4bought">購入数: 0</span>
+    <span id="generator4mode">モード: 3</span>
+    <button type="button" id="modebutton4">変更</button>
   </div>
-  <div>
-    <span class="generator" id="generator5">発生器5: 0</span>
-    <button type="button" class="gbutton" id="button5">購入　コスト: 工事中</button>
+  <div class="generator">
+    <span id="generator5">発生器5: 0</span>
+    <button type="button" class="gbutton" id="button5">購入　コスト: 1.0e+25</button>
+    <span id="generator5bought">購入数: 0</span>
+    <span id="generator5mode">モード: 4</span>
+    <button type="button" id="modebutton5">変更</button>
   </div>
-  <div>
-    <span class="generator" id="generator6">発生器6: 0</span>
+  <div class="generator">
+    <span id="generator6">発生器6: 0</span>
     <button type="button" class="gbutton" id="button6">購入　コスト: 工事中</button>
   </div>
-  <div>
-    <span class="generator" id="generator7">発生器7: 0</span>
+  <div class="generator">
+    <span id="generator7">発生器7: 0</span>
     <button type="button" class="gbutton" id="button7">購入　コスト: 工事中</button>
   </div>
-  <div>
-    <span class="generator" id="generator8">発生器8: 0</span>
+  <div class="generator">
+    <span id="generator8">発生器8: 0</span>
     <button type="button" class="gbutton" id="button8">購入　コスト: 工事中</button>
   </div>
   <div>
     <span class="accelerator" id="accelerator1">時間加速器1: 0</span>
     <button type="button" class="abutton" id="abutton1">購入　コスト: 1.0e+1</button>
+  </div>
+  <div class="levelrcontents">
+    <span class="accelerator" id="accelerator2">時間加速器2: 0</span>
+    <button type="button" class="abutton" id="abutton2">購入　コスト: 1.0e+10</button>
   </div>
 
 

@@ -44,6 +44,14 @@ button{
   color: white
 }
 
+#level{
+  display: none;
+}
+
+.levelrcontents{
+  display: none;
+}
+
 #tweet{
    margin: 20px 0px;
  }
