@@ -304,7 +304,7 @@ $("#modebutton5").on('click',function(){
 
 
 $("#resetbutton").on('click',function(){
-  if(confirm('リセット？')){
+  if(confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')){
     player = $.extend(true,{},firstplayer)
     updatetext()
   }
