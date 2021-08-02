@@ -27,7 +27,7 @@ var firstplayer = {
   generator5: new Decimal(0),
   generator5bought: new Decimal(0),
   generator5cost: new Decimal('1e25'),
-  generator5mode:4,
+  generator5mode:　4,
   generator6: new Decimal(0),
   generator6bought: new Decimal(0),
   //generator6cost: 工事中,
@@ -59,7 +59,7 @@ function update(){
     let to = eval("player.generator"+i+"mode");
     let mult = new Decimal(10).pow(i*(i-to-1));
     mult = mult.mul(player.levelresettime.add(1))
-    if(player.level.notEquals(0))mult = mult.mul(player.level.pow(i-to-1))
+    mult = mult.mul(new Decimal(player.level.add(2).log2()).pow(i-to-1))
     if(eval("player.generator"+i).greaterThan(eval("player.generator"+i+"bought"))){
       mult = mult.mul(eval("player.generator"+i+"bought"))
     }
@@ -188,7 +188,6 @@ function load() {
   player.accelerator2bought = new Decimal(player.accelerator2bought)
   player.accelerator2cost = new Decimal('1e10').pow(player.accelerator2bought.add(1).mul(player.accelerator2bought.add(2)).div(2))
   player.saveversion = version
-  calcbought()
 
 
 }
