@@ -2,70 +2,80 @@
 <html lang="ja">
 
 <head>
-  <meta charset="UTF-8">
-  <title>新しい放置ゲーム</title>
-  <link rel="stylesheet" href="stylesheet.css">
+	<meta charset="UTF-8">
+	<title>新しい放置ゲーム</title>
+	<link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
-  <div id="app">
-    <div class="container" v-cloak>
-      <div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
-      <div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
-      <div class="levelrcontents" v-if="player.levelresettime.gt(0)">
-        段位: {{ player.level }} 段位リセット: {{ player.levelresettime }}回
-      </div>
-      <div class="softreset">
-        <div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
-          <button type="button" @click="resetLevel">昇段リセット</button>
-        </div>
-      </div>
-      <div class="generators-container">
-        <div class="generator" v-for="i in 8" :key="i">
-          <span>
-            発生器{{ i }}: {{ player.generators[i-1].toExponential(3) }}
-          </span>
-          <button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }"
-            @click="buyGenerator(i-1)">
+	<div id="app">
+		<div class="container" v-cloak>
+			<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
+			<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
+			<div class="tabs">
+				<span id="basic">
+          <button type="button" @click="changeTab('basic')">通常</button>
+        </span>
+				<span id="option">
+          <button type="button" @click="changeTab('option')">設定</button>
+        </span>
+				<span id="level" v-if="player.levelresettime.gt(0)">
+          <button type="button" @click="changeTab('level')">段位</button>
+        </span>
+			</div>
+			<div class="basictabcontents" v-if="player.currenttab == 'basic'">
+				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
+					段位: {{ player.level }} 段位リセット: {{ player.levelresettime }}回
+				</div>
+				<div class="softreset">
+					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
+						<button type="button" @click="resetLevel">昇段リセット</button>
+					</div>
+				</div>
+				<div class="generators-container">
+					<div class="generator" v-for="i in 8" :key="i">
+						<span>
+              発生器{{ i }}: {{ player.generators[i-1].toExponential(3) }}
+            </span>
+						<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }" @click="buyGenerator(i-1)">
             購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
           </button>
-          <span>
+						<span>
             購入数: {{ player.generatorsBought[i-1] }}
           </span>
-          <div class="mode-container" v-if="i > 1">
-            <span>モード: {{ player.generatorsMode[i-1] }}</span>
-            <button class="mode-button" @click="changeMode(i-1)">
+						<div class="mode-container" v-if="i > 1">
+							<span>モード: {{ player.generatorsMode[i-1] }}</span>
+							<button class="mode-button" @click="changeMode(i-1)">
               変更
             </button>
-          </div>
-        </div>
-      </div>
-      <div class="accelerators-container">
-        <div>
-          <span class="accelerator">時間加速器1: {{ player.accelerators[0] }}</span>
-          <button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }"
-            @click="buyAccelerator(0)">
-            購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
-          </button>
-        </div>
-        <div v-if="player.levelresettime.gt(0)">
-          <span class="accelerator">時間加速器2: {{ player.accelerators[1] }}</span>
-          <button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }"
-            @click="buyAccelerator(1)">
-            購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
-          </button>
-        </div>
-      </div>
-      <p>
-        <button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
-      </p>
-      <div id="tweet"></div>
-    </div>
-  </div>
-  <script src="https://unpkg.com/vue@next"></script>
-  <script type="text/javascript" src="break_infinity.js"></script>
-  <script type="text/javascript" src="game.js"></script>
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+						</div>
+					</div>
+				</div>
+				<div class="accelerators-container">
+					<div>
+						<span class="accelerator">時間加速器1: {{ player.accelerators[0] }}</span>
+						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
+          購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
+        </button>
+					</div>
+					<div v-if="player.levelresettime.gt(0)">
+						<span class="accelerator">時間加速器2: {{ player.accelerators[1] }}</span>
+						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
+        購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
+      </button>
+					</div>
+				</div>
+			</div>
+			<div class="optiontabcontents" v-if="player.currenttab == 'option'">
+				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
+			</div>
+			<div id="tweet"></div>
+		</div>
+	</div>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script type="text/javascript" src="break_infinity.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+	<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </body>
 
 </html>
