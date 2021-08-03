@@ -56,16 +56,16 @@ var player = $.extend(true,{},firstplayer)
 function update(){
 
   for(let i=1;i<=5;i++){
-    let to = eval("player.generator"+i+"mode");
+    let to = player["generator"+i+"mode"];
     let mult = new Decimal(10).pow(i*(i-to-1));
     mult = mult.mul(player.levelresettime.add(1))
     mult = mult.mul(new Decimal(player.level.add(2).log2()).pow(i-to-1))
-    if(eval("player.generator"+i).greaterThan(eval("player.generator"+i+"bought"))){
-      mult = mult.mul(eval("player.generator"+i+"bought"))
+    if(player["generator"+i].greaterThan(player["generator"+i+"bought"])){
+      mult = mult.mul(player["generator"+i+"bought"])
     }
 
-    if(to==0) player.money = player.money.add(eval("player.generator"+i).mul(mult))
-    else player["generator"+to] = eval("player.generator"+to).add(eval("player.generator"+i).mul(mult))
+    if(to==0) player.money = player.money.add(player["generator"+i].mul(mult))
+    else player["generator"+to] = player["generator"+to].add(player["generator"+i].mul(mult))
   }
 
   player.generator5 = player.generator5.add(player.generator6)
@@ -83,14 +83,14 @@ function updatetext(){
 
   for(let i=1;i<=5;i++){
     let objg = "#generator" + i;
-    $(objg).text('発生器'+i+': '+eval("player.generator"+i).toExponential(3))
+    $(objg).text('発生器'+i+': '+player["generator"+i].toExponential(3))
     let objb = "#button" + i;
-    $(objb).text('購入　コスト: '+eval("player.generator"+i+"cost").toExponential(1))
+    $(objb).text('購入　コスト: '+player["generator"+i+"cost"].toExponential(1))
     let objgb = "#generator" + i + "bought"
-    $(objgb).text('購入数: '+eval("player.generator"+i+"bought"))
+    $(objgb).text('購入数: '+player["generator"+i+"bought"])
     if(i!=1){
       let objm = "#generator" + i + "mode";
-      $(objm).text('モード: '+eval("player.generator"+i+"mode"))
+      $(objm).text('モード: '+player["generator"+i+"mode"])
     }
   }
 
@@ -104,8 +104,8 @@ function updatetext(){
 
   for (let i = 1; i <= 8; i++){
     let obj = "#button" + i;
-    let cost = "player.generator" + i + "cost";
-    if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
+    let cost = player["generator" + i + "cost"];
+    if (player.money.lt(cost) || typeof(cost) == "undefined"){
       // 買えない
       $(obj).css("background-color", '#B0B0B0');
     }else{
@@ -116,8 +116,8 @@ function updatetext(){
 
   for (let i = 1; i <= 2; i++){
     let obj = "#abutton" + i;
-    let cost = "player.accelerator" + i + "cost";
-    if (player.money.lt(eval(cost)) || typeof(eval(cost)) == "undefined"){
+    let cost = player["accelerator" + i + "cost"];
+    if (player.money.lt(cost) || typeof(cost) == "undefined"){
       // 買えない
       $(obj).css("background-color", "#808080");
     }else{
