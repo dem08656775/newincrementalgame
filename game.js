@@ -1,4 +1,4 @@
-var version = 1;
+const version = 2;
 
 const initialData = () => {
   return {
@@ -97,23 +97,25 @@ Vue.createApp({
     load() {
       if (!localStorage.getItem("playerStored")) return
       let saveData = JSON.parse(localStorage.getItem("playerStored"));
-      this.player = {
-        money: new Decimal(saveData.money),
-        level: new Decimal(saveData.level),
-        levelresettime: new Decimal(saveData.levelresettime),
+      this.player = parseInt(saveData.saveversion) === version ?
+        {
+          money: new Decimal(saveData.money),
+          level: new Decimal(saveData.level),
+          levelresettime: new Decimal(saveData.levelresettime),
 
-        generators: saveData.generators.map(v => new Decimal(v)),
-        generatorsBought: saveData.generatorsBought.map(v => new Decimal(v)),
-        generatorsCost: saveData.generatorsCost.map(v => new Decimal(v)),
-        generatorsMode: saveData.generatorsMode.map(v => parseInt(v)),
+          generators: saveData.generators.map(v => new Decimal(v)),
+          generatorsBought: saveData.generatorsBought.map(v => new Decimal(v)),
+          generatorsCost: saveData.generatorsCost.map(v => new Decimal(v)),
+          generatorsMode: saveData.generatorsMode.map(v => parseInt(v)),
 
-        accelerators: saveData.accelerators.map(v => new Decimal(v)),
-        acceleratorsBought: saveData.acceleratorsBought.map(v => new Decimal(v)),
-        acceleratorsCost: saveData.acceleratorsCost.map(v => new Decimal(v)),
+          accelerators: saveData.accelerators.map(v => new Decimal(v)),
+          acceleratorsBought: saveData.acceleratorsBought.map(v => new Decimal(v)),
+          acceleratorsCost: saveData.acceleratorsCost.map(v => new Decimal(v)),
 
-        tickspeed: parseFloat(saveData.tickspeed),
-        saveversion: parseInt(saveData.version)
-      }
+          tickspeed: parseFloat(saveData.tickspeed),
+          saveversion: parseInt(saveData.version)
+        } :
+        readOldFormat(saveData);
       this.calcbought()
     },
     buyGenerator(index) {
@@ -182,3 +184,67 @@ Vue.createApp({
     setInterval(this.save, 2000);
   },
 }).mount('#app');
+
+function readOldFormat(saveData) {
+  return {
+    money: new Decimal(saveData.money),
+    level: new Decimal(saveData.level),
+    levelresettime: new Decimal(saveData.levelresettime),
+
+    generators: [
+      new Decimal(saveData.generator1 ?? 0),
+      new Decimal(saveData.generator2 ?? 0),
+      new Decimal(saveData.generator3 ?? 0),
+      new Decimal(saveData.generator4 ?? 0),
+      new Decimal(saveData.generator5 ?? 0),
+      new Decimal(saveData.generator6 ?? 0),
+      new Decimal(saveData.generator7 ?? 0),
+      new Decimal(saveData.generator8 ?? 0),
+    ],
+    generatorsBought: [
+      new Decimal(saveData.generator1bought ?? 0),
+      new Decimal(saveData.generator2bought ?? 0),
+      new Decimal(saveData.generator3bought ?? 0),
+      new Decimal(saveData.generator4bought ?? 0),
+      new Decimal(saveData.generator5bought ?? 0),
+      new Decimal(saveData.generator6bought ?? 0),
+      new Decimal(saveData.generator7bought ?? 0),
+      new Decimal(saveData.generator8bought ?? 0),
+    ],
+    generatorsCost: [
+      new Decimal(saveData.generator1cost ?? '1'),
+      new Decimal(saveData.generator2cost ?? '1e4'),
+      new Decimal(saveData.generator3cost ?? '1e9'),
+      new Decimal(saveData.generator4cost ?? '1e16'),
+      new Decimal(saveData.generator5cost ?? '1e25'),
+      new Decimal(saveData.generator6cost ?? '1e36'),
+      new Decimal(saveData.generator7cost ?? '1e49'),
+      new Decimal(saveData.generator8cost ?? '1e64'),
+    ],
+    generatorsMode: [
+      parseInt(saveData.generator1mode ?? 0),
+      parseInt(saveData.generator2mode ?? 1),
+      parseInt(saveData.generator3mode ?? 2),
+      parseInt(saveData.generator4mode ?? 3),
+      parseInt(saveData.generator5mode ?? 4),
+      parseInt(saveData.generator6mode ?? 5),
+      parseInt(saveData.generator7mode ?? 6),
+      parseInt(saveData.generator8mode ?? 7),
+    ],
+
+    accelerators: [
+      new Decimal(saveData.accelerator1 ?? 0),
+      new Decimal(saveData.accelerator2 ?? 0),
+    ],
+    acceleratorsBought: [
+      new Decimal(saveData.accelerator1bought ?? 0),
+      new Decimal(saveData.accelerator2bought ?? 0),
+    ],
+    acceleratorsCost: [
+      new Decimal(saveData.accelerator1cost ?? 10),
+      new Decimal(saveData.accelerator2cost ?? '1e10'),
+    ],
+    tickspeed: parseFloat(saveData.tickspeed ?? 1000),
+    saveversion: version
+  }
+}
