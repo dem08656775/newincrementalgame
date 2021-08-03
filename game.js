@@ -68,7 +68,7 @@ Vue.createApp({
         let mult = new Decimal(10).pow((i + 1) * (i - to));
         mult = mult.mul(this.player.levelresettime.add(1))
         mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
-        if (this.player.generators[i].greaterThan(this.player.generatorsBought[i])) {
+        if (this.player.generators[i].greaterThan(this.player.generatorsBought[i]) && this.player.generatorsBought[i].greaterThan(0)) {
           mult = mult.mul(this.player.generatorsBought[i])
         }
         if (to === 0) {
@@ -149,8 +149,8 @@ Vue.createApp({
         this.player.generatorsMode[index] = 0;
       }
     },
-    resetData() {
-      if (confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')) {
+    resetData(force) {
+      if (force || confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')) {
         this.player = initialData()
       }
     },
@@ -159,10 +159,9 @@ Vue.createApp({
       if (confirm('段位リセットして、段位' + gainlevel + 'を得ますか？')) {
         let nextlevel = this.player.level.add(gainlevel)
         let nextlevelresettime = this.player.levelresettime.add(new Decimal(1))
-        this.resetData();
+        this.resetData(true);
         this.player.level = nextlevel
         this.player.levelresettime = nextlevelresettime
-        updatetext()
       }
     }
   },
