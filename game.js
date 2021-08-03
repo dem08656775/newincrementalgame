@@ -171,7 +171,11 @@ Vue.createApp({
     const anchor = document.createElement('a');
     anchor.className = 'twitter-hashtag-button';
     anchor.innerText = 'Tweet #新しい放置ゲーム';
-    anchor.setAttribute('href', 'https://twitter.com/intent/tweet?text=ポイント:' + this.player.money + '%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム');
+    anchor.setAttribute('href',
+      'https://twitter.com/intent/tweet?text=ポイント:' + this.player.money +
+      '(' + this.player.money.toExponential().replace('+', '%2B') + ')' +
+      '%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム'
+    );
     tweetbutton.appendChild(anchor);
 
     this.load();
