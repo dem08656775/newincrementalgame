@@ -81,6 +81,14 @@ Vue.createApp({
       for (let i = 1; i < 2; i++) {
         this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
       }
+
+      anchor.setAttribute('href',
+        'https://twitter.com/intent/tweet?text=ポイント:' + this.player.money +
+        '(' + this.player.money.toExponential().replace('+', '%2B') + ')' +
+        '%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム'
+      );
+      tweetbutton.replaceChild(anchor, tweetbutton.lastChild);
+
       setTimeout(this.update, this.player.tickspeed);
     },
     save() {
@@ -160,14 +168,14 @@ Vue.createApp({
     }
   },
   mounted() {
-    const tweetbutton = document.getElementById("tweet");
-    const anchor = document.createElement('a');
+    tweetbutton = document.getElementById("tweet");
+    anchor = document.createElement('a');
     anchor.className = 'twitter-hashtag-button';
     anchor.innerText = 'Tweet #新しい放置ゲーム';
     anchor.setAttribute('href',
-      'https://twitter.com/intent/tweet?text=ポイント:' + this.player.money +
-      '(' + this.player.money.toExponential().replace('+', '%2B') + ')' +
-      '%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム'
+    'https://twitter.com/intent/tweet?text=ポイント:' + this.player.money +
+    '(' + this.player.money.toExponential().replace('+', '%2B') + ')' +
+    '%0Adem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム'
     );
     tweetbutton.appendChild(anchor);
 
