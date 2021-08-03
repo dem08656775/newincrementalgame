@@ -85,8 +85,11 @@ Vue.createApp({
       anchor.setAttribute('href',
         'https://twitter.com/intent/tweet?text=ポイント: ' + this.player.money
         + '(' + this.player.money.toExponential().replace('+', '%2B') + ')%0A'
-        + '段位: ' + this.player.level + '%0A'
-        + '段位リセット回数: ' + this.player.levelresettime + '%0A'
+        + (this.player.levelresettime.gt(new Decimal(0)) ? 
+            '段位: ' + this.player.level + '%0A'
+            + '段位リセット回数: ' + this.player.levelresettime + '%0A'
+            : ''
+          )
         + 'dem08656775.github.io/newincrementalgame%0A&hashtags=新しい放置ゲーム'
       );
       tweetbutton.replaceChild(anchor, tweetbutton.lastChild);
