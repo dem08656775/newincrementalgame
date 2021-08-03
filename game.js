@@ -150,7 +150,7 @@ Vue.createApp({
       }
     },
     resetData() {
-      if (confirm('リセット？')) {
+      if (confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')) {
         this.player = initialData()
       }
     },
