@@ -81,6 +81,7 @@ Vue.createApp({
       for (let i = 1; i < 2; i++) {
         this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
       }
+      this.setTimeout(this.update, this.player.tickspeed);
     },
     save() {
       console.log(JSON.stringify(this.player))
@@ -171,7 +172,7 @@ Vue.createApp({
     tweetbutton.appendChild(anchor);
 
     this.load();
-    setInterval(this.update, this.player.tickspeed);
+    setTimeout(this.update, this.player.tickspeed);
     setInterval(this.save, 2000);
   },
 }).mount('#app');
