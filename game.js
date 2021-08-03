@@ -106,7 +106,7 @@ Vue.createApp({
           acceleratorsCost: saveData.acceleratorsCost.map(v => new Decimal(v)),
 
           tickspeed: parseFloat(saveData.tickspeed),
-          saveversion: parseInt(saveData.version)
+          saveversion: parseInt(saveData.saveversion)
         } :
         readOldFormat(saveData);
     },
