@@ -14,10 +14,6 @@
   vertical-align: middle;
 }
 
-.mode-container {
-  display: inline-block;
-}
-
 .accelerator{
   font-size: 24px;
   text-align: right;
@@ -38,22 +34,26 @@ button{
 }
 
 .gbutton{
-  background: #FFFFFF;
-  color: #000000;
-}
-
-.gbutton.unavailable {
   background: #B0B0B0;
+  color: black
 }
 
 .abutton{
-  background: #000000;
-  border-color: #000000;
-  color: #FFFFFF;
+  background: black;
+  border-color: black;
+  color: white
 }
 
-.abutton.unavailable {
-  background: #808080;
+#level{
+  display: none;
+}
+
+#levelreset{
+  display: none;
+}
+
+.levelrcontents{
+  display: none;
 }
 
 #resetbutton{
@@ -72,17 +72,13 @@ button{
 }
 
 #tweet{
-  margin: 20px 0px;
-}
+   margin: 20px 0px;
+ }
 
-.twitter-hashtag-button{
-  color: white;
-  padding: 8px 12px;
-  background: #1DA1F2;
-  border-radius: 3px;
-  text-decoration: none;
-}
-
-[v-cloak] {
-  display: none;
-}
+ .twitter-hashtag-button{
+   color: white;
+   padding: 8px 12px;
+   background: #1DA1F2;
+   border-radius: 3px;
+   text-decoration: none;
+ }
