@@ -71,6 +71,21 @@ button{
   transition: all .2s;
 }
 
+#resetbutton{
+  background: white;
+  color: #D32F2F;
+  border-color: #D81B6032;
+  border-width: 1px;
+  width: 90px;
+}
+
+#resetbutton:hover{
+  background: #D32F2F;
+  color: white;
+  width: 90px;
+  transition: all .2s;
+}
+
 #tweet{
   margin: 20px 0px;
 }
