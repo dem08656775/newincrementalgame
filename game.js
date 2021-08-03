@@ -82,14 +82,6 @@ Vue.createApp({
         this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
       }
     },
-    calcbought() {
-      var v = this.player.generatorsCost[0].toNumber()
-      this.player.generatorsBought[0] = new Decimal(0)
-      while (v > 1) {
-        v /= 10;
-        this.player.generatorsBought[0] = this.player.generatorsBought[0].add(1)
-      }
-    },
     save() {
       console.log(JSON.stringify(this.player))
       localStorage.setItem("playerStored", JSON.stringify(this.player));
@@ -116,7 +108,6 @@ Vue.createApp({
           saveversion: parseInt(saveData.version)
         } :
         readOldFormat(saveData);
-      this.calcbought()
     },
     buyGenerator(index) {
       if (this.player.money.greaterThanOrEqualTo(this.player.generatorsCost[index])) {
