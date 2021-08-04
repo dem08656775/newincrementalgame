@@ -39,16 +39,16 @@
               発生器{{ i }}: {{ player.generators[i-1].toExponential(3)+' '}}
             </span>
 						<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }" @click="buyGenerator(i-1)">
-            購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
-          </button>
+							購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
+						</button>
 						<span>
-            購入数: {{ player.generatorsBought[i-1].toNumber()+' '}}
-          </span>
+							購入数: {{ player.generatorsBought[i-1].toNumber()+' '}}
+						</span>
 						<div class="mode-container" v-if="i > 1">
 							<span>モード: {{ player.generatorsMode[i-1] }}</span>
 							<button class="mode-button" @click="changeMode(i-1)">
-              変更
-            </button>
+								変更
+							</button>
 						</div>
 					</div>
 				</div>
@@ -56,14 +56,14 @@
 					<div>
 						<span class="accelerator">時間加速器1: {{ player.accelerators[0] }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
-          購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
-        </button>
+							購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
+						</button>
 					</div>
 					<div v-if="player.levelresettime.gt(0)">
 						<span class="accelerator">時間加速器2: {{ player.accelerators[1] }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
-        購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
-      </button>
+        			購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
+      			</button>
 					</div>
 				</div>
 			</div>
@@ -83,7 +83,6 @@
           挑戦中は勲章を消費して得た効力は無効となります。
           複数の挑戦を組み合わせることもできます。
           <div class="challenge" v-for="i in 8" :key="i">
-
 					  <button type="button" class="challengeconfigbutton" :class="{ 'selected': player.challenges.includes(i-1) }" @click="configchallenge(i-1)">
               挑戦 {{ i }}
             </button>
@@ -100,7 +99,6 @@
               挑戦放棄
             </button>
           </div>
-
         </div>
         <div class="challengebonuses-container">
           効力:効力とは勲章を消費して得られる強化のことです。
@@ -110,7 +108,6 @@
             </button>
 						<span> ・{{ challengedata.rewardtext[i-1] }} </span>
 					</div>
-
         </div>
 			</div>
 			<div id="tweet">
@@ -123,5 +120,4 @@
 	<script type="text/javascript" src="challenge.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
-
 </html>
