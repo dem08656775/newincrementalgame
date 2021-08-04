@@ -14,6 +14,11 @@
   vertical-align: middle;
 }
 
+.challenge{
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 .mode-container {
   display: inline-block;
 }
@@ -56,6 +61,21 @@ button{
   background: #808080;
 }
 
+.tweetconfigbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.challengeconfigbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.rewardbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
 #resetbutton{
   background: white;
   color: #D32F2F;
@@ -75,9 +95,10 @@ button{
   margin: 20px 0px;
 }
 
-.twitter-hashtag-button{
+#tweet a{
   color: white;
-  padding: 8px 12px;
+  font-size: .8rem;
+  padding: .6rem .8rem;
   background: #1DA1F2;
   border-radius: 3px;
   text-decoration: none;
