@@ -14,10 +14,12 @@
       <div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
       <div class="tabs">
         <span id="basic">
-          <button type="button" @click="changeTab('basic')">通常</button>
+          <button type="button" :class="{ 'selected': player.currenttab === 'basic' }"
+            @click="changeTab('basic')">通常</button>
         </span>
         <span id="option">
-          <button type="button" @click="changeTab('option')">設定</button>
+          <button type="button" :class="{ 'selected': player.currenttab === 'option' }"
+            @click="changeTab('option')">設定</button>
         </span>
         <span id="level" v-if="player.levelresettime.gt(0)">
           <button type="button" @click="changeTab('level')">段位</button>
