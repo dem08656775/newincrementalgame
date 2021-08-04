@@ -95,7 +95,7 @@ button{
   margin: 20px 0px;
 }
 
-.twitter-hashtag-button{
+a.twitter-hashtag-button{
   color: white;
   padding: 8px 12px;
   background: #1DA1F2;
