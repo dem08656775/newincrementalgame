@@ -14,6 +14,11 @@
   vertical-align: middle;
 }
 
+.challenge{
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 .mode-container {
   display: inline-block;
 }
@@ -54,6 +59,21 @@ button{
 
 .abutton.unavailable {
   background: #808080;
+}
+
+.tweetconfigbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.challengeconfigbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.rewardbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
 }
 
 #resetbutton{
