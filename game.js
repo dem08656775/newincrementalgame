@@ -89,6 +89,9 @@ Vue.createApp({
       if(this.player.tweeting.includes('level')){
         tweetText += '段位:' + this.player.level + '%0A';
       }
+      if(this.player.tweeting.includes('achieved')){
+        tweetText += '挑戦達成:' + this.player.challengecleared.length + '%0A';
+      }
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
 
@@ -104,7 +107,7 @@ Vue.createApp({
     softCap(num,cap){
       if(num.lessThanOrEqualTo(cap)) return num;
       let capped = num.div(cap)
-      capped = new Decimal(capped.log2())
+      capped = new Decimal(capped.log2()).add(1)
       return cap.mul(capped)
     },
 
