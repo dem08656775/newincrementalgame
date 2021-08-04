@@ -25,9 +25,7 @@ const initialData = () => {
     acceleratorsCost: [new Decimal(10), new Decimal('1e10')],
 
     tickspeed: 1000,
-    saveversion: version,
-
-    currenttab: 'basic'
+    saveversion: version
   }
 }
 
@@ -60,8 +58,8 @@ Vue.createApp({
         tickspeed: 1000,
         saveversion: version,
 
-        currenttab: 'basic'
-      }
+      },
+      currenttab: 'basic'
     }
   },
 
@@ -119,13 +117,11 @@ Vue.createApp({
 
           tickspeed: parseFloat(saveData.tickspeed),
           saveversion: parseInt(saveData.saveversion),
-
-          currenttab: saveData.currenttab
         } :
         readOldFormat(saveData);
     },
     changeTab(tabname){
-      this.player.currenttab = tabname;
+      this.currenttab = tabname;
     },
     buyGenerator(index) {
       if (this.player.money.greaterThanOrEqualTo(this.player.generatorsCost[index])) {
@@ -254,8 +250,6 @@ function readOldFormat(saveData) {
       new Decimal(saveData.accelerator2cost ?? '1e10'),
     ],
     tickspeed: parseFloat(saveData.tickspeed ?? 1000),
-    saveversion: version,
-
-    currenttab:(saveData.currenttab ?? 'basic')
+    saveversion: version
   }
 }

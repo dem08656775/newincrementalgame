@@ -56,6 +56,15 @@ button{
   background: #808080;
 }
 
+.tabs button:not(.selected) {
+  border-color: gray;
+  color: gray;
+}
+
+.tabs button:not(.selected):hover {
+  background: #D0D0D0;
+}
+
 #resetbutton{
   background: white;
   color: #D32F2F;
