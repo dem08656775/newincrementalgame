@@ -44,7 +44,7 @@
               購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
             </button>
             <span>
-              購入数: {{ player.generatorsBought[i-1] }}
+              購入数: {{ player.generatorsBought[i-1].toNumber() }}
             </span>
             <div class="mode-container" v-if="i > 1">
               <span>モード: {{ player.generatorsMode[i-1] }}</span>
