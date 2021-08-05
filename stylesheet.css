@@ -127,25 +127,23 @@ h2, p {
   cursor: pointer;
 }
 
+/* .challenge .text {
+  display: inline;
+  vertical-align: middle;
+} */
+
 .challenge-config {
-  box-sizing: border-box;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  padding: 2px;
   flex-shrink: 0;
   margin-right: .2rem;
   border: 2px solid black;
-  position: relative;
 }
 
-.challenge-config.selected::before {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 12px;
-  background: blue;
-  position: absolute;
-  top: 2px;
-  left: 2px;
+.challenge-config.selected {
+  background-color: blue;
+  background-clip: content-box;
 }
 
 .reward {

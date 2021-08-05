@@ -101,7 +101,7 @@
 								class="challenge-config"
 								:class="{ 'selected': player.challenges.includes(i-1) }"
 							></span>
-							<span> 挑戦 {{ i }}: {{ challengedata.challengetext[i-1] }} </span>
+							<span class="text"> 挑戦 {{ i }}: {{ challengedata.challengetext[i-1] }} </span>
 						</li>
 					</ul>
           <div v-if="!player.onchallenge">
