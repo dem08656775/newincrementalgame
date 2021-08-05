@@ -2,14 +2,14 @@
   box-sizing: border-box;
 }
 
-button{
-  border: .18em solid;
+button {
+  border: 2px solid;
   font-size: 12px;
-  width: 150px;
+  min-width: 150px;
   height: 32px;
   background: white;
   color: black;
-  border-radius: 10px;
+  border-radius: 5px;
   vertical-align: middle;
   cursor: pointer;
 }
@@ -28,6 +28,15 @@ span {
   vertical-align: middle;
 }
 
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.head {
+  margin-bottom: .8rem;
+}
+
 #coinamount{
   text-align: center;
   font-size: 48px
@@ -39,18 +48,20 @@ span {
   color: gray;
 }
 
-.container {
-  max-width: 960px;
-  margin: 0 auto;
+.tabs {
+  display: inline-flex;
+  border-bottom: 2px solid;
+  margin-bottom: .8rem;
 }
 
-.tabs {
-  display: flex;
+.tabs button {
+  border-radius: 0;
+  border-bottom: none;
 }
 
 .tabs button:not(.selected):not(:hover) {
   color: gray;
-  border-color: gray;
+  border-color: lightgray;
 }
 
 .generator, .accelerator {
@@ -117,7 +128,7 @@ span {
   display: block;
   width: 12px;
   height: 12px;
-  background: chartreuse;
+  background: blue;
   position: absolute;
   top: 2px;
   left: 2px;
