@@ -28,7 +28,12 @@ span {
   vertical-align: middle;
 }
 
+h2, p {
+  margin: 0;
+}
+
 .container {
+  padding: 0 20px;
   max-width: 960px;
   margin: 0 auto;
 }
@@ -62,6 +67,11 @@ span {
 .tabs button:not(.selected):not(:hover) {
   color: gray;
   border-color: lightgray;
+}
+
+.level-contents span {
+  display: inline-block;
+  margin: 0 .4rem;
 }
 
 .generator, .accelerator {
@@ -101,12 +111,16 @@ span {
   background: #808080;
 }
 
-.tweetconfigbutton.selected{
+.tweet-config-button.selected{
   background: #000000;
   color: #FFFFFF;
 }
 
-.challange {
+.challenges-container, .rewards-container {
+  margin: .8rem 0 2rem;
+}
+
+.challenge {
   display: flex;
   justify-content: left;
   align-items: baseline;
@@ -134,7 +148,23 @@ span {
   left: 2px;
 }
 
-.rewardbutton.selected{
+.reward {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.reward-button {
+  margin-right: .4rem;
+}
+
+.reward-button.unavailable {
+  border-color: gray;
+  background: lightgray;
+  color: gray;
+}
+
+.reward-button.selected {
   background: #000000;
   color: #FFFFFF;
 }
