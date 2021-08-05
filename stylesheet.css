@@ -1,34 +1,5 @@
-#coinamount{
-  text-align: center;
-  font-size: 48px
-}
-
-#tickspeed{
-  text-align: center;
-  font-size: 16px;
-  color: gray;
-}
-
-.generator{
-  font-size: 24px;
-  vertical-align: middle;
-}
-
-.challenge{
-  font-size: 24px;
-  vertical-align: middle;
-}
-
-.mode-container {
-  display: inline-block;
-}
-
-.accelerator{
-  font-size: 24px;
-  text-align: right;
-  vertical-align: middle;
-  color: red;
-
+* {
+  box-sizing: border-box;
 }
 
 button{
@@ -40,6 +11,64 @@ button{
   color: black;
   border-radius: 10px;
   vertical-align: middle;
+  cursor: pointer;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  font-size: 24px;
+}
+
+span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#coinamount{
+  text-align: center;
+  font-size: 48px
+}
+
+#tickspeed{
+  text-align: center;
+  font-size: 16px;
+  color: gray;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+}
+
+.tabs button:not(.selected):not(:hover) {
+  color: gray;
+  border-color: gray;
+}
+
+.generator, .accelerator {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.generator > *, .accelerator > * {
+  margin: 0 .4rem
+}
+
+.mode-container {
+  display: inline-block;
+}
+
+.accelerator{
+  color: red;
 }
 
 .gbutton{
@@ -61,19 +90,37 @@ button{
   background: #808080;
 }
 
-.tabs button:not(.selected):not(:hover) {
-  color: gray;
-  border-color: gray;
-}
-
 .tweetconfigbutton.selected{
   background: #000000;
   color: #FFFFFF;
 }
 
-.challengeconfigbutton.selected{
-  background: #000000;
-  color: #FFFFFF;
+.challange {
+  display: flex;
+  justify-content: left;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.challenge-config {
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: .2rem;
+  border: 2px solid black;
+  position: relative;
+}
+
+.challenge-config.selected::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: chartreuse;
+  position: absolute;
+  top: 2px;
+  left: 2px;
 }
 
 .rewardbutton.selected{
@@ -103,7 +150,7 @@ button{
 #tweet a{
   color: white;
   font-size: .8rem;
-  padding: .6rem .8rem;
+  padding: .5rem .8rem;
   background: #1DA1F2;
   border-radius: 3px;
   text-decoration: none;

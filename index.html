@@ -41,8 +41,8 @@
 						<button type="button" @click="resetLevel(false)">昇段リセット</button>
 					</div>
 				</div>
-				<div class="generators-container">
-					<div class="generator" v-for="i in 8" :key="i">
+				<ul class="generators-container">
+					<li class="generator" v-for="i in 8" :key="i">
 						<span>
               発生器{{ i }}: {{ player.generators[i-1].toExponential(3)+' '}}
             </span>
@@ -53,27 +53,26 @@
 							購入数: {{ player.generatorsBought[i-1].toNumber()+' '}}
 						</span>
 						<div class="mode-container" v-if="i > 1">
-							<span>モード: {{ player.generatorsMode[i-1] }}</span>
 							<button class="mode-button" @click="changeMode(i-1)">
-								変更
+								モード: {{ player.generatorsMode[i-1] }}
 							</button>
 						</div>
-					</div>
-				</div>
-				<div class="accelerators-container">
-					<div>
-						<span class="accelerator">時間加速器1: {{ player.accelerators[0].toNumber() }}</span>
+					</li>
+				</ul>
+				<ul class="accelerators-container">
+					<li class="accelerator">
+						<span>時間加速器1: {{ player.accelerators[0].toNumber() }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
 							購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
 						</button>
-					</div>
-					<div v-if="player.levelresettime.gt(0)">
-						<span class="accelerator">時間加速器2: {{ player.accelerators[1].toNumber() }}</span>
+					</li>
+					<li class="accelerator" v-if="player.levelresettime.gt(0)">
+						<span>時間加速器2: {{ player.accelerators[1].toNumber() }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
         			購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
       			</button>
-					</div>
-				</div>
+					</li>
+				</ul>
 			</div>
 			<div v-show="currenttab == 'option'">
 				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
@@ -91,12 +90,15 @@
           初めて挑戦に成功すると勲章が獲得でき、勲章を消費して様々な効力を得ることができます。
           挑戦中は勲章を消費して得た効力は無効となります。
           複数の挑戦を組み合わせることもできます。
-          <div class="challenge" v-for="i in 8" :key="i">
-					  <button type="button" class="challengeconfigbutton" :class="{ 'selected': player.challenges.includes(i-1) }" @click="configchallenge(i-1)">
-              挑戦 {{ i }}
-            </button>
-						<span> ・{{ challengedata.challengetext[i-1] }} </span>
-					</div>
+          <ul class="challenge-list" v-for="i in 8" :key="i">
+						<li class="challange" @click="configchallenge(i-1)">
+							<span
+								class="challenge-config"
+								:class="{ 'selected': player.challenges.includes(i-1) }"
+							></span>
+							<span> 挑戦 {{ i }}: {{ challengedata.challengetext[i-1] }} </span>
+						</li>
+					</ul>
           <br>
           <div v-if="!player.onchallenge">
             <button type="button" class="challengeconfigbutton" @click="startChallenge">
