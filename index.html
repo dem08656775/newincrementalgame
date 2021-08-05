@@ -14,16 +14,16 @@
 			<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
 			<div class="tabs">
 				<span id="basic">
-          <button type="button" @click="changeTab('basic')">通常</button>
+          <button type="button" @click="currenttab = 'basic'">通常</button>
         </span>
 				<span id="option">
-          <button type="button" @click="changeTab('option')">設定</button>
+          <button type="button" @click="currenttab = 'option'">設定</button>
         </span>
 				<span id="level" v-if="player.levelresettime.gt(0)">
-          <button type="button" @click="changeTab('level')">段位</button>
+          <button type="button" @click="currenttab = 'level'">段位</button>
         </span>
 			</div>
-			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
+			<div class="basictabcontents" v-show="currenttab == 'basic'">
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
 					段位: {{ player.level.toNumber() }} 段位リセット: {{ player.levelresettime.toNumber() }}回
 				</div>
@@ -53,20 +53,20 @@
 				</div>
 				<div class="accelerators-container">
 					<div>
-						<span class="accelerator">時間加速器1: {{ player.accelerators[0] }}</span>
+						<span class="accelerator">時間加速器1: {{ player.accelerators[0].toNumber() }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
 							購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
 						</button>
 					</div>
 					<div v-if="player.levelresettime.gt(0)">
-						<span class="accelerator">時間加速器2: {{ player.accelerators[1] }}</span>
+						<span class="accelerator">時間加速器2: {{ player.accelerators[1].toNumber() }}</span>
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
         			購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
       			</button>
 					</div>
 				</div>
 			</div>
-			<div v-show="player.currenttab == 'option'">
+			<div v-show="currenttab == 'option'">
 				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
         <div class="tweetconfig">
           ツイート機能設定
@@ -75,7 +75,7 @@
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
         </div>
 			</div>
-      <div v-show="player.currenttab == 'level'">
+      <div v-show="currenttab == 'level'">
         勲章:{{ player.token }}
 				<div class="challenges-container">
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。

@@ -28,7 +28,6 @@ const initialData = () => {
     tickspeed: 1000,
     saveversion: version,
 
-    currenttab: 'basic',
     tweeting:['money'],
     onchallenge:false,
     challenges:[],
@@ -67,8 +66,6 @@ Vue.createApp({
         tickspeed: 1000,
         saveversion: version,
 
-        currenttab: 'basic',
-
         tweeting:['money'],
 
         onchallenge: false,
@@ -76,6 +73,7 @@ Vue.createApp({
         challengecleared: [],
         challengebonuses:[]
       },
+      currenttab: 'basic',
       challengedata: new Challengedata()
     }
   },
@@ -189,8 +187,6 @@ Vue.createApp({
           tickspeed: parseFloat(saveData.tickspeed),
           saveversion: parseInt(saveData.saveversion),
 
-          currenttab: saveData.currenttab ?? 'basic',
-
           tweeting: saveData.tweeting ?? ['money'],
 
           onchallenge: saveData.onchallenge ?? false,
@@ -199,9 +195,6 @@ Vue.createApp({
           challengebonuses: saveData.challengebonuses ?? [],
         } :
         readOldFormat(saveData);
-    },
-    changeTab(tabname){
-      this.player.currenttab = tabname;
     },
     configtweet(content){
       if(!this.player.tweeting.includes(content)){
@@ -424,8 +417,6 @@ function readOldFormat(saveData) {
     ],
     tickspeed: parseFloat(saveData.tickspeed ?? 1000),
     saveversion: version,
-
-    currenttab:(saveData.currenttab ?? 'basic'),
 
     tweeting:(saveData.tweeting ?? ['money']),
 
