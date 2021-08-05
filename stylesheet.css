@@ -61,6 +61,11 @@ button{
   background: #808080;
 }
 
+.tabs button:not(.selected):not(:hover) {
+  color: gray;
+  border-color: gray;
+}
+
 .tweetconfigbutton.selected{
   background: #000000;
   color: #FFFFFF;

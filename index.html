@@ -14,13 +14,22 @@
 			<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
 			<div class="tabs">
 				<span id="basic">
-          <button type="button" @click="currenttab = 'basic'">通常</button>
+          <button type="button"
+            :class="{'selected': currenttab === 'basic'}"
+            @click="currenttab = 'basic'"
+          >通常</button>
         </span>
 				<span id="option">
-          <button type="button" @click="currenttab = 'option'">設定</button>
+          <button type="button"
+            :class="{'selected': currenttab === 'option'}"
+            @click="currenttab = 'option'"
+          >設定</button>
         </span>
 				<span id="level" v-if="player.levelresettime.gt(0)">
-          <button type="button" @click="currenttab = 'level'">段位</button>
+          <button type="button"
+            :class="{'selected': currenttab === 'level'}"
+            @click="currenttab = 'level'"
+          >段位</button>
         </span>
 			</div>
 			<div class="basictabcontents" v-show="currenttab == 'basic'">
@@ -111,7 +120,7 @@
         </div>
 			</div>
 			<div id="tweet">
-				<a :href="tweetLink">Tweet #新しい放置ゲーム</a>
+				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>
 			</div>
 		</div>
 	</div>
