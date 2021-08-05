@@ -36,8 +36,8 @@
 			</div>
 			<div v-show="currenttab == 'basic'">
 				<div class='level-contents' v-if="player.levelresettime.gt(0)">
-					<span>段位: {{ player.level.toNumber() }}</span>
-					<span>昇段リセット: {{ player.levelresettime.toNumber() }}回</span>
+					<span><b>段位:</b> {{ player.level.toNumber() }}</span>
+					<span><b>昇段リセット:</b> {{ player.levelresettime.toNumber() }}回</span>
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
 						<button type="button" @click="resetLevel(false)">昇段</button>
 					</div>
@@ -75,17 +75,22 @@
 					</li>
 				</ul>
 			</div>
-			<div v-show="currenttab == 'option'">
-				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
+			<div class="config-container" v-show="currenttab == 'option'">
         <div class="tweet-config">
-          ツイート機能設定
+          <h3>ツイート機能設定</h3>
+					<p>ツイートの内容を選択できます。</p>
           <button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
           <button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
 					<button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
         </div>
+				<div class="reset">
+					<h3>リセット</h3>
+					<p>データをすべて消去します。</p>
+					<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
+				</div>
 			</div>
       <div v-show="currenttab == 'level'">
-        <span>勲章: {{ player.token }}</span>
+        <span><b>勲章:</b> {{ player.token }}</span>
 				<div class="challenges-container">
 					<h2>挑戦</h2>
 					<p>
