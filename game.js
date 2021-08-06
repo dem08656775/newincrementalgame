@@ -83,14 +83,14 @@ Vue.createApp({
     tweetLink() {
       let tweetText = "";
       if(this.player.tweeting.includes('money')){
-        tweetText += 'ポイント:' + this.player.money +
+        tweetText += 'ポイント: ' + this.player.money +
         '(' + this.player.money.toExponential().replace('+', '%2B') + ')%0A';
       }
       if(this.player.tweeting.includes('level')){
-        tweetText += '段位:' + this.player.level + '%0A';
+        tweetText += '段位: ' + this.player.level + '%0A';
       }
       if(this.player.tweeting.includes('achieved')){
-        tweetText += '挑戦達成:' + this.player.challengecleared.length + '%0A';
+        tweetText += '挑戦達成: ' + this.player.challengecleared.length + '%0A';
       }
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
