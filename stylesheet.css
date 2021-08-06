@@ -1,109 +1,108 @@
 #coinamount{
-	text-align: center;
-	font-size: 48px
+  text-align: center;
+  font-size: 48px
 }
 
 #tickspeed{
-	text-align: center;
-	font-size: 16px;
-	color: gray;
+  text-align: center;
+  font-size: 16px;
+  color: gray;
 }
 
 .generator{
-	font-size: 24px;
-	vertical-align: middle;
+  font-size: 24px;
+  vertical-align: middle;
 }
 
 .challenge{
-	font-size: 24px;
-	vertical-align: middle;
+  font-size: 24px;
+  vertical-align: middle;
 }
 
 .mode-container {
-	display: inline-block;
+  display: inline-block;
 }
 
 .accelerator{
-	font-size: 24px;
-	text-align: right;
-	vertical-align: middle;
-	color: red;
-
+  font-size: 24px;
+  text-align: right;
+  vertical-align: middle;
+  color: red;
 }
 
 button{
-	border: .18em solid;
-	font-size: 12px;
-	width: 150px;
-	height: 32px;
-	background: white;
-	color: black;
-	border-radius: 10px;
-	vertical-align: middle;
+  border: .18em solid;
+  font-size: 12px;
+  width: 150px;
+  height: 32px;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  vertical-align: middle;
 }
 
 .gbutton{
-	background: #FFFFFF;
-	color: #000000;
+  background: #FFFFFF;
+  color: #000000;
 }
 
 .gbutton.unavailable {
-	background: #B0B0B0;
+  background: #B0B0B0;
 }
 
 .abutton{
-	background: #000000;
-	border-color: #000000;
-	color: #FFFFFF;
+  background: #000000;
+  border-color: #000000;
+  color: #FFFFFF;
 }
 
 .abutton.unavailable {
-	background: #808080;
+  background: #808080;
 }
 
 .tweetconfigbutton.selected{
-	background: #000000;
-	color: #FFFFFF;
+  background: #000000;
+  color: #FFFFFF;
 }
 
 .challengeconfigbutton.selected{
-	background: #000000;
-	color: #FFFFFF;
+  background: #000000;
+  color: #FFFFFF;
 }
 
 .rewardbutton.selected{
-	background: #000000;
-	color: #FFFFFF;
+  background: #000000;
+  color: #FFFFFF;
 }
 
 #resetbutton{
-	background: white;
-	color: #D32F2F;
-	border-color: #D81B6032;
-	border-width: 1px;
-	width: 90px;
+  background: white;
+  color: #D32F2F;
+  border-color: #D81B6032;
+  border-width: 1px;
+  width: 90px;
 }
 
 #resetbutton:hover{
-	background: #D32F2F;
-	color: white;
-	width: 90px;
-	transition: all .2s;
+  background: #D32F2F;
+  color: white;
+  width: 90px;
+  transition: all .2s;
 }
 
 #tweet{
-	margin: 20px 0px;
+  margin: 20px 0px;
 }
 
 #tweet a{
-	color: white;
-	font-size: .8rem;
-	padding: .6rem .8rem;
-	background: #1DA1F2;
-	border-radius: 3px;
-	text-decoration: none;
+  color: white;
+  font-size: .8rem;
+  padding: .6rem .8rem;
+  background: #1DA1F2;
+  border-radius: 3px;
+  text-decoration: none;
 }
 
 [v-cloak] {
-	display: none;
+  display: none;
 }
