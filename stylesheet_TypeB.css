@@ -1,0 +1,210 @@
+* {
+  box-sizing: border-box;
+}
+
+button {
+  border: 2px solid;
+  font-size: 12px;
+  min-width: 150px;
+  height: 32px;
+  background: white;
+  color: black;
+  border-radius: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+button.unavailable {
+  border-color: gray;
+  background: lightgray;
+  color: gray;
+  cursor: default;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  font-size: 24px;
+}
+
+span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+h2, h3 {
+  margin: 0;
+  color: #333;
+}
+
+p {
+  margin: 0;
+}
+
+b {
+  color: #333;
+}
+
+.container {
+  padding: 0 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.head {
+  margin-bottom: .8rem;
+}
+
+#coinamount{
+  text-align: center;
+  font-size: 48px
+}
+
+#tickspeed{
+  text-align: center;
+  font-size: 16px;
+  color: gray;
+}
+
+.tabs {
+  display: inline-flex;
+  border-bottom: 2px solid;
+  margin-bottom: .8rem;
+}
+
+.tabs button {
+  border-radius: 0;
+  border-bottom: none;
+}
+
+.tabs button:not(.selected):not(:hover) {
+  color: gray;
+  border-color: lightgray;
+}
+
+.level-contents span {
+  display: inline-block;
+  margin: 0 .4rem;
+}
+
+.generator, .accelerator {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.generator > *, .accelerator > * {
+  margin: 0 .4rem
+}
+
+.mode-container {
+  display: inline-block;
+}
+
+.accelerator{
+  color: red;
+}
+
+.gbutton{
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.abutton{
+  background: #000000;
+  border-color: #000000;
+  color: #FFFFFF;
+}
+
+.config-container > * {
+  margin-bottom: 2rem;
+}
+
+.tweet-config-button {
+  margin: 0 .2rem;
+}
+
+.tweet-config-button:not(.selected) {
+  color: gray;
+  border-color: lightgray;
+}
+
+.challenges-container, .rewards-container {
+  margin: .8rem 0 2rem;
+}
+
+.challenge {
+  display: flex;
+  justify-content: left;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+/* .challenge .text {
+  display: inline;
+  vertical-align: middle;
+} */
+
+.challenge-config {
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  flex-shrink: 0;
+  margin-right: .2rem;
+  border: 2px solid black;
+}
+
+.challenge-config.selected {
+  background-color: blue;
+  background-clip: content-box;
+}
+
+.reward {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.reward-button {
+  margin-right: .4rem;
+}
+
+.reward-button.selected {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+#resetbutton{
+  background: white;
+  color: #D32F2F;
+  border-color: #D81B6032;
+  border-width: 1px;
+  width: 90px;
+}
+
+#resetbutton:hover{
+  background: #D32F2F;
+  color: white;
+  width: 90px;
+  transition: all .2s;
+}
+
+#tweet{
+  margin: 2rem 0;
+}
+
+#tweet a{
+  color: white;
+  font-size: .8rem;
+  padding: .5rem .8rem;
+  background: #1DA1F2;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+[v-cloak] {
+  display: none;
+}

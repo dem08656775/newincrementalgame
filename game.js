@@ -74,7 +74,8 @@ Vue.createApp({
         challengebonuses:[]
       },
       currenttab: 'basic',
-      challengedata: new Challengedata()
+      challengedata: new Challengedata(),
+      abtest: 'a',
     }
   },
   computed: {

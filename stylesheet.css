@@ -1,210 +1,109 @@
-* {
-  box-sizing: border-box;
-}
-
-button {
-  border: 2px solid;
-  font-size: 12px;
-  min-width: 150px;
-  height: 32px;
-  background: white;
-  color: black;
-  border-radius: 5px;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-button.unavailable {
-  border-color: gray;
-  background: lightgray;
-  color: gray;
-  cursor: default;
-}
-
-ul {
-  padding: 0;
-}
-
-li {
-  list-style: none;
-  font-size: 24px;
-}
-
-span {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-h2, h3 {
-  margin: 0;
-  color: #333;
-}
-
-p {
-  margin: 0;
-}
-
-b {
-  color: #333;
-}
-
-.container {
-  padding: 0 20px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.head {
-  margin-bottom: .8rem;
-}
-
 #coinamount{
-  text-align: center;
-  font-size: 48px
-}
+	text-align: center;
+	font-size: 48px
+  }
 
-#tickspeed{
-  text-align: center;
-  font-size: 16px;
-  color: gray;
-}
+  #tickspeed{
+	text-align: center;
+	font-size: 16px;
+	color: gray;
+  }
 
-.tabs {
-  display: inline-flex;
-  border-bottom: 2px solid;
-  margin-bottom: .8rem;
-}
+  .generator{
+	font-size: 24px;
+	vertical-align: middle;
+  }
 
-.tabs button {
-  border-radius: 0;
-  border-bottom: none;
-}
+  .challenge{
+	font-size: 24px;
+	vertical-align: middle;
+  }
 
-.tabs button:not(.selected):not(:hover) {
-  color: gray;
-  border-color: lightgray;
-}
+  .mode-container {
+	display: inline-block;
+  }
 
-.level-contents span {
-  display: inline-block;
-  margin: 0 .4rem;
-}
+  .accelerator{
+	font-size: 24px;
+	text-align: right;
+	vertical-align: middle;
+	color: red;
 
-.generator, .accelerator {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-}
+  }
 
-.generator > *, .accelerator > * {
-  margin: 0 .4rem
-}
+  button{
+	border: .18em solid;
+	font-size: 12px;
+	width: 150px;
+	height: 32px;
+	background: white;
+	color: black;
+	border-radius: 10px;
+	vertical-align: middle;
+  }
 
-.mode-container {
-  display: inline-block;
-}
+  .gbutton{
+	background: #FFFFFF;
+	color: #000000;
+  }
 
-.accelerator{
-  color: red;
-}
+  .gbutton.unavailable {
+	background: #B0B0B0;
+  }
 
-.gbutton{
-  background: #FFFFFF;
-  color: #000000;
-}
+  .abutton{
+	background: #000000;
+	border-color: #000000;
+	color: #FFFFFF;
+  }
 
-.abutton{
-  background: #000000;
-  border-color: #000000;
-  color: #FFFFFF;
-}
+  .abutton.unavailable {
+	background: #808080;
+  }
 
-.config-container > * {
-  margin-bottom: 2rem;
-}
+  .tweetconfigbutton.selected{
+	background: #000000;
+	color: #FFFFFF;
+  }
 
-.tweet-config-button {
-  margin: 0 .2rem;
-}
+  .challengeconfigbutton.selected{
+	background: #000000;
+	color: #FFFFFF;
+  }
 
-.tweet-config-button:not(.selected) {
-  color: gray;
-  border-color: lightgray;
-}
+  .rewardbutton.selected{
+	background: #000000;
+	color: #FFFFFF;
+  }
 
-.challenges-container, .rewards-container {
-  margin: .8rem 0 2rem;
-}
+  #resetbutton{
+	background: white;
+	color: #D32F2F;
+	border-color: #D81B6032;
+	border-width: 1px;
+	width: 90px;
+  }
 
-.challenge {
-  display: flex;
-  justify-content: left;
-  align-items: baseline;
-  cursor: pointer;
-}
+  #resetbutton:hover{
+	background: #D32F2F;
+	color: white;
+	width: 90px;
+	transition: all .2s;
+  }
 
-/* .challenge .text {
-  display: inline;
-  vertical-align: middle;
-} */
+  #tweet{
+	margin: 20px 0px;
+  }
 
-.challenge-config {
-  width: 18px;
-  height: 18px;
-  padding: 2px;
-  flex-shrink: 0;
-  margin-right: .2rem;
-  border: 2px solid black;
-}
+  #tweet a{
+	color: white;
+	font-size: .8rem;
+	padding: .6rem .8rem;
+	background: #1DA1F2;
+	border-radius: 3px;
+	text-decoration: none;
+  }
 
-.challenge-config.selected {
-  background-color: blue;
-  background-clip: content-box;
-}
-
-.reward {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-}
-
-.reward-button {
-  margin-right: .4rem;
-}
-
-.reward-button.selected {
-  background: #000000;
-  color: #FFFFFF;
-}
-
-#resetbutton{
-  background: white;
-  color: #D32F2F;
-  border-color: #D81B6032;
-  border-width: 1px;
-  width: 90px;
-}
-
-#resetbutton:hover{
-  background: #D32F2F;
-  color: white;
-  width: 90px;
-  transition: all .2s;
-}
-
-#tweet{
-  margin: 2rem 0;
-}
-
-#tweet a{
-  color: white;
-  font-size: .8rem;
-  padding: .5rem .8rem;
-  background: #1DA1F2;
-  border-radius: 3px;
-  text-decoration: none;
-}
-
-[v-cloak] {
-  display: none;
-}
+  [v-cloak] {
+	display: none;
+  }
