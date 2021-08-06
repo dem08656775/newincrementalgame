@@ -21,6 +21,10 @@ button.unavailable {
   cursor: default;
 }
 
+button:not(.unavailable):hover {
+  background: lightgray;
+}
+
 ul {
   padding: 0;
 }
@@ -32,6 +36,10 @@ li {
 
 span {
   display: inline-block;
+}
+
+span.text {
+  display: inline;
   vertical-align: middle;
 }
 
@@ -108,28 +116,31 @@ b {
   color: red;
 }
 
-.gbutton{
-  background: #FFFFFF;
-  color: #000000;
-}
-
-.abutton{
-  background: #000000;
-  border-color: #000000;
-  color: #FFFFFF;
-}
-
 .config-container > * {
   margin-bottom: 2rem;
 }
 
-.tweet-config-button {
-  margin: 0 .2rem;
+.tweet-config-list li {
+  font-size: medium;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  cursor: pointer;
 }
 
-.tweet-config-button:not(.selected) {
-  color: gray;
-  border-color: lightgray;
+.tweet-config-button {
+  width: 14px;
+  height: 14px;
+  padding: 2px;
+  flex-shrink: 0;
+  margin-right: .2rem;
+  margin-top: 2px;
+  border: 1px solid black;
+}
+
+.tweet-config-button.selected {
+  background-color: green;
+  background-clip: content-box;
 }
 
 .challenges-container, .rewards-container {
@@ -158,7 +169,7 @@ b {
 }
 
 .challenge-config.selected {
-  background-color: blue;
+  background-color: green;
   background-clip: content-box;
 }
 
@@ -172,9 +183,11 @@ b {
   margin-right: .4rem;
 }
 
-.reward-button.selected {
-  background: #000000;
-  color: #FFFFFF;
+button.reward-button.selected {
+  background: gray;
+  border-color: black;
+  color: black;
+  cursor: default;
 }
 
 #resetbutton{

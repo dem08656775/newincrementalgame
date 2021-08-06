@@ -188,9 +188,26 @@
         <div class="tweet-config">
           <h3>ツイート機能設定</h3>
 					<p>ツイートの内容を選択できます。</p>
-          <button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
-          <button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
-					<button type="button" class="tweet-config-button" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
+					<ul class="tweet-config-list">
+						<li @click="configtweet('money')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('money') }">
+							</span>
+							<span class="text">ポイント</span>
+						</li>
+						<li v-if="player.levelresettime.gt(0)" @click="configtweet('level')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('level') }">
+							</span>
+							<span class="text">段位</span>
+						</li>
+						<li v-if="player.levelresettime.gt(0)" @click="configtweet('achieved')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('achieved') }">
+							</span>
+							<span class="text">挑戦達成</span>
+						</li>
+					</ul>
         </div>
 				<div class="reset">
 					<h3>リセット</h3>
@@ -245,7 +262,7 @@
 									'unavailable': player.token < challengedata.rewardcost[i-1]
 								}"
 								@click="buyRewards(i-1)">
-								効力 {{ i }}: コスト {{ challengedata.rewardcost[i-1] }}
+								{{ player.challengebonuses.includes(i-1) ? '購入済' : '購入' }}: コスト {{ challengedata.rewardcost[i-1] }}
 							</button>
 							<span>{{ challengedata.rewardtext[i-1] }}</span>
 						</li>
