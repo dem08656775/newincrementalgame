@@ -28,7 +28,6 @@ const initialData = () => {
     tickspeed: 1000,
     saveversion: version,
 
-    currenttab: 'basic',
     tweeting:['money'],
     onchallenge:false,
     challenges:[],
@@ -67,8 +66,6 @@ Vue.createApp({
         tickspeed: 1000,
         saveversion: version,
 
-        currenttab: 'basic',
-
         tweeting:['money'],
 
         onchallenge: false,
@@ -76,7 +73,9 @@ Vue.createApp({
         challengecleared: [],
         challengebonuses:[]
       },
-      challengedata: new Challengedata()
+      currenttab: 'basic',
+      challengedata: new Challengedata(),
+      abtest: 'A',
     }
   },
   computed: {
@@ -189,8 +188,6 @@ Vue.createApp({
           tickspeed: parseFloat(saveData.tickspeed),
           saveversion: parseInt(saveData.saveversion),
 
-          currenttab: saveData.currenttab ?? 'basic',
-
           tweeting: saveData.tweeting ?? ['money'],
 
           onchallenge: saveData.onchallenge ?? false,
@@ -199,9 +196,6 @@ Vue.createApp({
           challengebonuses: saveData.challengebonuses ?? [],
         } :
         readOldFormat(saveData);
-    },
-    changeTab(tabname){
-      this.player.currenttab = tabname;
     },
     configtweet(content){
       if(!this.player.tweeting.includes(content)){
@@ -352,6 +346,16 @@ Vue.createApp({
           }
         }
       }
+    },
+    toggleStyle() {
+      let css = document.getElementById('stylesheet');
+      if (this.abtest === 'A') {
+        css.href = "stylesheet_TypeB.css";
+        this.abtest = 'B';
+      } else {
+        css.href = "stylesheet.css";
+        this.abtest = 'A';
+      }
     }
   },
   mounted() {
@@ -424,8 +428,6 @@ function readOldFormat(saveData) {
     ],
     tickspeed: parseFloat(saveData.tickspeed ?? 1000),
     saveversion: version,
-
-    currenttab:(saveData.currenttab ?? 'basic'),
 
     tweeting:(saveData.tweeting ?? ['money']),
 

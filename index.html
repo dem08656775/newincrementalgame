@@ -4,26 +4,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>新しい放置ゲーム</title>
-	<link rel="stylesheet" href="stylesheet.css">
+	<link rel="stylesheet" href="stylesheet.css" id="stylesheet">
 </head>
 
 <body>
 	<div id="app">
-		<div class="container" v-cloak>
+		<div class="container" v-cloak v-show="abtest === 'A'">
 			<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
 			<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
 			<div class="tabs">
 				<span id="basic">
-          <button type="button" @click="changeTab('basic')">通常</button>
+          <button type="button" @click="currenttab = 'basic'">通常</button>
         </span>
 				<span id="option">
-          <button type="button" @click="changeTab('option')">設定</button>
+          <button type="button" @click="currenttab = 'option'">設定</button>
         </span>
 				<span id="level" v-if="player.levelresettime.gt(0)">
-          <button type="button" @click="changeTab('level')">段位</button>
+          <button type="button" @click="currenttab = 'level'">段位</button>
         </span>
 			</div>
-			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
+			<div class="basictabcontents" v-show="currenttab == 'basic'">
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
 					段位: {{ player.level.toNumber() }} 段位リセット: {{ player.levelresettime.toNumber() }}回
 				</div>
@@ -66,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<div v-show="player.currenttab == 'option'">
+			<div v-show="currenttab == 'option'">
 				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
         <div class="tweetconfig">
           ツイート機能設定
@@ -74,8 +74,9 @@
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
         </div>
+				<button @click="toggleStyle">ABテスト: {{ abtest }}</button>
 			</div>
-      <div v-show="player.currenttab == 'level'">
+      <div v-show="currenttab == 'level'">
         勲章:{{ player.token }}
 				<div class="challenges-container">
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。
@@ -112,6 +113,164 @@
 			</div>
 			<div id="tweet">
 				<a :href="tweetLink">Tweet #新しい放置ゲーム</a>
+			</div>
+		</div>
+
+
+
+		<div class="container" v-cloak v-show="abtest == 'B'">
+			<div class="head">
+				<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
+				<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
+			</div>
+			<div class="tabs">
+				<span id="basic">
+          <button type="button"
+            :class="{'selected': currenttab === 'basic'}"
+            @click="currenttab = 'basic'"
+          >通常</button>
+        </span>
+				<span id="option">
+          <button type="button"
+            :class="{'selected': currenttab === 'option'}"
+            @click="currenttab = 'option'"
+          >設定</button>
+        </span>
+				<span id="level" v-if="player.levelresettime.gt(0)">
+          <button type="button"
+            :class="{'selected': currenttab === 'level'}"
+            @click="currenttab = 'level'"
+          >段位</button>
+        </span>
+			</div>
+			<div v-show="currenttab == 'basic'">
+				<div class='level-contents' v-if="player.levelresettime.gt(0)">
+					<span><b>段位:</b> {{ player.level.toNumber() }}</span>
+					<span><b>昇段リセット:</b> {{ player.levelresettime.toNumber() }}回</span>
+					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
+						<button type="button" @click="resetLevel(false)">昇段</button>
+					</div>
+				</div>
+				<ul class="generators-container">
+					<li class="generator" v-for="i in 8" :key="i">
+						<span>
+              発生器{{ i }}: {{ player.generators[i-1].toExponential(3)+' '}}
+            </span>
+						<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }" @click="buyGenerator(i-1)">
+							購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
+						</button>
+						<span>
+							購入数: {{ player.generatorsBought[i-1].toNumber()+' '}}
+						</span>
+						<div class="mode-container" v-if="i > 1">
+							<button class="mode-button" @click="changeMode(i-1)">
+								モード: {{ player.generatorsMode[i-1] }}
+							</button>
+						</div>
+					</li>
+				</ul>
+				<ul class="accelerators-container">
+					<li class="accelerator">
+						<span>時間加速器1: {{ player.accelerators[0].toNumber() }}</span>
+						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
+							購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
+						</button>
+					</li>
+					<li class="accelerator" v-if="player.levelresettime.gt(0)">
+						<span>時間加速器2: {{ player.accelerators[1].toNumber() }}</span>
+						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
+        			購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
+      			</button>
+					</li>
+				</ul>
+			</div>
+			<div class="config-container" v-show="currenttab == 'option'">
+        <div class="tweet-config">
+          <h3>ツイート機能設定</h3>
+					<p>ツイートの内容を選択できます。</p>
+					<ul class="tweet-config-list">
+						<li @click="configtweet('money')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('money') }">
+							</span>
+							<span class="text">ポイント</span>
+						</li>
+						<li v-if="player.levelresettime.gt(0)" @click="configtweet('level')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('level') }">
+							</span>
+							<span class="text">段位</span>
+						</li>
+						<li v-if="player.levelresettime.gt(0)" @click="configtweet('achieved')">
+							<span class="tweet-config-button"
+								:class="{ 'selected': player.tweeting.includes('achieved') }">
+							</span>
+							<span class="text">挑戦達成</span>
+						</li>
+					</ul>
+        </div>
+				<div class="reset">
+					<h3>リセット</h3>
+					<p>データをすべて消去します。</p>
+					<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
+				</div>
+				<button @click="toggleStyle">ABテスト: {{ abtest }}</button>
+			</div>
+      <div v-show="currenttab == 'level'">
+        <span><b>勲章:</b> {{ player.token }}</span>
+				<div class="challenges-container">
+					<h2>挑戦</h2>
+					<p>
+						挑戦とは、厳しい条件で昇段リセットを目指すことです。
+						挑戦を始める際は、適用する条件を選択します。
+						複数の条件を同時に適用することもでき、条件の組み合わせが異なるものは別の挑戦としてカウントされます。
+						それぞれの挑戦に始めて成功すると勲章が獲得できます。勲章を消費することで様々な効力を得ることができます。
+						挑戦中はそれまでに得た効力は無効となります。
+					</p>
+          <ul class="challenge-list" v-for="i in 8" :key="i">
+						<li class="challenge" @click="configchallenge(i-1)">
+							<span
+								class="challenge-config"
+								:class="{ 'selected': player.challenges.includes(i-1) }"
+							></span>
+							<span class="text"> 挑戦 {{ i }}: {{ challengedata.challengetext[i-1] }} </span>
+						</li>
+					</ul>
+          <div v-if="!player.onchallenge">
+            <button type="button" class="challenge-button" @click="startChallenge">
+              挑戦開始
+            </button>
+          </div>
+          <div v-if="player.onchallenge">
+            <button type="button" class="challenge-button" @click="exitChallenge">
+              挑戦放棄
+            </button>
+          </div>
+        </div>
+        <div class="rewards-container">
+          <h2>効力</h2>
+					<p>
+						効力とは、勲章を消費して得られる強化のことです。
+						挑戦を行っている間は、購入した効力もすべて無効となります。
+					</p>
+          <ul class="rewards-list" v-for="i in 15" :key="i">
+					  <li class="reward">
+							<button type="button"
+								class="reward-button"
+								:class="{
+									'selected': player.challengebonuses.includes(i-1),
+									'unavailable': player.token < challengedata.rewardcost[i-1]
+								}"
+								@click="buyRewards(i-1)">
+								{{ player.challengebonuses.includes(i-1) ? '購入済' : '購入' }}: コスト {{ challengedata.rewardcost[i-1] }}
+							</button>
+							<span>{{ challengedata.rewardtext[i-1] }}</span>
+						</li>
+					</ul>
+        </div>
+			</div>
+			<div id="tweet">
+				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>
 			</div>
 		</div>
 	</div>
