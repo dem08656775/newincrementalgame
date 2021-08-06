@@ -75,7 +75,7 @@ Vue.createApp({
       },
       currenttab: 'basic',
       challengedata: new Challengedata(),
-      abtest: 'a',
+      abtest: 'A',
     }
   },
   computed: {
@@ -345,6 +345,16 @@ Vue.createApp({
             new Decimal(10).pow(this.player.generatorsBought[i].add(i + 1).mul(i + 1))
           }
         }
+      }
+    },
+    toggleStyle() {
+      let css = document.getElementById('stylesheet');
+      if (this.abtest === 'A') {
+        css.href = "stylesheet_TypeB.css";
+        this.abtest = 'B';
+      } else {
+        css.href = "stylesheet.css";
+        this.abtest = 'A';
       }
     }
   },
