@@ -1,37 +1,37 @@
 #coinamount{
 	text-align: center;
 	font-size: 48px
-  }
+}
 
-  #tickspeed{
+#tickspeed{
 	text-align: center;
 	font-size: 16px;
 	color: gray;
-  }
+}
 
-  .generator{
+.generator{
 	font-size: 24px;
 	vertical-align: middle;
-  }
+}
 
-  .challenge{
+.challenge{
 	font-size: 24px;
 	vertical-align: middle;
-  }
+}
 
-  .mode-container {
+.mode-container {
 	display: inline-block;
-  }
+}
 
-  .accelerator{
+.accelerator{
 	font-size: 24px;
 	text-align: right;
 	vertical-align: middle;
 	color: red;
 
-  }
+}
 
-  button{
+button{
 	border: .18em solid;
 	font-size: 12px;
 	width: 150px;
@@ -40,70 +40,70 @@
 	color: black;
 	border-radius: 10px;
 	vertical-align: middle;
-  }
+}
 
-  .gbutton{
+.gbutton{
 	background: #FFFFFF;
 	color: #000000;
-  }
+}
 
-  .gbutton.unavailable {
+.gbutton.unavailable {
 	background: #B0B0B0;
-  }
+}
 
-  .abutton{
+.abutton{
 	background: #000000;
 	border-color: #000000;
 	color: #FFFFFF;
-  }
+}
 
-  .abutton.unavailable {
+.abutton.unavailable {
 	background: #808080;
-  }
+}
 
-  .tweetconfigbutton.selected{
+.tweetconfigbutton.selected{
 	background: #000000;
 	color: #FFFFFF;
-  }
+}
 
-  .challengeconfigbutton.selected{
+.challengeconfigbutton.selected{
 	background: #000000;
 	color: #FFFFFF;
-  }
+}
 
-  .rewardbutton.selected{
+.rewardbutton.selected{
 	background: #000000;
 	color: #FFFFFF;
-  }
+}
 
-  #resetbutton{
+#resetbutton{
 	background: white;
 	color: #D32F2F;
 	border-color: #D81B6032;
 	border-width: 1px;
 	width: 90px;
-  }
+}
 
-  #resetbutton:hover{
+#resetbutton:hover{
 	background: #D32F2F;
 	color: white;
 	width: 90px;
 	transition: all .2s;
-  }
+}
 
-  #tweet{
+#tweet{
 	margin: 20px 0px;
-  }
+}
 
-  #tweet a{
+#tweet a{
 	color: white;
 	font-size: .8rem;
 	padding: .6rem .8rem;
 	background: #1DA1F2;
 	border-radius: 3px;
 	text-decoration: none;
-  }
+}
 
-  [v-cloak] {
+[v-cloak] {
 	display: none;
-  }
+}
