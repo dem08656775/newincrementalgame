@@ -126,13 +126,12 @@ Vue.createApp({
           highest = j;
         }
       }
-      i<highest && this.player.generatorsBought[i].greaterThan(0)
 
       if(!(this.player.onchallenge && this.player.challenges.includes(2))){
         if(i<highest && this.player.generatorsBought[i].greaterThan(0)){
           mult = mult.mul(this.player.generatorsBought[i])
         }else if(!this.player.onchallenge){
-          if(this.player.challengebonuses.includes(2)){
+          if(this.player.challengebonuses.includes(2) && this.player.generatorsBought[i].greaterThan(0)){
             mult = mult.mul(this.player.generatorsBought[i])
           }
         }
