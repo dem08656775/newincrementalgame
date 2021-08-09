@@ -200,7 +200,7 @@ Vue.createApp({
       }
       if(!this.player.onchallenge && this.autolevel){
         if(this.player.money.greaterThanOrEqualTo('1e18')){
-          this.resetLevel(true)
+          this.resetLevel(true,false)
         }
       }
       if(this.player.challengebonuses.includes(9)&&this.genautobuy){
@@ -350,7 +350,7 @@ Vue.createApp({
         this.player = initialData()
       }
     },
-    resetLevel(force) {
+    resetLevel(force,exit) {
       if(this.player.onchallenge && this.player.challenges.includes(0)){
         if(this.player.money.lt(new Decimal('1e24'))){
           alert('現在挑戦1が適用されているため、まだ昇段リセットができません。')
@@ -364,9 +364,9 @@ Vue.createApp({
           this.player.token = this.player.token + 1
           this.player.challengecleared.push(this.calcchallengeid())
         }
-        let nextlevel = this.player.level.add(force?new Decimal(0):gainlevel)
-        let nextlevelresettime = this.player.levelresettime.add(new Decimal(force?0:this.player.challengebonuses.includes(8)?2:1))
-        let nextmaxlevelgained = this.player.maxlevelgained.max(force?new Decimal(0):gainlevel)
+        let nextlevel = this.player.level.add(exit?new Decimal(0):gainlevel)
+        let nextlevelresettime = this.player.levelresettime.add(new Decimal(exit?0:this.player.challengebonuses.includes(8)?2:1))
+        let nextmaxlevelgained = this.player.maxlevelgained.max(exit?new Decimal(0):gainlevel)
         let tkn = this.player.token
         let cls = this.player.challenges
         let clcleared = this.player.challengecleared
@@ -431,7 +431,7 @@ Vue.createApp({
       }
 
       if (confirm('挑戦を開始しますか？現在のポイントや発生器、時間加速器は失われます。')) {
-        this.resetLevel(true);
+        this.resetLevel(true,true);
         this.player.onchallenge = true;
         if(this.player.challenges.includes(3)){
           for(let i=0;i<8;i++){

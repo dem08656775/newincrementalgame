@@ -14,7 +14,7 @@
 			<div id="tickspeed">
 				間隙: {{ Math.round(player.tickspeed) }}毛秒
 				<span v-if="player.accelerators[0].gt(0)">
-					時間加速器効果: {{ 1000/player.tickspeed }} 倍
+					時間加速器効果: {{ (1000/player.tickspeed).toFixed(3) }} 倍
 				</span>
 			</div>
 			<div class="tabs">
@@ -37,7 +37,7 @@
 				</div>
 				<div class="softreset">
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
-						<button type="button" @click="resetLevel(false)">昇段リセット</button>
+						<button type="button" @click="resetLevel(false,false)">昇段リセット</button>
 					</div>
 				</div>
 				<div class="generators-container">
@@ -101,6 +101,7 @@
 				</div>
 			</div>
       <div v-show="player.currenttab == 'level'">
+				最大取得段位:{{player.maxlevelgained}}
         勲章:{{ player.token }}
 				<div class="challenges-container">
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。
