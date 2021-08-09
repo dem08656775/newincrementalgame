@@ -190,7 +190,7 @@ Vue.createApp({
       }
       let amult = new Decimal(1)
       if(this.player.challengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].max(1))
-      this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).mul(amult).log10()
+
       for (let i = 1; i < 2; i++) {
         if(this.player.challengebonuses.includes(10)){
           this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i]))
@@ -213,6 +213,9 @@ Vue.createApp({
           this.buyGenerator(i)
         }
       }
+
+      this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).mul(amult).log10()
+
       setTimeout(this.update, this.player.tickspeed);
     },
     exportsave(){
@@ -322,15 +325,15 @@ Vue.createApp({
       if(index==2)this.autolevel = !this.autolevel
     },
     buyRewards(index){
-      if(this.player.token<this.challengedata.rewardcost[index]){
-        return;
-      }
       if(this.player.challengebonuses.includes(index)){
         if(this.player.challengebonuses.includes(4)){
           this.player.challengebonuses.splice(this.player.challengebonuses.indexOf(index),1)
           this.player.token += this.challengedata.rewardcost[index]
         }
       }else{
+        if(this.player.token<this.challengedata.rewardcost[index]){
+          return;
+        }
         this.player.challengebonuses.push(index)
         this.player.token -= this.challengedata.rewardcost[index]
       }

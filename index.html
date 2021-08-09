@@ -11,7 +11,12 @@
 	<div id="app">
 		<div class="container" v-cloak>
 			<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
-			<div id="tickspeed">間隙: {{ Math.round(player.tickspeed) }}毛秒</div>
+			<div id="tickspeed">
+				間隙: {{ Math.round(player.tickspeed) }}毛秒
+				<span v-if="player.accelerators[0].gt(0)">
+					時間加速器効果: {{ 1000/player.tickspeed }} 倍
+				</span>
+			</div>
 			<div class="tabs">
 				<span id="basic">
           <button type="button" @click="changeTab('basic')">通常</button>
@@ -100,8 +105,7 @@
 				<div class="challenges-container">
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。
           初めて挑戦に成功すると勲章が獲得でき、勲章を消費して様々な効力を得ることができます。
-          挑戦中は勲章を消費して得た効力は無効となります。
-          複数の挑戦を組み合わせることもできます。
+          複数の挑戦を組み合わせて、新たな挑戦として受けることもできます。
           <div class="challenge" v-for="i in 8" :key="i">
 					  <button type="button" class="challengeconfigbutton" :class="{ 'selected': player.challenges.includes(i-1) }" @click="configchallenge(i-1)">
               挑戦 {{ i }}
@@ -113,6 +117,7 @@
 						<button type="button" class="showclearedchallengesbutton" @click="showunclearedchallenges()">
 							未達成挑戦
 						</button>
+						{{ exported }}
 					</div>
           <br>
           <div v-if="!player.onchallenge">
