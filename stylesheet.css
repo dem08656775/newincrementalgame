@@ -25,7 +25,6 @@
 
 .accelerator{
   font-size: 24px;
-  text-align: right;
   vertical-align: middle;
   color: red;
 
@@ -72,6 +71,11 @@ button{
 }
 
 .rewardbutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.autobuyerbutton.selected{
   background: #000000;
   color: #FFFFFF;
 }

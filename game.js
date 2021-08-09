@@ -5,6 +5,7 @@ const initialData = () => {
     money: new Decimal(1),
     level: new Decimal(0),
     levelresettime: new Decimal(0),
+    maxlevelgained: new Decimal(1),
     token: 0,
 
     generators: new Array(8).fill(null).map(() => new Decimal(0)),
@@ -44,6 +45,7 @@ Vue.createApp({
         money: new Decimal(1),
         level: new Decimal(0),
         levelresettime: new Decimal(0),
+        maxlevelgained: new Decimal(1),
         token:0,
 
         generators: new Array(8).fill(null).map(() => new Decimal(0)),
@@ -76,7 +78,12 @@ Vue.createApp({
         challengecleared: [],
         challengebonuses:[]
       },
-      challengedata: new Challengedata()
+      challengedata: new Challengedata(),
+      exported: "",
+      genautobuy:false,
+      accautobuy:false,
+      autolevel:false
+
     }
   },
   computed: {
@@ -104,6 +111,7 @@ Vue.createApp({
     }
   },
   methods: {
+
     softCap(num,cap){
       if(num.lessThanOrEqualTo(cap)) return num;
       let capped = num.div(cap)
@@ -113,10 +121,10 @@ Vue.createApp({
 
     calcincrementmult(i,to){
       let mult = new Decimal(1);
-      if(!(this.player.onchallenge && this.player.challenges.includes(4))){
+      if(!this.player.challenges.includes(4)){
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
-      if(!(this.player.onchallenge && this.player.challenges.includes(7))){
+      if(!this.player.challenges.includes(7)){
         mult = mult.mul(this.softCap(this.player.levelresettime.add(1),new Decimal(100)))
       }
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
@@ -127,40 +135,94 @@ Vue.createApp({
         }
       }
 
-      if(!(this.player.onchallenge && this.player.challenges.includes(2))){
+      if(this.player.challenges.includes(2)){
+        let mm = this.player.generatorsBought[i]
+        if(this.player.challengebonuses.includes(11)){
+          mm = mm.mul(new Decimal(mm.add(2).log2()).round())
+        }
         if(i<highest && this.player.generatorsBought[i].greaterThan(0)){
-          mult = mult.mul(this.player.generatorsBought[i])
-        }else if(!this.player.onchallenge){
+          mult = mult.mul(mm)
+        }else{
           if(this.player.challengebonuses.includes(2) && this.player.generatorsBought[i].greaterThan(0)){
-            mult = mult.mul(this.player.generatorsBought[i])
+            mult = mult.mul(mm)
           }
         }
       }
 
-      if(!this.player.onchallenge){
-        if(this.player.challengebonuses.includes(3)){
-          mult = mult.mul(new Decimal(2))
-        }
+      if(this.player.challengebonuses.includes(3)){
+        mult = mult.mul(new Decimal(2))
       }
+
+      if(i==0&&this.player.challengebonuses.includes(7)){
+        mult = mult.mul(this.player.maxlevelgained)
+      }
+
 
       return mult;
 
     },
     update() {
       for (let i = 0; i < 8; i++) {
-        let to = this.player.generatorsMode[i];
-        let mult = this.calcincrementmult(i,to)
-        if (to === 0) {
-          this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
-        } else {
-          this.player.generators[to - 1] = this.player.generators[to - 1].add(this.player.generators[i].mul(mult))
+        if(!this.player.challengebonuses.includes(13)){
+          let to = this.player.generatorsMode[i];
+          let mult = this.calcincrementmult(i,to)
+          if (to === 0) {
+            this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
+          } else {
+            this.player.generators[to - 1] = this.player.generators[to - 1].add(this.player.generators[i].mul(mult))
+          }
+        }else{
+          if(this.player.onchallenge&&this.player.challenges.includes(3)){
+            let mult = this.calcincrementmult(i,0)
+            mult = mult.mul(i+1)
+            this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
+          }else{
+            for(let to = 0; to <= i; to++){
+            let mult = this.calcincrementmult(i,to)
+              if (to === 0) {
+                this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
+              } else {
+                this.player.generators[to - 1] = this.player.generators[to - 1].add(this.player.generators[i].mul(mult))
+              }
+            }
+          }
         }
       }
-      this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).log10()
+      let amult = new Decimal(1)
+      if(this.player.challengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].max(1))
+      this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).mul(amult).log10()
       for (let i = 1; i < 2; i++) {
-        this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
+        if(this.player.challengebonuses.includes(10)){
+          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i]))
+        }else{
+          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
+        }
+      }
+      if(!this.player.onchallenge && this.autolevel){
+        if(this.player.money.greaterThanOrEqualTo('1e18')){
+          this.resetLevel(true)
+        }
+      }
+      if(this.player.challengebonuses.includes(9)&&this.genautobuy){
+        for(let i=1;i>=0;i--){
+          this.buyAccelerator(i)
+        }
+      }
+      if(this.player.challengebonuses.includes(5)&&this.genautobuy){
+        for(let i=7;i>=0;i--){
+          this.buyGenerator(i)
+        }
       }
       setTimeout(this.update, this.player.tickspeed);
+    },
+    exportsave(){
+      this.exported = btoa(JSON.stringify(this.player))
+    },
+    importsave(){
+      let input = window.prompt("データを入力","")
+      input = atob(input)
+      localStorage.setItem("playerStored",input)
+      this.load()
     },
     save() {
       console.log(JSON.stringify(this.player))
@@ -174,6 +236,7 @@ Vue.createApp({
           money: new Decimal(saveData.money),
           level: new Decimal(saveData.level),
           levelresettime: new Decimal(saveData.levelresettime),
+          maxlevelgained: new Decimal(saveData.maxlevelgained ?? 1),
           token: saveData.token ?? 0,
 
           generators: saveData.generators.map(v => new Decimal(v)),
@@ -253,12 +316,24 @@ Vue.createApp({
             )
       }
     },
+    toggleautobuyer(index){
+      if(index==0)this.genautobuy = !this.genautobuy
+      if(index==1)this.accautobuy = !this.accautobuy
+      if(index==2)this.autolevel = !this.autolevel
+    },
     buyRewards(index){
-      if(index>3||this.player.challengebonuses.includes(index)||this.player.token<this.challengedata.rewardcost[index]){
+      if(this.player.token<this.challengedata.rewardcost[index]){
         return;
       }
-      this.player.challengebonuses.push(index)
-      this.player.token -= this.challengedata.rewardcost[index]
+      if(this.player.challengebonuses.includes(index)){
+        if(this.player.challengebonuses.includes(4)){
+          this.player.challengebonuses.splice(this.player.challengebonuses.indexOf(index),1)
+          this.player.token += this.challengedata.rewardcost[index]
+        }
+      }else{
+        this.player.challengebonuses.push(index)
+        this.player.token -= this.challengedata.rewardcost[index]
+      }
     },
     changeMode(index) {
       if(this.player.onchallenge && this.player.challenges.includes(3)) return;
@@ -280,20 +355,15 @@ Vue.createApp({
         }
       }
       let gainlevel = new Decimal(this.player.money.log10()).div(18).pow_base(2).round()
+      if(this.player.challengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
       if (force || confirm('昇段リセットして、段位' + gainlevel + 'を得ますか？')) {
         if(this.player.onchallenge) {
           this.player.token = this.player.token + 1
-          let challengeid = 0;
-          for(let i=0;i<8;i++){
-            challengeid *= 2
-            if(this.player.challenges.includes(i)){
-              challengeid += 1
-            }
-          }
-          this.player.challengecleared.push(challengeid)
+          this.player.challengecleared.push(this.calcchallengeid())
         }
         let nextlevel = this.player.level.add(force?new Decimal(0):gainlevel)
-        let nextlevelresettime = this.player.levelresettime.add(force?new Decimal(0):new Decimal(1))
+        let nextlevelresettime = this.player.levelresettime.add(new Decimal(force?0:this.player.challengebonuses.includes(8)?2:1))
+        let nextmaxlevelgained = this.player.maxlevelgained.max(force?new Decimal(0):gainlevel)
         let tkn = this.player.token
         let cls = this.player.challenges
         let clcleared = this.player.challengecleared
@@ -301,25 +371,53 @@ Vue.createApp({
         this.resetData(true);
         this.player.level = nextlevel
         this.player.levelresettime = nextlevelresettime
+        this.player.maxlevelgained = nextmaxlevelgained
         this.player.token = tkn
         this.player.challenges = cls
         this.player.challengecleared = clcleared
         this.player.challengebonuses = clbonuses
-        if(!force){
-          if(this.player.challengebonuses.includes(0))this.player.money = new Decimal(10001)
-          if(this.player.challengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
-        }
+
+        if(this.player.challengebonuses.includes(0))this.player.money = new Decimal(10001)
+        if(this.player.challengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
+
       }
     },
-    startChallenge(){
+    calcchallengeid(){
       let challengeid = 0;
       for(let i=0;i<8;i++){
         challengeid *= 2
         if(this.player.challenges.includes(i)){
           challengeid += 1
         }
+      }
+      return challengeid;
+    },
+    showunclearedchallenges(){
+      if(this.player.challengecleared.length == 255) return;
+      if(this.player.onchallenge) return;
+      let challengeid = this.calcchallengeid();
+
+      do{
+        if(challengeid == 0) {
+          challengeid = 128
+        }else {
+          let idx = this.challengedata.challengeids.indexOf(challengeid) + 1
+          if(idx==255) idx = 0
+          challengeid = this.challengedata.challengeids[idx]
+        }
+      }while(this.player.challengecleared.includes(challengeid));
+
+      let cls = [];
+      for(let i=7;i>=0;i--){
+        if(challengeid%2 == 1)cls.push(i)
+        challengeid = challengeid >>> 1
 
       }
+      this.player.challenges = cls;
+    },
+    startChallenge(){
+      let challengeid = this.calcchallengeid();
+
       if(challengeid == 0){
         alert("挑戦が一つも選択されていません。")
         return;
@@ -335,7 +433,6 @@ Vue.createApp({
         if(this.player.challenges.includes(3)){
           for(let i=0;i<8;i++){
             this.player.generatorsMode[i] = 0
-
           }
         }
       }
@@ -366,6 +463,7 @@ function readOldFormat(saveData) {
     money: new Decimal(saveData.money),
     level: new Decimal(saveData.level),
     levelresettime: new Decimal(saveData.levelresettime),
+    maxlevelgained: new Decimal(saveData.maxlevelgained ?? 0),
     token: saveData.token ?? 0,
 
     generators: [

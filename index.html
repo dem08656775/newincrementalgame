@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>新しい放置ゲーム</title>
+	<title>新しい放置ゲーム(1).file</title>
 	<link rel="stylesheet" href="stylesheet.css">
 </head>
 
@@ -21,6 +21,9 @@
         </span>
 				<span id="level" v-if="player.levelresettime.gt(0)">
           <button type="button" @click="changeTab('level')">段位</button>
+        </span>
+				<span id="auto" v-if="player.levelresettime.gt(0)">
+          <button type="button" @click="changeTab('auto')">自動</button>
         </span>
 			</div>
 			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
@@ -43,7 +46,7 @@
 						<span>
 							購入数: {{ player.generatorsBought[i-1].toNumber()+' '}}
 						</span>
-						<div class="mode-container" v-if="i > 1">
+						<div class="mode-container" v-if="i > 1 && !player.challengebonuses.includes(13)">
 							<span>モード: {{ player.generatorsMode[i-1] }}</span>
 							<button class="mode-button" @click="changeMode(i-1)">
 								変更
@@ -53,16 +56,24 @@
 				</div>
 				<div class="accelerators-container">
 					<div>
-						<span class="accelerator">時間加速器1: {{ player.accelerators[0] }}</span>
+						<div class="accelerator">時間加速器1: {{ player.accelerators[0].toNumber() }}
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[0]) }" @click="buyAccelerator(0)">
 							購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
 						</button>
+						<span>
+							購入数: {{ player.acceleratorsBought[0].toNumber()+' '}}
+						</span>
+					</div>
 					</div>
 					<div v-if="player.levelresettime.gt(0)">
-						<span class="accelerator">時間加速器2: {{ player.accelerators[1] }}</span>
+						<div class="accelerator">時間加速器2: {{ player.accelerators[1].toNumber() }}
 						<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[1]) }" @click="buyAccelerator(1)">
         			購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
       			</button>
+						<span>
+							購入数: {{ player.acceleratorsBought[1].toNumber()+' '}}
+						</span>
+					</div>
 					</div>
 				</div>
 			</div>
@@ -74,6 +85,15 @@
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
         </div>
+				<div class="export">
+					データ
+					<button type="button" id="exportsave" @click="exportsave()">データ吐き出し</button>
+					{{ exported }}
+				</div>
+				<div class="import">
+					データ
+					<button type="button" id="importsave" @click="importsave()">データ取り込み</button>
+				</div>
 			</div>
       <div v-show="player.currenttab == 'level'">
         勲章:{{ player.token }}
@@ -88,14 +108,21 @@
             </button>
 						<span> ・{{ challengedata.challengetext[i-1] }} </span>
 					</div>
+					<br>
+					<div>
+						<button type="button" class="showclearedchallengesbutton" @click="showunclearedchallenges()">
+							未達成挑戦
+						</button>
+						{{ exported }}
+					</div>
           <br>
           <div v-if="!player.onchallenge">
-            <button type="button" class="challengeconfigbutton" @click="startChallenge">
+            <button type="button" class="challengeconfigbutton" @click="startChallenge()">
               挑戦開始
             </button>
           </div>
           <div v-if="player.onchallenge">
-            <button type="button" class="challengeconfigbutton" @click="exitChallenge">
+            <button type="button" class="challengeconfigbutton" @click="exitChallenge()">
               挑戦放棄
             </button>
           </div>
@@ -109,6 +136,24 @@
 						<span> ・{{ challengedata.rewardtext[i-1] }} </span>
 					</div>
         </div>
+			</div>
+			<div v-show="player.currenttab == 'auto'">
+				自動購入機設定
+				<div v-if="player.challengebonuses.includes(5)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': genautobuy }" @click="toggleautobuyer(0)">
+						発生器自動購入器
+					</button>
+				</div>
+				<div v-if="player.challengebonuses.includes(9)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': accautobuy }" @click="toggleautobuyer(1)">
+						時間加速器自動購入器
+					</button>
+				</div>
+				<div v-if="player.challengebonuses.includes(14)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': autolevel }" @click="toggleautobuyer(2)">
+						自動昇段器
+					</button>
+				</div>
 			</div>
 			<div id="tweet">
 				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>
