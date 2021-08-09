@@ -203,7 +203,7 @@ Vue.createApp({
           this.resetLevel(true,false)
         }
       }
-      if(this.player.challengebonuses.includes(9)&&this.genautobuy){
+      if(this.player.challengebonuses.includes(9)&&this.accautobuy){
         for(let i=1;i>=0;i--){
           this.buyAccelerator(i)
         }
