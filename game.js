@@ -135,7 +135,7 @@ Vue.createApp({
         }
       }
 
-      if(this.player.challenges.includes(2)){
+      if(!this.player.challenges.includes(2)){
         let mm = this.player.generatorsBought[i]
         if(this.player.challengebonuses.includes(11)){
           mm = mm.mul(new Decimal(mm.add(2).log2()).round())
