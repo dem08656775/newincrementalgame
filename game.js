@@ -121,10 +121,10 @@ Vue.createApp({
 
     calcincrementmult(i,to){
       let mult = new Decimal(1);
-      if(!this.player.challenges.includes(4)){
+      if(!(this.player.onchallenge && this.player.challenges.includes(4))){
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
-      if(!this.player.challenges.includes(7)){
+      if(!(this.player.onchallenge && this.player.challenges.includes(7))){
         mult = mult.mul(this.softCap(this.player.levelresettime.add(1),new Decimal(100)))
       }
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
@@ -135,7 +135,7 @@ Vue.createApp({
         }
       }
 
-      if(!this.player.challenges.includes(2)){
+      if(!(this.player.onchallenge && this.player.challenges.includes(2))){
         let mm = this.player.generatorsBought[i]
         if(this.player.challengebonuses.includes(11)){
           mm = mm.mul(new Decimal(mm.add(2).log2()).round())
