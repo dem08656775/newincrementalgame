@@ -30,6 +30,11 @@
 
 }
 
+.levelitem{
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 button{
   border: .18em solid;
   font-size: 12px;
@@ -60,6 +65,14 @@ button{
   background: #808080;
 }
 
+.lbutton{
+  width:180px;
+}
+
+.lbutton.unavailable {
+  background: #B0B0B0;
+}
+
 .tweetconfigbutton.selected{
   background: #000000;
   color: #FFFFFF;
@@ -69,6 +82,7 @@ button{
   background: #000000;
   color: #FFFFFF;
 }
+
 
 .rewardbutton.selected{
   background: #000000;

@@ -8,6 +8,9 @@ const initialData = () => {
     maxlevelgained: new Decimal(1),
     token: 0,
 
+    rank:new Decimal(0),
+    rankresettime: new Decimal(0),
+
     generators: new Array(8).fill(null).map(() => new Decimal(0)),
     generatorsBought: new Array(8).fill(null).map(() => new Decimal(0)),
     generatorsCost: [
@@ -22,9 +25,18 @@ const initialData = () => {
     ],
     generatorsMode: new Array(8).fill(null).map((_, i) => i),
 
-    accelerators: [new Decimal(0), new Decimal(0)],
-    acceleratorsBought: [new Decimal(0), new Decimal(0)],
-    acceleratorsCost: [new Decimal(10), new Decimal('1e10')],
+    accelerators: new Array(8).fill(null).map(() => new Decimal(0)),
+    acceleratorsBought: new Array(8).fill(null).map(() => new Decimal(0)),
+    acceleratorsCost: [
+      new Decimal(10),
+      new Decimal('1e10'),
+      new Decimal('1e20'),
+      new Decimal('1e40'),
+      new Decimal('1e80'),
+      new Decimal('1e160'),
+      new Decimal('1e320'),
+      new Decimal('1e640'),
+    ],
 
     tickspeed: 1000,
     saveversion: version,
@@ -34,7 +46,10 @@ const initialData = () => {
     onchallenge:false,
     challenges:[],
     challengecleared:[],
-    challengebonuses:[]
+    challengebonuses:[],
+
+    levelitems:[0,0]
+
   }
 }
 
@@ -47,6 +62,9 @@ Vue.createApp({
         levelresettime: new Decimal(0),
         maxlevelgained: new Decimal(1),
         token:0,
+
+        rank:new Decimal(0),
+        rankresettime: new Decimal(0),
 
         generators: new Array(8).fill(null).map(() => new Decimal(0)),
         generatorsBought: new Array(8).fill(null).map(() => new Decimal(0)),
@@ -62,9 +80,18 @@ Vue.createApp({
         ],
         generatorsMode: new Array(8).fill(null).map((_, i) => i),
 
-        accelerators: [new Decimal(0), new Decimal(0)],
-        acceleratorsBought: [new Decimal(0), new Decimal(0)],
-        acceleratorsCost: [new Decimal(10), new Decimal('1e10')],
+        accelerators: new Array(8).fill(null).map(() => new Decimal(0)),
+        acceleratorsBought: new Array(8).fill(null).map(() => new Decimal(0)),
+        acceleratorsCost: [
+          new Decimal(10),
+          new Decimal('1e10'),
+          new Decimal('1e20'),
+          new Decimal('1e40'),
+          new Decimal('1e80'),
+          new Decimal('1e160'),
+          new Decimal('1e320'),
+          new Decimal('1e640'),
+        ],
 
         tickspeed: 1000,
         saveversion: version,
@@ -76,9 +103,12 @@ Vue.createApp({
         onchallenge: false,
         challenges: [],
         challengecleared: [],
-        challengebonuses:[]
+        challengebonuses:[],
+
+        levelitems:[0,0],
       },
       challengedata: new Challengedata(),
+      levelshopdata: new Levelshopdata(),
       exported: "",
       genautobuy:false,
       accautobuy:false,
@@ -116,7 +146,16 @@ Vue.createApp({
       if(num.lessThanOrEqualTo(cap)) return num;
       let capped = num.div(cap)
       capped = new Decimal(capped.log2()).add(1)
-      return cap.mul(capped)
+      return cap.mul(capped).min(num)
+    },
+
+    calcaccost(){
+      for(let i=0;i<8;i++){
+        let p = this.player.acceleratorsBought[i].add(1)
+        p = p.mul(p.add(1)).div(2)
+        p = p.mul(i === 0 ? 1:new Decimal(10).mul(new Decimal(2).pow(i-1)))
+        this.player.acceleratorsCost[i] = p.pow_base(10)
+      }
     },
 
     calcincrementmult(i,to){
@@ -125,7 +164,8 @@ Vue.createApp({
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
       if(!(this.player.onchallenge && this.player.challenges.includes(7))){
-        mult = mult.mul(this.softCap(this.player.levelresettime.add(1),new Decimal(100)))
+        let cap = new Decimal(100).mul(new Decimal(2).pow(this.player.levelitems[0]))
+        mult = mult.mul(this.softCap(this.player.levelresettime.add(1),cap))
       }
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
       let highest = 0;
@@ -191,20 +231,21 @@ Vue.createApp({
       let amult = new Decimal(1)
       if(this.player.challengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].max(1))
 
-      for (let i = 1; i < 2; i++) {
+      for (let i = 1; i < 8; i++) {
         if(this.player.challengebonuses.includes(10)){
           this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i]))
         }else{
           this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i])
         }
       }
-      if(!this.player.onchallenge && this.autolevel){
+      if(!this.player.onchallenge && this.player.challengebonuses.includes(14) && this.autolevel){
         if(this.player.money.greaterThanOrEqualTo('1e18')){
           this.resetLevel(true,false)
         }
       }
       if(this.player.challengebonuses.includes(9)&&this.accautobuy){
-        for(let i=1;i>=0;i--){
+        let ha = this.player.levelitems[1] + 1
+        for(let i=ha;i>=0;i--){
           this.buyAccelerator(i)
         }
       }
@@ -234,6 +275,12 @@ Vue.createApp({
     load() {
       if (!localStorage.getItem("playerStored")) return
       let saveData = JSON.parse(localStorage.getItem("playerStored"));
+      if(saveData.saveversion === version){
+        while(saveData.accelerators.length<8)saveData.accelerators.push('0')
+        while(saveData.acceleratorsBought.length<8)saveData.acceleratorsBought.push('0')
+        saveData.acceleratorsBought = saveData.acceleratorsBought.map(v => new Decimal(v))
+        while(saveData.acceleratorsCost.length<8)saveData.acceleratorsCost.push('0')
+      }
       this.player = parseInt(saveData.saveversion) === version ?
         {
           money: new Decimal(saveData.money),
@@ -241,6 +288,9 @@ Vue.createApp({
           levelresettime: new Decimal(saveData.levelresettime),
           maxlevelgained: new Decimal(saveData.maxlevelgained ?? 1),
           token: saveData.token ?? 0,
+
+          rank: new Decimal(saveData.rank ?? 0),
+          rankresettime: new Decimal(saveData.rank ?? 0),
 
           generators: saveData.generators.map(v => new Decimal(v)),
           generatorsBought: saveData.generatorsBought.map(v => new Decimal(v)),
@@ -262,8 +312,12 @@ Vue.createApp({
           challenges: saveData.challenges ?? [],
           challengecleared: saveData.challengecleared ?? [],
           challengebonuses: saveData.challengebonuses ?? [],
+
+          levelitems: saveData.levelitems ?? [0,0],
+
         } :
         readOldFormat(saveData);
+      this.calcaccost()
     },
     changeTab(tabname){
       this.player.currenttab = tabname;
@@ -307,16 +361,7 @@ Vue.createApp({
         this.player.money = this.player.money.sub(this.player.acceleratorsCost[index])
         this.player.accelerators[index] = this.player.accelerators[index].add(1)
         this.player.acceleratorsBought[index] = this.player.acceleratorsBought[index].add(1)
-        this.player.acceleratorsCost[index] = index === 0 ?
-          this.player.acceleratorsCost[0] = this.player.acceleratorsCost[0].mul(
-            this.player.acceleratorsBought[0].add(1).pow_base(10)
-          ) :
-          new Decimal('1e10')
-            .pow(
-              this.player.acceleratorsBought[index]
-                .add(1)
-                .mul(this.player.acceleratorsBought[index].add(index + 1)).div(index + 1)
-            )
+        this.calcaccost()
       }
     },
     toggleautobuyer(index){
@@ -338,6 +383,14 @@ Vue.createApp({
         this.player.token -= this.challengedata.rewardcost[index]
       }
     },
+    buylevelitems(index){
+      let cost = this.levelshopdata.itemcost[index].pow(this.player.levelitems[index]+1)
+      if(this.player.level.lessThan(cost) || this.player.levelitems[index]>=5){
+        return;
+      }
+      this.player.level = this.player.level.sub(cost);
+      this.player.levelitems[index] = this.player.levelitems[index]+1;
+    },
     changeMode(index) {
       if(this.player.onchallenge && this.player.challenges.includes(3)) return;
       this.player.generatorsMode[index] += 1;
@@ -357,7 +410,9 @@ Vue.createApp({
           return;
         }
       }
-      let gainlevel = new Decimal(this.player.money.log10()).div(18).pow_base(2).round()
+      let dividing = 19-this.player.rank.add(2).log2()
+      if(dividing<1) dividing = 1
+      let gainlevel = new Decimal(this.player.money.log10()).div(dividing).pow_base(2).round()
       if(this.player.challengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
       if (force || confirm('昇段リセットして、段位' + gainlevel + 'を得ますか？')) {
         if(this.player.onchallenge) {
@@ -365,12 +420,14 @@ Vue.createApp({
           this.player.challengecleared.push(this.calcchallengeid())
         }
         let nextlevel = this.player.level.add(exit?new Decimal(0):gainlevel)
-        let nextlevelresettime = this.player.levelresettime.add(new Decimal(exit?0:this.player.challengebonuses.includes(8)?2:1))
+        let nextlevelresettime = this.player.levelresettime.add(this.player.rankresettime.add(1).mul(new Decimal(exit?0:this.player.challengebonuses.includes(8)?2:1)))
         let nextmaxlevelgained = this.player.maxlevelgained.max(exit?new Decimal(0):gainlevel)
         let tkn = this.player.token
         let cls = this.player.challenges
         let clcleared = this.player.challengecleared
         let clbonuses = this.player.challengebonuses
+
+        let lvi = this.player.levelitems
         this.resetData(true);
         this.player.level = nextlevel
         this.player.levelresettime = nextlevelresettime
@@ -379,6 +436,37 @@ Vue.createApp({
         this.player.challenges = cls
         this.player.challengecleared = clcleared
         this.player.challengebonuses = clbonuses
+        this.player.levelitems = lvi
+
+        if(this.player.challengebonuses.includes(0))this.player.money = new Decimal(10001)
+        if(this.player.challengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
+
+      }
+    },
+    resetRank(){
+      let gainrank = new Decimal(this.player.money.log10()).div(36).pow_base(2).round()
+      if(confirm('昇階リセットして、階位' + gainrank + 'を得ますか？')){
+
+        let nextrank = this.player.rank.add(gainrank)
+        let nextrankresettime = this.player.rankresettime.add(new Decimal(1))
+
+        let mlg = this.player.maxlevelgained
+        let tkn = this.player.token
+
+        let clcleared = this.player.challengecleared
+        let clbonuses = this.player.challengebonuses
+
+        this.resetData(true)
+
+        this.player.rank = nextrank
+        this.player.rankresettime = nextrankresettime
+
+        this.player.maxlevelgained = mlg
+        this.player.token = tkn
+
+        this.player.challengecleared = clcleared
+        this.player.challengebonuses = clbonuses
+
 
         if(this.player.challengebonuses.includes(0))this.player.money = new Decimal(10001)
         if(this.player.challengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
@@ -469,6 +557,9 @@ function readOldFormat(saveData) {
     maxlevelgained: new Decimal(saveData.maxlevelgained ?? 0),
     token: saveData.token ?? 0,
 
+    rank: new Decimal(saveData.rank ?? 0),
+    rankresettime: new Decimal(saveData.rank ?? 0),
+
     generators: [
       new Decimal(saveData.generator1 ?? 0),
       new Decimal(saveData.generator2 ?? 0),
@@ -532,6 +623,8 @@ function readOldFormat(saveData) {
     onchallenge: saveData.onchallenge ?? false,
     challenges: saveData.challenges ?? [],
     challengecleared: saveData.challengecleared ?? [],
-    challengebonuses: saveData.challengebonuses ?? []
+    challengebonuses: saveData.challengebonuses ?? [],
+
+    levelitems: saveData.levelitems ?? [],
   }
 }
