@@ -290,7 +290,7 @@ Vue.createApp({
           token: saveData.token ?? 0,
 
           rank: new Decimal(saveData.rank ?? 0),
-          rankresettime: new Decimal(saveData.rank ?? 0),
+          rankresettime: new Decimal(saveData.rankresettime ?? 0),
 
           generators: saveData.generators.map(v => new Decimal(v)),
           generatorsBought: saveData.generatorsBought.map(v => new Decimal(v)),
@@ -422,6 +422,8 @@ Vue.createApp({
         let nextlevel = this.player.level.add(exit?new Decimal(0):gainlevel)
         let nextlevelresettime = this.player.levelresettime.add(this.player.rankresettime.add(1).mul(new Decimal(exit?0:this.player.challengebonuses.includes(8)?2:1)))
         let nextmaxlevelgained = this.player.maxlevelgained.max(exit?new Decimal(0):gainlevel)
+        let rk = this.player.rank
+        let rkt = this.player.rankresettime
         let tkn = this.player.token
         let cls = this.player.challenges
         let clcleared = this.player.challengecleared
@@ -432,6 +434,8 @@ Vue.createApp({
         this.player.level = nextlevel
         this.player.levelresettime = nextlevelresettime
         this.player.maxlevelgained = nextmaxlevelgained
+        this.player.rank = rk
+        this.player.rankresettime = rtk
         this.player.token = tkn
         this.player.challenges = cls
         this.player.challengecleared = clcleared
