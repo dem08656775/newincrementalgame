@@ -24,10 +24,13 @@
 				<span id="option">
           <button type="button" @click="changeTab('option')">設定</button>
         </span>
-				<span id="level" v-if="player.levelresettime.gt(0)">
+				<span id="level" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
           <button type="button" @click="changeTab('level')">段位</button>
         </span>
-				<span id="auto" v-if="player.levelresettime.gt(0)">
+				<span id="rank" v-if="player.rankresettime.gt(0)">
+          <button type="button" @click="changeTab('rank')">階位</button>
+        </span>
+				<span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
           <button type="button" @click="changeTab('auto')">自動</button>
         </span>
 			</div>
@@ -35,9 +38,15 @@
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
 					段位: {{ player.level.toNumber() }} 段位リセット: {{ player.levelresettime.toNumber() }}回
 				</div>
+				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
+					階位: {{ player.rank.toNumber() }} 階位リセット: {{ player.rankresettime.toNumber() }}回
+				</div>
 				<div class="softreset">
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
 						<button type="button" @click="resetLevel(false,false)">昇段リセット</button>
+					</div>
+					<div id="rankreset" v-if="player.money.greaterThanOrEqualTo('1e36')">
+						<button type="button" @click="resetRank()">昇階リセット</button>
 					</div>
 				</div>
 				<div class="generators-container">
@@ -78,7 +87,18 @@
 						<span>
 							購入数: {{ player.acceleratorsBought[1].toNumber()+' '}}
 						</span>
-					</div>
+						</div>
+						<div class="accelerator" v-for="i in 6" :key="i">
+							<div v-show="player.levelitems[1]>=i">
+								時間加速器{{i+2}}: {{ player.accelerators[i+1].toNumber() }}
+								<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[i+1]) }" @click="buyAccelerator(i+1)">
+        					購入 コスト: {{ player.acceleratorsCost[i+1].toExponential(1) }}
+      					</button>
+								<span>
+									購入数: {{ player.acceleratorsBought[i+1].toNumber()+' '}}
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -141,6 +161,19 @@
 					</div>
         </div>
 			</div>
+			<div v-show="player.currenttab == 'rank'">
+				<div class="levelshop">
+					段位捧所:段位捧所では、段位を消費することによって強化を購入することができます。
+					<br>
+					<div class="levelitem" v-for="i in 2" :key="i">
+					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(levelshopdata.itemcost[i-1].pow(player.levelitems[i-1]+1)) }" @click="buylevelitems(i-1)">
+              段位効力 {{ i }}: コスト {{ levelshopdata.itemcost[i-1].pow(this.player.levelitems[i-1]+1).toExponential(1) }}
+            </button>
+						<span> ・{{ levelshopdata.itemtext[i-1] }} </span>
+						<span> 取得数: {{ player.levelitems[i-1] }}
+					</div>
+				</div>
+			</div>
 			<div v-show="player.currenttab == 'auto'">
 				自動購入機設定
 				<div v-if="player.challengebonuses.includes(5)">
@@ -167,6 +200,7 @@
 	<script src="https://unpkg.com/vue@next"></script>
 	<script type="text/javascript" src="break_infinity.js"></script>
 	<script type="text/javascript" src="challenge.js"></script>
+	<script type="text/javascript" src="rank.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>
