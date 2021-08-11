@@ -46,6 +46,10 @@ button{
   vertical-align: middle;
 }
 
+button:not(.unavailable) {
+  cursor: pointer;
+}
+
 .gbutton{
   background: #FFFFFF;
   color: #000000;
