@@ -438,7 +438,7 @@ Vue.createApp({
         this.player.levelresettime = nextlevelresettime
         this.player.maxlevelgained = nextmaxlevelgained
         this.player.rank = rk
-        this.player.rankresettime = rtk
+        this.player.rankresettime = rkt
         this.player.token = tkn
         this.player.challenges = cls
         this.player.challengecleared = clcleared
