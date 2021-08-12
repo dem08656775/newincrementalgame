@@ -129,6 +129,9 @@ Vue.createApp({
       if(this.player.tweeting.includes('achieved')){
         tweetText += '挑戦達成:' + this.player.challengecleared.length + '%0A';
       }
+      if(this.player.tweeting.includes('rank')){
+        tweetText += '階位:' + this.player.rank + '%0A';
+      }
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
 
@@ -435,7 +438,7 @@ Vue.createApp({
         this.player.levelresettime = nextlevelresettime
         this.player.maxlevelgained = nextmaxlevelgained
         this.player.rank = rk
-        this.player.rankresettime = rkt
+        this.player.rankresettime = rtk
         this.player.token = tkn
         this.player.challenges = cls
         this.player.challengecleared = clcleared
