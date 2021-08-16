@@ -128,6 +128,7 @@
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。
           初めて挑戦に成功すると勲章が獲得でき、勲章を消費して様々な効力を得ることができます。
           複数の挑戦を組み合わせて、新たな挑戦として受けることもできます。
+					挑戦中は効力が無効になります。
           <div class="challenge" v-for="i in 8" :key="i">
 					  <button type="button" class="challengeconfigbutton" :class="{ 'selected': player.challenges.includes(i-1) }" @click="configchallenge(i-1)">
               挑戦 {{ i }}
