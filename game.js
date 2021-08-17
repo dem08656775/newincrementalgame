@@ -416,18 +416,22 @@ Vue.createApp({
           return;
         }
       }
+
       let dividing = 19-this.player.rank.add(2).log2()
       if(dividing<1) dividing = 1
       let gainlevel = new Decimal(this.player.money.log10()).div(dividing).pow_base(2).round()
       if(this.activechallengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
+      let gainlevelreset =  this.player.rankresettime.add(1).mul(new Decimal(exit?0:this.activechallengebonuses.includes(8)?2:1))
+
       if (force || confirm('昇段リセットして、段位' + gainlevel + 'を得ますか？')) {
         if(this.player.onchallenge) {
           this.player.token = this.player.token + 1
           this.activechallengebonuses = this.player.challengebonuses;
           this.player.challengecleared.push(this.calcchallengeid())
         }
+        
         let nextlevel = this.player.level.add(exit?new Decimal(0):gainlevel)
-        let nextlevelresettime = this.player.levelresettime.add(this.player.rankresettime.add(1).mul(new Decimal(exit?0:this.activechallengebonuses.includes(8)?2:1)))
+        let nextlevelresettime = this.player.levelresettime.add(gainlevelreset)
         let nextmaxlevelgained = this.player.maxlevelgained.max(exit?new Decimal(0):gainlevel)
         let rk = this.player.rank
         let rkt = this.player.rankresettime
