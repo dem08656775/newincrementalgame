@@ -515,6 +515,7 @@ Vue.createApp({
 
         let mlg = this.player.maxlevelgained
         let tkn = this.player.token
+        let sh = this.player.shine
 
         let clcleared = this.player.challengecleared
         let clbonuses = this.player.challengebonuses
@@ -528,6 +529,7 @@ Vue.createApp({
 
         this.player.maxlevelgained = mlg
         this.player.token = tkn
+        this.player.shine = sh
 
         this.player.challengecleared = clcleared
         this.player.challengebonuses = clbonuses
