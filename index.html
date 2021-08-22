@@ -33,6 +33,9 @@
 				<span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
           <button type="button" @click="changeTab('auto')">自動</button>
         </span>
+				<span id="shine" v-if="player.challengecleared.length >= 64">
+					<button type="button" @click="changeTab('shine')">輝き</button>
+				</span>
 			</div>
 			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
@@ -194,6 +197,17 @@
 					</button>
 				</div>
 			</div>
+			<div v-show="player.currenttab == 'shine'">
+				<div>
+				輝き所持数:{{ player.shine }}
+					<button type="button" class="spendshinebutton"  @click="spendshine()">
+						輝き消費
+					</button>
+				</div>
+				<div>輝き入手率: {{ Math.round(shinedata.getp(player.challengecleared.length) * 100) }}%</div>
+				<div>最大輝き保有率: {{ shinedata.getmaxshine(player.challengecleared.length)　}}</div>
+
+			</div>
 			<div id="tweet">
 				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>
 			</div>
@@ -203,6 +217,7 @@
 	<script type="text/javascript" src="break_infinity.js"></script>
 	<script type="text/javascript" src="challenge.js"></script>
 	<script type="text/javascript" src="rank.js"></script>
+	<script type="text/javascript" src="shine.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>
