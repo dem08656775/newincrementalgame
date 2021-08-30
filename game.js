@@ -119,6 +119,7 @@ Vue.createApp({
       genautobuy:false,
       accautobuy:false,
       autolevel:false,
+      autolevelnumber:new Decimal(2),
 
       shinepersent:0,
 
@@ -280,7 +281,11 @@ Vue.createApp({
 
       if(!this.player.onchallenge && this.activechallengebonuses.includes(14) && this.autolevel){
         if(this.player.money.greaterThanOrEqualTo('1e18')){
-          this.resetLevel(true,false)
+          let dividing = 19-this.player.rank.add(2).log2()
+          if(dividing<1) dividing = 1
+          if(new Decimal(this.player.money.log10()).div(dividing).pow_base(2).round().greaterThanOrEqualTo(this.autolevelnumber)){
+              this.resetLevel(true,false)
+          }
         }
       }
       if(this.activechallengebonuses.includes(9)&&this.accautobuy){
@@ -406,6 +411,11 @@ Vue.createApp({
         this.player.acceleratorsBought[index] = this.player.acceleratorsBought[index].add(1)
         this.calcaccost()
       }
+    },
+    configautobuyer(){
+      let input = window.prompt("リセット時入手段位を設定","")
+      input = new Decimal(input)
+      this.autolevelnumber = input
     },
     toggleautobuyer(index){
       if(index==0)this.genautobuy = !this.genautobuy

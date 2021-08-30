@@ -195,6 +195,10 @@
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': autolevel }" @click="toggleautobuyer(2)">
 						自動昇段器
 					</button>
+					<button type="button" class="autobuyerbutton" @click="configautobuyer()">
+						自動昇段器設定
+					</button>
+					現在: {{ autolevelnumber.toNumber() }}
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">
