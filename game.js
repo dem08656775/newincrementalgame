@@ -228,12 +228,12 @@ Vue.createApp({
           }
         }else{
           if(this.player.onchallenge&&this.player.challenges.includes(3)){
-            let mult = this.calcincrementmult(i,0)
+            let mult = mu.mul(this.calcincrementmult(i,0))
             mult = mult.mul(i+1)
             this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
           }else{
             for(let to = 0; to <= i; to++){
-            let mult = this.calcincrementmult(i,to)
+            let mult = mu.mul(this.calcincrementmult(i,to))
               if (to === 0) {
                 this.player.money = this.player.money.add(this.player.generators[i].mul(mult))
               } else {
@@ -257,11 +257,12 @@ Vue.createApp({
       }
     },
 
-    spendshine(){
-      if(this.player.shine==0)return;
-      this.player.shine--;
-      this.updategenerators(new Decimal(1))
-      this.updateaccelerators(new Decimal(1))
+    spendshine(num){
+      if(this.player.shine<num)return;
+      this.player.shine -= num
+      let val = new Decimal(11).pow(new Decimal(num).log10())
+      this.updategenerators(new Decimal(val))
+      this.updateaccelerators(new Decimal(val))
     },
 
     update() {

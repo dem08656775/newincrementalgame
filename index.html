@@ -204,8 +204,14 @@
 			<div v-show="player.currenttab == 'shine'">
 				<div>
 				輝き所持数:{{ player.shine }}
-					<button type="button" class="spendshinebutton"  @click="spendshine()">
-						輝き消費
+					<button type="button" class="spendshinebutton"  @click="spendshine(1)">
+						輝き消費:1
+					</button>
+					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 96" @click="spendshine(10)">
+						輝き消費:10
+					</button>
+					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 128" @click="spendshine(100)">
+						輝き消費:100
 					</button>
 				</div>
 				<div>輝き入手率: {{ Math.round(shinedata.getp(player.challengecleared.length) * 100) }}%</div>
