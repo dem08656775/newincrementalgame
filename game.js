@@ -49,7 +49,8 @@ const initialData = () => {
     challengecleared:[],
     challengebonuses:[],
 
-    levelitems:[0,0]
+    levelitems:[0,0],
+    time: new Date().getTime(),
 
   }
 }
@@ -122,7 +123,7 @@ Vue.createApp({
       autolevelnumber:new Decimal(2),
 
       shinepersent:0,
-
+      time: new Date().getTime(),
 
     }
   },
@@ -245,8 +246,6 @@ Vue.createApp({
       }
     },
 
-
-
     updateaccelerators(mu){
       for (let i = 1; i < 8; i++) {
         if(this.activechallengebonuses.includes(10)){
@@ -263,6 +262,19 @@ Vue.createApp({
       let val = new Decimal(11).pow(new Decimal(num).log10())
       this.updategenerators(new Decimal(val))
       this.updateaccelerators(new Decimal(val))
+    },
+    
+    updateFrame() {
+      const currentTime = new Date().getTime();
+      this.player.time = Math.max(this.player.time, currentTime - 3600 * 1000);
+      for (let i = 0; i < 100; ++i) {
+        const next = this.player.time + this.player.tickspeed;
+        const currentTime2 = new Date().getTime();
+        if (currentTime2 - currentTime >= 8) { return; }
+        if (currentTime < next) { return; }
+        this.player.time = next;
+        this.update();
+      }
     },
 
     update() {
@@ -302,8 +314,6 @@ Vue.createApp({
       }
 
       this.player.tickspeed = 1000 / this.player.accelerators[0].add(10).mul(amult).log10()
-
-      setTimeout(this.update, this.player.tickspeed);
     },
     exportsave(){
       this.exported = btoa(JSON.stringify(this.player))
@@ -362,6 +372,7 @@ Vue.createApp({
           challengebonuses: saveData.challengebonuses ?? [],
 
           levelitems: saveData.levelitems ?? [0,0],
+          time: saveData.time ?? new Date().getTime(),
 
         } :
         readOldFormat(saveData);
@@ -624,8 +635,7 @@ Vue.createApp({
   },
   mounted() {
     this.load();
-
-    setTimeout(this.update, this.player.tickspeed);
+    setInterval(this.updateFrame, 16);
     setInterval(this.save, 2000);
   },
 }).mount('#app');
@@ -708,5 +718,6 @@ function readOldFormat(saveData) {
     challengebonuses: saveData.challengebonuses ?? [],
 
     levelitems: saveData.levelitems ?? [],
+    time: saveData.time ?? new Date().time(),
   }
 }
