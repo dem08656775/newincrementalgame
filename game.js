@@ -333,7 +333,7 @@ Vue.createApp({
     importsave(){
       let input = window.prompt("データを入力","")
       localStorage.setItem("playerStoredb",input)
-      this.load()
+      this.load(0)
     },
     save() {
 
