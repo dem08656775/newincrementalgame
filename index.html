@@ -36,6 +36,12 @@
 				<span id="shine" v-if="player.challengecleared.length >= 64">
 					<button type="button" @click="changeTab('shine')">輝き</button>
 				</span>
+				<span id="world" v-if="worldopened[1] || worldopened[2]">
+					<button type="button" @click="changeTab('world')">世界</button>
+				</span>
+				<span id="trophy" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || world!=0">
+					<button type="button" @click="changeTab('trophy')">実績</button>
+				</span>
 			</div>
 			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
@@ -175,7 +181,7 @@
               段位効力 {{ i }}: コスト {{ levelshopdata.itemcost[i-1].pow(this.player.levelitems[i-1]+1).toExponential(1) }}
             </button>
 						<span> ・{{ levelshopdata.itemtext[i-1] }} </span>
-						<span> 取得数: {{ player.levelitems[i-1] }}
+						<span> 取得数: {{ player.levelitems[i-1] }} </span>
 					</div>
 				</div>
 			</div>
@@ -218,6 +224,21 @@
 				<div>最大輝き保有率: {{ shinedata.getmaxshine(player.challengecleared.length)　}}</div>
 
 			</div>
+			<div v-show="player.currenttab == 'world'">
+				記憶: {{ memory }}
+				<div class="worlds" v-for="i in 10" :key="i">
+					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
+						世界 {{ i }}
+					</button>
+				</div>
+			</div>
+			<div v-show="player.currenttab == 'trophy'">
+				<div class="levelitem" v-for="i in 4" :key="i">
+					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
+						実績 {{ i }}: {{ gettrophyname(i-1) }}
+					</button>
+				</div>
+			</div>
 			<div id="tweet">
 				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>
 			</div>
@@ -228,6 +249,7 @@
 	<script type="text/javascript" src="challenge.js"></script>
 	<script type="text/javascript" src="rank.js"></script>
 	<script type="text/javascript" src="shine.js"></script>
+	<script type="text/javascript" src="trophy.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>
