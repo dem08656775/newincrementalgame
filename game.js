@@ -355,6 +355,7 @@ Vue.createApp({
         this.players = JSON.parse(atob(localStorage.getItem("playerStoredb")))
         saveData = this.players[world]
       }
+      this.world = world
       console.log(saveData)
       if(saveData.saveversion === version){
         while(saveData.accelerators.length<8)saveData.accelerators.push('0')
