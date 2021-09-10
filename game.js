@@ -332,6 +332,9 @@ Vue.createApp({
     },
     importsave(){
       let input = window.prompt("データを入力","")
+      let k = atob(input).charAt(0)
+      console.log(k)
+      if(k=='{') return
       localStorage.setItem("playerStoredb",input)
       this.load(0)
     },
@@ -350,9 +353,8 @@ Vue.createApp({
       let saveData = JSON.parse(localStorage.getItem("playerStored"));
       if (localStorage.getItem("playerStoredb")) {
         this.players = JSON.parse(atob(localStorage.getItem("playerStoredb")))
-        saveData = this.players[world]　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+        saveData = this.players[world]
       }
-      this.world = world
       console.log(saveData)
       if(saveData.saveversion === version){
         while(saveData.accelerators.length<8)saveData.accelerators.push('0')
