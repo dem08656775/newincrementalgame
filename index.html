@@ -119,6 +119,8 @@
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rank') }" @click="configtweet('rank')" v-if="player.rankresettime.gt(0)">階位</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('world') }" @click="configtweet('world')" v-if="worldopened[1] || worldopened[2]">世界</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('memory') }" @click="configtweet('memory')" v-if="worldopened[1] || worldopened[2]">記憶</button>
 				</div>
 				<div class="export">
 					データ
@@ -226,6 +228,9 @@
 			</div>
 			<div v-show="player.currenttab == 'world'">
 				記憶: {{ memory }}
+				<div>
+					記憶は、他世界での実績の個数の合計です。記憶が多くなるほど、発生器の生産量が増加します。
+				</div>
 				<div class="worlds" v-for="i in 10" :key="i">
 					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
 						世界 {{ i }}

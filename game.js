@@ -143,6 +143,12 @@ Vue.createApp({
   computed: {
     tweetLink() {
       let tweetText = "";
+      if(this.player.tweeting.includes('world')){
+        tweetText += '在住世界:' + (this.world+1) + '%0A';
+      }
+      if(this.player.tweeting.includes('memory')){
+        tweetText += '記憶:' + this.memory + '%0A';
+      }
       if(this.player.tweeting.includes('money')){
         tweetText += 'ポイント:' + this.player.money +
         '(' + this.player.money.toExponential().replace('+', '%2B') + ')%0A';
@@ -329,13 +335,13 @@ Vue.createApp({
     },
     exportsave(){
       this.exported = btoa(JSON.stringify(this.players))
-    },
+                                                                                                                                                                                                     },
     importsave(){
       let input = window.prompt("データを入力","")
       let k = atob(input).charAt(0)
       console.log(k)
       if(k=='{') return
-      localStorage.setItem("playerStoredb",input)
+      localStorage.setItem("playerStoredb",atob(input))
       this.load(0)
     },
     save() {
@@ -344,7 +350,7 @@ Vue.createApp({
 
       this.players[this.world] = this.player
 
-      localStorage.setItem("playerStored", JSON.stringify(this.player));
+      //localStorage.setItem("playerStored", JSON.stringify(this.player));
       localStorage.setItem("playerStoredb", btoa(JSON.stringify(this.players)));
     },
     load(world) {
