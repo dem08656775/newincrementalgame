@@ -335,13 +335,13 @@ Vue.createApp({
     },
     exportsave(){
       this.exported = btoa(JSON.stringify(this.players))
-                                                                                                                                                                                                     },
+    },
     importsave(){
       let input = window.prompt("データを入力","")
       let k = atob(input).charAt(0)
       console.log(k)
       if(k=='{') return
-      localStorage.setItem("playerStoredb",atob(input))
+      localStorage.setItem("playerStoredb",input)
       this.load(0)
     },
     save() {
