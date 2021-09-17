@@ -350,7 +350,7 @@ Vue.createApp({
 
       this.players[this.world] = this.player
 
-      //localStorage.setItem("playerStored", JSON.stringify(this.player));
+      localStorage.setItem("playerStored", JSON.stringify(this.player));
       localStorage.setItem("playerStoredb", btoa(JSON.stringify(this.players)));
     },
     load(world) {
