@@ -180,7 +180,7 @@
 					段位を捧げた回数に応じて、捧げるべき段位の量が少なくなります。
 					<br>
 					<div class="levelitem" v-for="i in 5" :key="i">
-					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(levelshopdata.itemcost[i-1].pow(player.levelitems[i-1]+1)) }" @click="buylevelitems(i-1)">
+					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(calclevelitemcost(i-1)) }" @click="buylevelitems(i-1)">
               段位効力 {{ i }}: コスト {{ calclevelitemcost(i-1).toExponential(1) }}
             </button>
 						<span> ・{{ levelshopdata.itemtext[i-1] }} </span>
