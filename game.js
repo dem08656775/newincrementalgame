@@ -544,11 +544,13 @@ Vue.createApp({
       let glmax = this.player.maxlevelgained.div(2)
 
       if(!glmin.add(0.1).greaterThanOrEqualTo(glmax)) {
-        let persent = new Decimal(1).sub(gainlevel.sub(glmin).div(glmax.sub(glmin)))
+        if(gainlevel.lt(glmax)){
+          let persent = new Decimal(1).sub(gainlevel.sub(glmin).div(glmax.sub(glmin)))
 
-        persent = persent.pow(1+this.player.levelitems[0])
-        persent = new Decimal(1).sub(persent)
-        gainlevel = glmax.sub(glmin).mul(persent).add(glmin)
+          persent = persent.pow(1+this.player.levelitems[0])
+          persent = new Decimal(1).sub(persent)
+          gainlevel = glmax.sub(glmin).mul(persent).add(glmin)
+        }
 
       }
 
