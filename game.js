@@ -416,7 +416,7 @@ Vue.createApp({
           tickspeed: parseFloat(saveData.tickspeed),
           saveversion: parseInt(saveData.saveversion),
 
-          currenttab: saveData.currenttab ?? 'basic',
+          currenttab: 'basic',
 
           tweeting: saveData.tweeting ?? ['money'],
 
