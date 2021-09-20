@@ -98,7 +98,7 @@
 						</span>
 						</div>
 						<div class="accelerator" v-for="i in 6" :key="i">
-							<div v-show="player.levelitems[1]>=i">
+							<div v-show="player.levelitems[3]>=i">
 								時間加速器{{i+2}}: {{ player.accelerators[i+1].toNumber() }}
 								<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[i+1]) }" @click="buyAccelerator(i+1)">
         					購入 コスト: {{ player.acceleratorsCost[i+1].toExponential(1) }}
@@ -177,14 +177,16 @@
 			<div v-show="player.currenttab == 'rank'">
 				<div class="levelshop">
 					段位捧所:段位捧所では、段位を消費することによって強化を購入することができます。
+					段位を捧げた回数に応じて、捧げるべき段位の量が少なくなります。
 					<br>
-					<div class="levelitem" v-for="i in 2" :key="i">
+					<div class="levelitem" v-for="i in 5" :key="i">
 					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(levelshopdata.itemcost[i-1].pow(player.levelitems[i-1]+1)) }" @click="buylevelitems(i-1)">
-              段位効力 {{ i }}: コスト {{ levelshopdata.itemcost[i-1].pow(this.player.levelitems[i-1]+1).toExponential(1) }}
+              段位効力 {{ i }}: コスト {{ calclevelitemcost(i-1).toExponential(1) }}
             </button>
 						<span> ・{{ levelshopdata.itemtext[i-1] }} </span>
 						<span> 取得数: {{ player.levelitems[i-1] }} </span>
 					</div>
+					累計購入回数: {{player.levelitembought}}
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'auto'">
