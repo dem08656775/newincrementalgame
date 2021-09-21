@@ -359,7 +359,7 @@ Vue.createApp({
       if(!localStorage.getItem("playerStored")) return
       let saveData = JSON.parse(localStorage.getItem("playerStored"));
       if(saveData.saveversion === 1){
-        saveData = readOldFormat()
+        saveData = readOldFormat(saveData)
       }
       if (localStorage.getItem("playerStoredb")) {
         this.players = JSON.parse(atob(localStorage.getItem("playerStoredb")))
