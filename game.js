@@ -270,7 +270,7 @@ Vue.createApp({
       for (let i = 0; i < 100; ++i) {
         const next = this.player.time + this.player.tickspeed;
         const currentTime2 = new Date().getTime();
-        if (currentTime2 - currentTime >= 8) { console.log(i); return; }
+        if (currentTime2 - currentTime >= 8) { return; }
         if (currentTime < next) { return; }
         this.player.time = next;
         this.update();
