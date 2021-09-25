@@ -266,6 +266,7 @@ Vue.createApp({
     
     updateFrame() {
       const currentTime = new Date().getTime();
+      this.player.time = Math.max(this.player.time, currentTime - 3600 * 1000);
       for (let i = 0; i < 100; ++i) {
         const next = this.player.time + this.player.tickspeed;
         const currentTime2 = new Date().getTime();
@@ -337,7 +338,6 @@ Vue.createApp({
         saveData.acceleratorsBought = saveData.acceleratorsBought.map(v => new Decimal(v))
         while(saveData.acceleratorsCost.length<8)saveData.acceleratorsCost.push('0')
       }
-      saveData.time = Math.max(saveData.time, new Date().getTime() - 3600 * 1000);
       this.player = parseInt(saveData.saveversion) === version ?
         {
           money: new Decimal(saveData.money),
