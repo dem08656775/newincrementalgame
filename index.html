@@ -134,7 +134,6 @@
 			</div>
       <div v-show="player.currenttab == 'level'">
 				最大取得段位:{{ player.maxlevelgained }}
-        勲章:{{ player.token }}
 				<div class="challenges-container">
           挑戦:挑戦とは厳しい条件で昇段リセットを目指すことです。
           初めて挑戦に成功すると勲章が獲得でき、勲章を消費して様々な効力を得ることができます。
@@ -163,9 +162,13 @@
               挑戦放棄
             </button>
           </div>
+
+					<div v-if="player.challengecleared.length>=128">挑戦中に階位リセットを行うと...？</div>
+
         </div>
         <div class="challengebonuses-container">
           効力:効力とは勲章を消費して得られる強化のことです。
+					勲章:{{ player.token }}
           <div class="challenge" v-for="i in 15" :key="i">
 					  <button type="button" class="rewardbutton" :class="{ 'selected': player.challengebonuses.includes(i-1) }" @click="buyRewards(i-1)">
               効力 {{ i }}: コスト {{ challengedata.rewardcost[i-1] }}
@@ -173,6 +176,16 @@
 						<span> ・{{ challengedata.rewardtext[i-1] }} </span>
 					</div>
         </div>
+				<div v-if="player.rankchallengecleared.length>=1">
+					上位効力:上位効力とは大勲章を消費して得られる強化のことです。
+					大勲章:{{ player.ranktoken }}
+					<div class="challenge" v-for="i in 15" :key="i">
+						<button type="button" class="rewardbutton" :class="{ 'selected': player.rankchallengebonuses.includes(i-1) }" @click="buyrankRewards(i-1)">
+							効力 {{ i }}: コスト {{ challengedata.rewardcost[i-1] }}
+						</button>
+						<span> ・{{ challengedata.rankrewardtext[i-1] }} </span>
+					</div>
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'rank'">
 				<div class="levelshop">
@@ -209,6 +222,11 @@
 						自動昇段器設定
 					</button>
 					現在: {{ autolevelnumber.toNumber() }}
+				</div>
+				<div v-if="player.rankchallengebonuses.includes(5)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': litemautobuy }" @click="toggleautobuyer(3)">
+						段位効力自動購入器
+					</button>
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">
