@@ -1,7 +1,7 @@
 function Shinedata(){
 
    this.getp = function(clear){
-     if(clear>=32*8) return 0.20
+     if(clear>=32*8-1) return 0.20
      if(clear>=32*7) return 0.16
      if(clear>=32*6) return 0.13
      if(clear>=32*5) return 0.10
@@ -13,7 +13,7 @@ function Shinedata(){
    }
 
    this.getmaxshine = function(clear){
-     if(clear>=32*8) return 10000000
+     if(clear>=32*8-1) return 10000000
      if(clear>=32*7) return 3000000
      if(clear>=32*6) return 1000000
      if(clear>=32*5) return 700000
@@ -22,6 +22,18 @@ function Shinedata(){
      if(clear>=32*2) return 100000
      return 0
    }
+
+   this.shineshopcost = [
+     50000,
+     100000,
+     100000
+   ]
+
+   this.rankrewardtext = [
+     "モード型登録",
+     "効力型登録1",
+     "効力型登録2"
+   ]
 
 
 

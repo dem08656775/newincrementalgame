@@ -103,6 +103,11 @@ button:not(.unavailable) {
   color: #FFFFFF;
 }
 
+.buytypebutton.selected{
+  background: #000000;
+  color: #FFFFFF;
+}
+
 .wdbutton.unavailable{
   background: #B0B0B0;
 }
