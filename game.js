@@ -259,7 +259,7 @@ Vue.createApp({
 
       if(i==0&&this.activechallengebonuses.includes(7)){
         if(this.player.rankchallengebonuses.includes(7)){
-          mult = mult.mul(this.strongsoftcap(this.player.maxlevelgained))
+          mult = mult.mul(this.strongsoftcap(this.player.maxlevelgained,new Decimal(100000)))
         }
         else {
           mult = mult.mul(this.player.maxlevelgained.min(100000))
