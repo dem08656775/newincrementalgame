@@ -59,7 +59,7 @@ const initialData = () => {
     rankchallengecleared:[],
     rankchallengebonuses:[],
 
-    trophies: new Array(4).fill(null).map(() => false),
+    trophies: new Array(8).fill(null).map(() => false),
 
     levelitems:[0,0,0,0,0],
     levelitembought: 0
@@ -128,7 +128,7 @@ Vue.createApp({
         rankchallengecleared:[],
         rankchallengebonuses:[],
 
-        trophies: new Array(4).fill(null).map(() => false),
+        trophies: new Array(8).fill(null).map(() => false),
 
         levelitems:[0,0,0,0,0],
         levelitembought: 0
@@ -438,6 +438,11 @@ Vue.createApp({
           saveData.levelitems[1] = 0
           saveData.levelitems[0] = 0
         }
+        if(saveData.trophies.length<8){
+          while(saveData.trophies.length<8){
+            saveData.trophies.push(false)
+          }
+        }
         if(!('levelitembought' in saveData)){
           saveData.levelitembought = 0
         }
@@ -512,7 +517,7 @@ Vue.createApp({
           setchallengebonusesfst:saveData.setchallengebonusesfst ?? [],
           setchallengebonusessnd:saveData.setchallengebonusessnd ?? [],
 
-          trophies: saveData.trophies ?? new Array(4).fill(null).map(() => false),
+          trophies: saveData.trophies ?? new Array(8).fill(null).map(() => false),
 
           levelitems: saveData.levelitems ?? [0,0,0,0,0],
           levelitembought :saveData.levelitembought ?? 0
@@ -590,7 +595,7 @@ Vue.createApp({
           this.player.setchallengebonusesfst = ans
         }
         if(index==2){
-          this.player.setchallengebonusesfst = ans
+          this.player.setchallengebonusessnd = ans
         }
       }
 
@@ -668,6 +673,7 @@ Vue.createApp({
       }
     },
     changemodetype(){
+      if(this.player.onchallenge && this.player.challenges.includes(3)) return;
       for(let i=0;i<8;i++){
         while(this.player.setmodes[i] != this.player.generatorsMode[i]){
           this.changeMode(i)
@@ -684,6 +690,9 @@ Vue.createApp({
     resetData(force) {
       if (force || confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')) {
         this.player = initialData()
+        for(let i=0;i<10;i++){
+          this.players[i] = initialData()
+        }
       }
     },
     calcgainlevel(){
@@ -1060,7 +1069,7 @@ function readOldFormat(saveData) {
 
     rankchallengecleared: saveData.rankchallengecleared ?? [],
 
-    trophies: new Array(4).fill(null).map(() => false),
+    trophies: new Array(8).fill(null).map(() => false),
 
     levelitems: saveData.levelitems ?? [0,0],
   }

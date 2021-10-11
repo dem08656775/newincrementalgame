@@ -222,9 +222,10 @@
 				<div class="levelshop">
 					段位捧所:段位捧所では、段位を消費することによって強化を購入することができます。
 					段位を捧げた回数に応じて、捧げるべき段位の量が少なくなります。
+					段位効力は、種類ごとに5回まで購入することができます。
 					<br>
 					<div class="levelitem" v-for="i in 5" :key="i">
-					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(calclevelitemcost(i-1)) }" @click="buylevelitems(i-1)">
+					  <button type="button" class="lbutton" :class="{ 'unavailable': player.level.lt(calclevelitemcost(i-1)) || player.levelitems[i-1] >= 5 }" @click="buylevelitems(i-1)">
               段位効力 {{ i }}: コスト {{ calclevelitemcost(i-1).toExponential(1) }}
             </button>
 						<span> ・{{ levelshopdata.itemtext[i-1] }} </span>
