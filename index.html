@@ -21,6 +21,9 @@
 				<span id="basic">
           <button type="button" @click="changeTab('basic')">通常</button>
         </span>
+				<span id="dark" v-if="player.money.greaterThanOrEqualTo('1e100') || player.darkgenerators[0].greaterThanOrEqualTo(1)">
+          <button type="button" @click="changeTab('dark')">裏</button>
+        </span>
 				<span id="option">
           <button type="button" @click="changeTab('option')">設定</button>
         </span>
@@ -50,12 +53,18 @@
 				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
 					階位: {{ player.rank.toNumber() }} 階位リセット: {{ player.rankresettime.toNumber() }}回
 				</div>
+				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
+					段位リセット条件: 1e+18
+				</div>
+				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
+					階位リセット条件: {{ resetRankborder().toExponential(3)}}
+				</div>
 				<div class="softreset">
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
 						<button type="button" @click="resetLevel(false,false)">昇段リセット</button>
 					</div>
-					<div id="rankreset" v-if="player.money.greaterThanOrEqualTo('1e72')">
-						<button type="button" @click="resetRank()">昇階リセット</button>
+					<div id="rankreset" v-if="player.money.greaterThanOrEqualTo(resetRankborder())">
+						<button type="button" @click="resetRank(false)">昇階リセット</button>
 					</div>
 				</div>
 				<div class="generators-container">
@@ -75,6 +84,9 @@
 								変更
 							</button>
 						</div>
+						<span>
+							倍率: {{ calcincrementmult(i-1,player.generatorsMode[i-1]).toExponential(2) }}
+						</span>
 					</div>
 				</div>
 				<div class="accelerators-container">
@@ -119,6 +131,22 @@
 							モード型適用
 						</button>
 					</div>
+			</div>
+			<div v-show= "player.currenttab == 'dark'">
+				<div id="darkcoinamount" v-show="player.rankchallengecleared.length>=32">裏ポイント: {{ player.darkmoney.toExponential(3) }}</div>
+				裏発生器iは発生器iを強化します。
+				<div v-show = "player.rankchallengecleared.length>=32">裏発生器は、煌きを消費すると発生器のように動作し、裏ポイントや下位の裏発生器を生み出します。裏ポイントは全ての発生器を強化します。</div>
+				<div class="darkgenerator" v-for="i in 8" :key="i">
+					<span>
+						裏発生器{{ i }}: {{ player.darkgenerators[i-1].toExponential(3)+' '}}
+					</span>
+					<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.darkgeneratorsCost[i-1]) }" @click="buydarkgenerator(i-1)">
+						購入 コスト: {{ player.darkgeneratorsCost[i-1].toExponential(1) }}
+					</button>
+					<span>
+						購入数: {{ player.darkgeneratorsBought[i-1].toNumber()+' '}}
+					</span>
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'option'">
 				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
@@ -250,15 +278,24 @@
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': autolevel }" @click="toggleautobuyer(2)">
 						自動昇段器
 					</button>
-					<button type="button" class="autobuyerbutton" @click="configautobuyer()">
-						自動昇段器設定
+					<button type="button" class="autobuyerbutton" @click="configautobuyer(0)">
+						自動昇段器設定:入手段位
 					</button>
-					現在: {{ autolevelnumber.toNumber() }}
+					<button type="button" class="autobuyerbutton" @click="configautobuyer(1)">
+						自動昇段器設定:停止段位
+					</button>
+					現在: {{ autolevelnumber.toNumber() }}, {{ autolevelstopnumber.toExponential(3) }}
 				</div>
 				<div v-if="player.rankchallengebonuses.includes(5)">
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': litemautobuy }" @click="toggleautobuyer(3)">
 						段位効力自動購入器
 					</button>
+				</div>
+				<div v-if="player.rankchallengebonuses.includes(14)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': autorank }" @click="toggleautobuyer(5)">
+						自動昇階機
+					</button>
+					消費輝き:1000
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">
@@ -292,20 +329,56 @@
 						効力型2購入:コスト100000
 					</button>
 				</div>
+				<br>
+				<div v-if = "player.rankchallengecleared.length>=32">
+				煌き所持数:{{ player.brightness }}
+					<button type="button" class="spendbrightnessbutton"  @click="spendbrightness(1)">
+						煌き消費:1
+					</button>
+					<button type="button" v-if="player.rankchallengecleared.length>=64" class="spendbrightnessbutton"  @click="spendbrightness(10)">
+						煌き消費:10
+					</button>
+					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
+						煌き消費:100
+					</button>
+				</div>
+				<div>煌き入手率: {{ shinedata.getbp(player.rankchallengecleared.length) * 100 }}%</div>
+				<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
 			</div>
 			<div v-show="player.currenttab == 'world'">
 				記憶: {{ memory }}
 				<div>
 					記憶は、他世界での実績の個数の合計です。記憶が多くなるほど、発生器の生産量が増加します。
 				</div>
+				<div v-if="counttrophies(0)>=6">
+					思い出: {{ checkremembers() }}
+					<button type="button"  v-if="false" @click="spendremember()">
+						思い出消費
+					</button>
+					<div>
+						思い出は、自分より番号が大きい世界の思い出の合計です。思い出が多くなるほど、階位リセットに必要なポイントが減少します。
+					</div>
+				</div>
 				<div class="worlds" v-for="i in 10" :key="i">
 					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
 						世界 {{ i }}
 					</button>
+					<button type="button" v-if="counttrophies(0)>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= counttrophies(i-1) ||  counttrophies(i-1) < 4}" @click="shrinkworld(i-1)">
+						収縮
+					</button>
+					<span>
+						思い出:{{ players[i-1].remember }}
+					</span>
+				</div>
+				<div v-if="checkremembers()>0">
+					思い出ボーナス:世界収縮後、思い出ボーナスに応じた状態から新しい世界をスタートすることができます。
+					<div  v-for="i in checkremembers()" :key="i">
+						達成数 {{ i }} : {{ rememberdata.contents[i-1] }}
+					</div>
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
-				<div class="levelitem" v-for="i in 4" :key="i">
+				<div class="levelitem" v-for="i in 8" :key="i">
 					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
 						実績 {{ i }}: {{ gettrophyname(i-1) }}
 					</button>
@@ -327,6 +400,7 @@
 	<script type="text/javascript" src="rank.js"></script>
 	<script type="text/javascript" src="shine.js"></script>
 	<script type="text/javascript" src="trophy.js"></script>
+	<script type="text/javascript" src="remember.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>

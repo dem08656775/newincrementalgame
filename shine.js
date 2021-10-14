@@ -12,6 +12,18 @@ function Shinedata(){
 
    }
 
+   this.getbp = function(clear){
+     if(clear>=32*8-1) return 0.010
+     if(clear>=32*7) return 0.008
+     if(clear>=32*6) return 0.006
+     if(clear>=32*5) return 0.005
+     if(clear>=32*4) return 0.004
+     if(clear>=32*3) return 0.003
+     if(clear>=32*2) return 0.002
+     if(clear>=32*1) return 0.001
+     return 0
+   }
+
    this.getmaxshine = function(clear){
      if(clear>=32*8-1) return 10000000
      if(clear>=32*7) return 3000000
@@ -20,6 +32,18 @@ function Shinedata(){
      if(clear>=32*4) return 400000
      if(clear>=32*3) return 200000
      if(clear>=32*2) return 100000
+     return 0
+   }
+
+   this.getmaxbr = function(clear){
+     if(clear>=32*8-1) return 3000
+     if(clear>=32*7) return 2000
+     if(clear>=32*6) return 1500
+     if(clear>=32*5) return 1000
+     if(clear>=32*4) return 700
+     if(clear>=32*3) return 400
+     if(clear>=32*2) return 200
+     if(clear>=32*1) return 100
      return 0
    }
 
