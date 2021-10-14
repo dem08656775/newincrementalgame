@@ -874,7 +874,7 @@ Vue.createApp({
       }
 
       let gainrank = new Decimal(this.player.money.log10()).div(36-1.2*this.player.levelitems[4]).pow_base(2).round()
-      if(this.player.rankchallengebonuses.includes(8)){
+      if(this.player.rankchallengebonuses.includes(12)){
         gainrank = gainrank.mul(3)
       }
       if(force || confirm('昇階リセットして、階位' + gainrank + 'を得ますか？')){
