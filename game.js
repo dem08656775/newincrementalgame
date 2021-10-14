@@ -126,10 +126,18 @@ Vue.createApp({
       if(this.player.tweeting.includes('memory')){
         tweetText += '記憶:' + this.memory + '%0A';
       }
+      if(this.player.tweeting.includes('remember')){
+        tweetText += '思い出:' + this.checkremembers() + '%0A';
+      }
       if(this.player.tweeting.includes('money')){
         tweetText += 'ポイント:' + this.player.money +
         '(' + this.player.money.toExponential().replace('+', '%2B') + ')%0A';
       }
+      if(this.player.tweeting.includes('darkmoney')){
+        tweetText += '裏ポイント:' + this.player.darkmoney +
+        '(' + this.player.darkmoney.toExponential().replace('+', '%2B') + ')%0A';
+      }
+
       if(this.player.tweeting.includes('level')){
         tweetText += '段位:' + this.player.level + '%0A';
       }

@@ -153,6 +153,7 @@
         <div class="tweetconfig">
           ツイート機能設定
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darkmoney') }" @click="configtweet('darkmoney')" v-if="player.darkmoney.gt(0)">裏ポイント</button>
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rankachieved') }" @click="configtweet('rankachieved')" v-if="player.rankchallengecleared.length>=1">上位挑戦達成</button>
@@ -160,6 +161,7 @@
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('levelitemboughttime') }" @click="configtweet('levelitemboughttime')" v-if="player.rankresettime.gt(0)">段位効力購入</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('world') }" @click="configtweet('world')" v-if="worldopened[1] || worldopened[2]">世界</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('memory') }" @click="configtweet('memory')" v-if="worldopened[1] || worldopened[2]">記憶</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('remember') }" @click="configtweet('remember')" v-if="checkremembers()>0">思い出</button>
 				</div>
 				<div class="export">
 					データ
@@ -263,7 +265,7 @@
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'auto'">
-				自動購入機設定
+				自動購入器設定
 				<div v-if="player.challengebonuses.includes(5)">
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': genautobuy }" @click="toggleautobuyer(0)">
 						発生器自動購入器
@@ -293,7 +295,7 @@
 				</div>
 				<div v-if="player.rankchallengebonuses.includes(14)">
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': autorank }" @click="toggleautobuyer(5)">
-						自動昇階機
+						自動昇階器
 					</button>
 					消費輝き:1000
 				</div>
