@@ -341,10 +341,9 @@
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
 					</button>
+					<div>煌き入手率: {{ shinedata.getbp(player.rankchallengecleared.length) * 100 }}%</div>
+					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
 				</div>
-				<div>煌き入手率: {{ shinedata.getbp(player.rankchallengecleared.length) * 100 }}%</div>
-				<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
-			</div>
 			<div v-show="player.currenttab == 'world'">
 				記憶: {{ memory }}
 				<div>
