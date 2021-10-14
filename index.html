@@ -366,7 +366,7 @@
 					<button type="button" v-if="counttrophies(0)>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= counttrophies(i-1) ||  counttrophies(i-1) < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
-					<span>
+					<span v-if="counttrophies(0)>=6">
 						思い出:{{ players[i-1].remember }}
 					</span>
 				</div>
