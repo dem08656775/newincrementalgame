@@ -402,8 +402,8 @@ Vue.createApp({
         }
       }
 
-      this.player.tickspeed = 10
-      //this.player.tickspeed = (1000-this.player.levelitems[1]*this.player.challengebonuses.length) / this.player.accelerators[0].add(10).mul(amult).log10()
+      //this.player.tickspeed = 10
+      this.player.tickspeed = (1000-this.player.levelitems[1]*this.player.challengebonuses.length) / this.player.accelerators[0].add(10).mul(amult).log10()
 
       setTimeout(this.update, this.player.tickspeed);
     },
