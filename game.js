@@ -93,6 +93,8 @@ Vue.createApp({
 
       players: new Array(10).fill(null).map(() => initialData()),
 
+      showmult:true,
+
       challengedata: new Challengedata(),
       levelshopdata: new Levelshopdata(),
       shinedata: new Shinedata(),
@@ -166,6 +168,9 @@ Vue.createApp({
   },
   methods: {
 
+    configshowmult(){
+      this.showmult = !this.showmult
+    },
     softCap(num,cap){
       if(num.lessThanOrEqualTo(cap)) return num;
       let capped = num.div(cap)
@@ -215,15 +220,16 @@ Vue.createApp({
       }
 
       if(!(this.player.onchallenge && this.player.challenges.includes(2))){
-        let mm = this.player.generatorsBought[i]
+        let mm = new Decimal(1)
+        mm = mm.mul(this.player.generatorsBought[i])
         if(this.activechallengebonuses.includes(11)){
-          mm = mm.mul(new Decimal(mm.add(2).log2()).round())
-      }
+          mm = mm.mul(new Decimal(mm.add(2).log2()))
+        }
 
-        if(i<highest && this.player.generatorsBought[i].greaterThan(0)){
+        if(i<highest && mm.greaterThanOrEqualTo(1)){
           mult = mult.mul(mm)
         }else{
-          if(this.activechallengebonuses.includes(2) && this.player.generatorsBought[i].greaterThan(0)){
+          if(this.activechallengebonuses.includes(2) && mm.greaterThanOrEqualTo(1)){
             mult = mult.mul(mm)
           }
         }
@@ -236,8 +242,7 @@ Vue.createApp({
       if(i==0&&this.activechallengebonuses.includes(7)){
         if(this.player.rankchallengebonuses.includes(7)){
           mult = mult.mul(this.strongsoftcap(this.player.maxlevelgained,new Decimal(100000)))
-        }
-        else {
+        }else {
           mult = mult.mul(this.player.maxlevelgained.min(100000))
         }
       }
@@ -247,6 +252,7 @@ Vue.createApp({
       }
 
       mult = mult.mul(1+this.memory*0.25)
+
       if(this.player.rankchallengebonuses.includes(11)){
         mult = mult.mul(new Decimal(2).pow(new Decimal(this.memory).div(12)))
       }
@@ -302,9 +308,9 @@ Vue.createApp({
     updateaccelerators(mu){
       for (let i = 1; i < 8; i++) {
         if(i==1&&this.activechallengebonuses.includes(10)){
-          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i]).mul(mu))
+          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i].pow_base(2)).mul(mu))
         }else if(i!=1&&this.player.rankchallengebonuses.includes(10)){
-          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i]).mul(mu))
+          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i].pow_base(2)).mul(mu))
         }else{
           this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(mu))
         }
@@ -359,7 +365,7 @@ Vue.createApp({
       this.calctoken()
 
       let amult = new Decimal(1)
-      if(this.activechallengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].max(1))
+      if(this.activechallengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].pow_base(2))
 
       let p = this.shinedata.getp(this.player.challengecleared.length)
 
@@ -1047,7 +1053,7 @@ Vue.createApp({
         alert("実績が思い出より多くありません。")
         return
       }
-      if(confirm("世界"+i+"を収縮させ、記憶を思い出に変化させますか？収縮した世界は最初からになります。")){
+      if(confirm("世界"+(i+1)+"を収縮させ、記憶を思い出に変化させますか？収縮した世界は最初からになります。")){
         let u = this.counttrophies(i)
         let r = this.checkremembers()
         this.players[i] = initialData()

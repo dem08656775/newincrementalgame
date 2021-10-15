@@ -67,6 +67,10 @@
 						<button type="button" @click="resetRank(false)">昇階リセット</button>
 					</div>
 				</div>
+				<br>
+				<div>
+					<button type="button" @click="configshowmult()">倍率を表示/非表示</button>
+				</div>
 				<div class="generators-container">
 					<div class="generator" v-for="i in 8" :key="i">
 						<span>
@@ -84,7 +88,7 @@
 								変更
 							</button>
 						</div>
-						<span>
+						<span v-show="showmult">
 							倍率: {{ calcincrementmult(i-1,player.generatorsMode[i-1]).toExponential(2) }}
 						</span>
 					</div>
@@ -353,7 +357,7 @@
 					記憶は、他世界での実績の個数の合計です。記憶が多くなるほど、発生器の生産量が増加します。
 				</div>
 				<div v-if="counttrophies(0)>=6">
-					思い出: {{ checkremembers() }}
+					合計思い出: {{ checkremembers() }}
 					<button type="button"  v-if="false" @click="spendremember()">
 						思い出消費
 					</button>
@@ -368,6 +372,9 @@
 					<button type="button" v-if="counttrophies(0)>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= counttrophies(i-1) ||  counttrophies(i-1) < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
+					<span>
+						記憶: {{ counttrophies(i-1) }}
+					</span>
 					<span v-if="counttrophies(0)>=6">
 						思い出:{{ players[i-1].remember }}
 					</span>
