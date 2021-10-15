@@ -262,7 +262,7 @@ Vue.createApp({
       }
 
       if(this.player.darkgenerators[i].greaterThanOrEqualTo(1)){
-        mult = mult.mul(i+1+this.player.darkgenerators[i].log10())
+        mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
       }
 
       if(this.player.darkmoney.greaterThanOrEqualTo(1)){
