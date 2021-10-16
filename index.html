@@ -15,38 +15,38 @@
                  :data-times="(1000 / player.tickspeed).toFixed(3)">
                 間隙: {{ Math.round(player.tickspeed) }}毛秒
                 <span v-if="player.accelerators[0].gt(0)">
-				時間加速器効果: {{ (1000 / player.tickspeed).toFixed(3) }} 倍
-			</span>
+                    時間加速器効果: {{ (1000 / player.tickspeed).toFixed(3) }} 倍
+                </span>
             </div>
             <div class="tabs">
-			<span id="basic">
-			  <button type="button" @click="changeTab('basic')">通常</button>
-			</span>
+                <span id="basic">
+                    <button type="button" @click="changeTab('basic')">通常</button>
+                </span>
                 <span id="dark"
                       v-if="player.money.greaterThanOrEqualTo('1e100') || player.darkgenerators[0].greaterThanOrEqualTo(1)">
-				<button type="button" @click="changeTab('dark')">裏</button>
-			</span>
+                    <button type="button" @click="changeTab('dark')">裏</button>
+                </span>
                 <span id="option">
-          <button type="button" @click="changeTab('option')">設定</button>
-        </span>
+                    <button type="button" @click="changeTab('option')">設定</button>
+                </span>
                 <span id="level" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
-          <button type="button" @click="changeTab('level')">段位</button>
-        </span>
+                    <button type="button" @click="changeTab('level')">段位</button>
+                </span>
                 <span id="rank" v-if="player.rankresettime.gt(0)">
-          <button type="button" @click="changeTab('rank')">階位</button>
-        </span>
+                    <button type="button" @click="changeTab('rank')">階位</button>
+                </span>
                 <span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
-          <button type="button" @click="changeTab('auto')">自動</button>
-        </span>
+                    <button type="button" @click="changeTab('auto')">自動</button>
+                </span>
                 <span id="shine" v-if="player.challengecleared.length >= 64">
-					<button type="button" @click="changeTab('shine')">輝き</button>
-				</span>
+                    <button type="button" @click="changeTab('shine')">輝き</button>
+                </span>
                 <span id="world" v-if="worldopened[1] || worldopened[2]">
-					<button type="button" @click="changeTab('world')">世界</button>
-				</span>
+                    <button type="button" @click="changeTab('world')">世界</button>
+                </span>
                 <span id="trophy" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || world !== 0">
-					<button type="button" @click="changeTab('trophy')">実績</button>
-				</span>
+                    <button type="button" @click="changeTab('trophy')">実績</button>
+                </span>
             </div>
             <div class="basictabcontents tab tab--basic" v-show="player.currenttab === 'basic'">
                 <div class="levelrcontents" v-if="player.levelresettime.gt(0)"
@@ -83,9 +83,9 @@
                 </div>
                 <div class="generators-container">
                     <div class="generator" v-for="i in 8" :key="`gen-${i}`" :data-generator="i">
-						<span :data-value="player.generators[i-1].toExponential(3)">
-              発生器{{ i }}: {{ player.generators[i - 1].toExponential(3) + " " }}
-            </span>
+                        <span :data-value="player.generators[i-1].toExponential(3)">
+                            発生器{{ i }}: {{ player.generators[i - 1].toExponential(3) + " " }}
+                        </span>
                         <button type="button" class="gbutton"
                                 :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }"
                                 @click="buyGenerator(i-1)"
@@ -93,8 +93,8 @@
                             購入 コスト: {{ player.generatorsCost[i - 1].toExponential(1) }}
                         </button>
                         <span class="bought-count" :data-value="player.generatorsBought[i-1].toNumber()">
-							購入数: {{ player.generatorsBought[i - 1].toNumber() + " " }}
-						</span>
+                            購入数: {{ player.generatorsBought[i - 1].toNumber() + " " }}
+                        </span>
                         <div class="mode-container" v-if="i > 1 && !player.challengebonuses.includes(13)"
                              :data-value="player.generatorsMode[i-1]">
                             <span>モード: {{ player.generatorsMode[i - 1] }}</span>
@@ -104,8 +104,8 @@
                         </div>
                         <span class="mult" v-show="showmult"
                               :data-value="calcincrementmult(i-1, player.generatorsMode[i-1]).toExponential(2)">
-							倍率: {{ calcincrementmult(i - 1, player.generatorsMode[i - 1]).toExponential(2) }}
-						</span>
+                            倍率: {{ calcincrementmult(i - 1, player.generatorsMode[i - 1]).toExponential(2) }}
+                        </span>
                     </div>
                 </div>
                 <div class="accelerators-container">
@@ -118,8 +118,8 @@
                             購入 コスト: {{ player.acceleratorsCost[0].toExponential(1) }}
                         </button>
                         <span class="bought-count" :data-value="player.acceleratorsBought[0].toNumber()">
-						購入数: {{ player.acceleratorsBought[0].toNumber() + " " }}
-					</span>
+                            購入数: {{ player.acceleratorsBought[0].toNumber() + " " }}
+                        </span>
                     </div>
                     <template v-if="player.levelresettime.gt(0)">
                         <div class="accelerator" :data-value="toFormated(player.accelerators[1], 5)" data-accelator="2">
@@ -131,8 +131,8 @@
                                 購入 コスト: {{ player.acceleratorsCost[1].toExponential(1) }}
                             </button>
                             <span class="bought-count" :data-value="player.acceleratorsBought[1].toNumber()">
-						購入数: {{ player.acceleratorsBought[1].toNumber() + " " }}
-					</span>
+                                購入数: {{ player.acceleratorsBought[1].toNumber() + " " }}
+                            </span>
                         </div>
                         <div class="accelerator" v-for="i in 6" :key="`acc-${i}`"
                              :data-value="toFormated(player.accelerators[i+1],5)"
@@ -146,8 +146,8 @@
                                     購入 コスト: {{ player.acceleratorsCost[i + 1].toExponential(1) }}
                                 </button>
                                 <span class="bought-count" :data-value="player.acceleratorsBought[i+1].toNumber()">
-								購入数: {{ player.acceleratorsBought[i + 1].toNumber() + " " }}
-							</span>
+                                    購入数: {{ player.acceleratorsBought[i + 1].toNumber() + " " }}
+                                </span>
                             </div>
                         </div>
                     </template>
@@ -173,17 +173,17 @@
                     </template>
                 </p>
                 <div class="darkgenerator" v-for="i in 8" :key="i" :data-dark-generator="i">
-					<span :data-value="player.darkgenerators[i-1].toExponential(3)">
-						裏発生器{{ i }}: {{ player.darkgenerators[i - 1].toExponential(3) + " " }}
-					</span>
+                    <span :data-value="player.darkgenerators[i-1].toExponential(3)">
+                        裏発生器{{ i }}: {{ player.darkgenerators[i - 1].toExponential(3) + " " }}
+                    </span>
                     <button type="button" class="gbutton"
                             :class="{ 'unavailable': player.money.lt(player.darkgeneratorsCost[i-1]) }"
                             :data-cost="player.darkgeneratorsCost[i-1].toExponential(1)" @click="buydarkgenerator(i-1)">
                         購入 コスト: {{ player.darkgeneratorsCost[i - 1].toExponential(1) }}
                     </button>
                     <span :data-value="player.darkgeneratorsBought[i-1].toNumber()">
-						購入数: {{ player.darkgeneratorsBought[i - 1].toNumber() + " " }}
-					</span>
+                        購入数: {{ player.darkgeneratorsBought[i - 1].toNumber() + " " }}
+                    </span>
                 </div>
             </div>
             <div class="tab tab--option" v-show="player.currenttab === 'option'">
@@ -488,11 +488,11 @@
                         収縮
                     </button>
                     <span :data-value="counttrophies(i-1)">
-						記憶: {{ counttrophies(i - 1) }}
-					</span>
+                        記憶: {{ counttrophies(i - 1) }}
+                    </span>
                     <span v-if="counttrophies(0)>=6" :data-value="players[i-1].remember">
-						思い出:{{ players[i - 1].remember }}
-					</span>
+                        思い出:{{ players[i - 1].remember }}
+                    </span>
                 </div>
                 <div v-if="checkremembers()>0">
                     思い出ボーナス:世界収縮後、思い出ボーナスに応じた状態から新しい世界をスタートすることができます。
