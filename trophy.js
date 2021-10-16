@@ -1,5 +1,4 @@
-function Trophydata(){
-
+function Trophydata() {
   this.contents = [
     "有段者",
     "有階者",
@@ -10,7 +9,4 @@ function Trophydata(){
     "想い出す者",
     "有冠者",
   ]
-
-
-
 }
