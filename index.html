@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<div id="app">
+　<div id="app">
 		<div class="container" v-cloak>
 			<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
 			<div id="tickspeed">
@@ -301,7 +301,7 @@
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': autorank }" @click="toggleautobuyer(5)">
 						自動昇階器
 					</button>
-					消費輝き:1000
+					消費輝き: {{ 1000 - checkremembers()*10 }}
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">

@@ -379,10 +379,12 @@ Vue.createApp({
         this.player.brightness += 1
       }
 
+      let autorankshine = 1000 - this.checkremembers()*10
+
       if(!this.player.onchallenge && this.player.rankchallengebonuses.includes(14) && this.autorank){
-        if(this.player.shine>=1000 && this.player.money.greaterThanOrEqualTo(this.resetRankborder())){
+        if(this.player.shine>=autorankshine && this.player.money.greaterThanOrEqualTo(this.resetRankborder())){
           this.resetRank(true)
-          this.player.shine -= 1000
+          this.player.shine -= autorankshine
         }
       }
 
@@ -1114,7 +1116,6 @@ Vue.createApp({
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[7][j]))
           }
         }
-        this.players[i].token = this.players[i].challengecleared.length
         if(r>=25) this.players[i].rank=new Decimal(64)
         if(r>=26) this.players[i].levelitembought=108
         if(r>=27) this.players[i].rank=new Decimal(128)
@@ -1123,6 +1124,32 @@ Vue.createApp({
         if(r>=30) this.players[i].levelitembought=800
         if(r>=31) this.players[i].rank=new Decimal(512)
         if(r>=32) this.players[i].levelitembought=1728
+        if(r>=33) this.players[i].maxlevelgained=new Decimal(1000)
+        if(r>=34){
+          for(let j=0;j<this.rememberdata.givenchalenges[8].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[8][j]))
+          }
+        }
+        if(r>=35) this.players[i].maxlevelgained=new Decimal(4000)
+        if(r>=36){
+          for(let j=0;j<this.rememberdata.givenchalenges[9].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[9][j]))
+          }
+        }
+        if(r>=37) this.players[i].maxlevelgained=new Decimal(20000)
+        if(r>=38){
+          for(let j=0;j<this.rememberdata.givenchalenges[10].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[10][j]))
+          }
+        }
+        if(r>=39) this.players[i].maxlevelgained=new Decimal(100000)
+        if(r>=40){
+          for(let j=0;j<this.rememberdata.givenchalenges[11].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[11][j]))
+          }
+        }
+
+        this.players[i].token = this.players[i].challengecleared.length
 
 
 
