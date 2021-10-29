@@ -110,6 +110,8 @@ Vue.createApp({
       litemautobuy:false,
       autorank:false,
 
+      multbyac:new Decimal(1),
+
       shinepersent:0,
       memory:0,
       worldopened:new Array(10).fill(null).map(() => false),
@@ -269,6 +271,9 @@ Vue.createApp({
         mult = mult.mul(this.player.darkmoney.add(10).log10())
       }
 
+      mult = mult.mul(this.multbyac)
+      if(this.multbyac.gt(1)) mult = mult.mul(this.multbyac)
+
       return mult;
 
     },
@@ -307,13 +312,14 @@ Vue.createApp({
 
     updateaccelerators(mu){
       for (let i = 1; i < 8; i++) {
+        let mult = new Decimal(1)
         if(i==1&&this.activechallengebonuses.includes(10)){
-          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i].pow_base(2)).mul(mu))
-        }else if(i!=1&&this.player.rankchallengebonuses.includes(10)){
-          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(this.player.acceleratorsBought[i].pow_base(2)).mul(mu))
-        }else{
-          this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(mu))
+          mult = this.player.rankchallengebonuses.includes(10)?mult.add(this.player.acceleratorsBought[i].pow_base(2)):mult.add(this.player.acceleratorsBought[i])
+        }else if(i!=1&&this.player.rankchallengebonuses.includes(6)){
+          mult = this.player.rankchallengebonuses.includes(10)?mult.add(this.player.acceleratorsBought[i].pow_base(2)):mult.add(this.player.acceleratorsBought[i])
         }
+        this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(mult).mul(mu))
+
       }
     },
 
@@ -365,7 +371,13 @@ Vue.createApp({
       this.calctoken()
 
       let amult = new Decimal(1)
-      if(this.activechallengebonuses.includes(6))amult = amult.mul(this.player.acceleratorsBought[0].pow_base(2))
+      if(this.activechallengebonuses.includes(6)){
+        if(this.player.rankchallengebonuses.includes(10)){
+          amult = amult.mul(this.player.acceleratorsBought[0].pow_base(2))
+        }else{
+          amult = amult.mul(this.player.acceleratorsBought[0].add(1))
+        }
+      }
 
       let p = this.shinedata.getp(this.player.challengecleared.length)
 
@@ -418,8 +430,24 @@ Vue.createApp({
         }
       }
 
+      let acnum = this.player.accelerators[0]
+
+      if(this.player.rankchallengebonuses.includes(13)){
+        for(let i=1;i<8;i++){
+          acnum = acnum.mul(this.player.accelerators[i].add(1))
+        }
+      }
+
+
       //this.player.tickspeed = 10
-      this.player.tickspeed = (1000-this.player.levelitems[1]*this.player.challengebonuses.length) / this.player.accelerators[0].add(10).mul(amult).log10()
+      this.player.tickspeed = (1000-this.player.levelitems[1]*this.player.challengebonuses.length) / acnum.add(10).mul(amult).log10()
+
+      if(this.player.rankchallengebonuses.includes(9)){
+        this.multbyac = new Decimal(50).div(this.player.tickspeed)
+        this.player.tickspeed = 50
+      }else{
+        this.multbyac = new Decimal(1)
+      }
 
       setTimeout(this.update, this.player.tickspeed);
     },
@@ -797,7 +825,11 @@ Vue.createApp({
 
           persent = persent.pow(1+this.player.levelitems[0])
           persent = new Decimal(1).sub(persent)
-          gainlevel = glmax.sub(glmin).mul(persent).add(glmin)
+          if(persent.lt("1e-5")){
+            gainlevel = gainlevel.mul(1+this.player.levelitems[0])
+          }else{
+            gainlevel = glmax.sub(glmin).mul(persent).add(glmin)
+          }
         }
 
       }
