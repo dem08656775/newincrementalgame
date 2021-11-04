@@ -42,7 +42,7 @@
 				<span id="world" v-if="worldopened[1] || worldopened[2]">
 					<button type="button" @click="changeTab('world')">世界</button>
 				</span>
-				<span id="trophy" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || world!=0">
+				<span id="trophy">
 					<button type="button" @click="changeTab('trophy')">実績</button>
 				</span>
 			</div>
@@ -301,6 +301,10 @@
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': autorank }" @click="toggleautobuyer(5)">
 						自動昇階器
 					</button>
+					<button type="button" class="autobuyerbutton" @click="configautobuyer(2)">
+						自動昇階器設定:入手階位
+					</button>
+					現在: {{ autoranknumber.toNumber() }}
 					消費輝き: {{ 1000 - checkremembers()*10 }}
 				</div>
 			</div>
@@ -387,11 +391,40 @@
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
+				実績
 				<div class="levelitem" v-for="i in 8" :key="i">
 					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
 						実績 {{ i }}: {{ gettrophyname(i-1) }}
 					</button>
 				</div>
+				里程
+				<div class="smalltrophy">
+					<table border="1">
+						<template v-for="i in 10" :key="i">
+							<tr>
+								<template v-for="j in 10" :key="j">
+									<td>
+										<span v-show="player.smalltrophies[(i-1)*10+(j-1)]">{{ (i-1)*10+j }}</span>
+									</td>
+								</template>
+							</tr>
+						</template>
+					</table>
+				</div>
+				ヒント
+				<div>1:はじまり</div>
+				<div>2:777</div>
+				<div>3:七七</div>
+				<div>4:待ちすぎ</div>
+				<div>6:待ちすぎ2</div>
+				<div>7:ここには何もない</div>
+				<div>22:買えるの？</div>
+				<div>25:陰りが...?</div>
+				<div>30:古い放置ゲーム</div>
+				<div>59:大事に</div>
+				<div>60:自慢</div>
+
+
 			</div>
 			<div id="tweet">
 				<a :href="tweetLink" target="_blank" rel="noopener noreferrer">Tweet #新しい放置ゲーム</a>

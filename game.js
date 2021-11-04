@@ -76,6 +76,7 @@ const initialData = () => {
     rankchallengebonuses:[],
 
     trophies: new Array(8).fill(null).map(() => false),
+    smalltrophies: new Array(10).fill(null).map(() => false),
 
     levelitems:[0,0,0,0,0],
     levelitembought: 0,
@@ -106,6 +107,7 @@ Vue.createApp({
       accautobuy:false,
       autolevel:false,
       autolevelnumber:new Decimal(2),
+      autoranknumber:new Decimal(4),
       autolevelstopnumber: new Decimal("1e100"),
       litemautobuy:false,
       autorank:false,
@@ -253,7 +255,7 @@ Vue.createApp({
         mult = mult.mul(new Decimal(3))
       }
 
-      mult = mult.mul(1+this.memory*0.25)
+      mult = mult.mul(1+0.01*this.countsmalltrophies()+this.memory*0.25)
 
       if(this.player.rankchallengebonuses.includes(11)){
         mult = mult.mul(new Decimal(2).pow(new Decimal(this.memory).div(12)))
@@ -395,8 +397,10 @@ Vue.createApp({
 
       if(!this.player.onchallenge && this.player.rankchallengebonuses.includes(14) && this.autorank){
         if(this.player.shine>=autorankshine && this.player.money.greaterThanOrEqualTo(this.resetRankborder())){
-          this.resetRank(true)
-          this.player.shine -= autorankshine
+          if(this.calcgainrank().greaterThanOrEqualTo(this.autoranknumber)){
+            this.resetRank(true)
+            this.player.shine -= autorankshine
+          }
         }
       }
 
@@ -555,6 +559,9 @@ Vue.createApp({
         if(!('rememberspent' in saveData)){
           saveData.rememberspent = 0
         }
+        if(!('smalltrophies' in saveData)){
+          saveData.smalltrophies = new Array(100).fill(null).map(() => false)
+        }
 
 
         this.players[i] = saveData
@@ -615,6 +622,7 @@ Vue.createApp({
           setchallengebonusessnd:saveData.setchallengebonusessnd ?? [],
 
           trophies: saveData.trophies ?? new Array(8).fill(null).map(() => false),
+          smalltrophies: saveData.smalltrophies ?? new Array(100).fill(null).map(() => false),
 
           levelitems: saveData.levelitems ?? [0,0,0,0,0],
           levelitembought :saveData.levelitembought ?? 0,
@@ -690,6 +698,10 @@ Vue.createApp({
         let input = window.prompt("昇段停止段位を設定","")
         input = new Decimal(input)
         this.autolevelstopnumber = input
+      }else if(index==2){
+        let input = window.prompt("リセット時入手階位を設定","")
+        input = new Decimal(input)
+        this.autoranknumber = input
       }
     },
     toggleautobuyer(index){
@@ -907,6 +919,13 @@ Vue.createApp({
 
       }
     },
+    calcgainrank(){
+      let gainrank = new Decimal(this.player.money.log10()).div(36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]).pow_base(2).round()
+      if(this.player.rankchallengebonuses.includes(12)){
+        gainrank = gainrank.mul(3)
+      }
+      return gainrank
+    },
     resetRankborder(){
       let p = (this.player.onchallenge && this.player.challenges.includes(0))?96:72
       p -= this.checkremembers()/2.0
@@ -921,10 +940,7 @@ Vue.createApp({
         }
       }
 
-      let gainrank = new Decimal(this.player.money.log10()).div(36-1.2*this.player.levelitems[4]).pow_base(2).round()
-      if(this.player.rankchallengebonuses.includes(12)){
-        gainrank = gainrank.mul(3)
-      }
+      let gainrank = this.calcgainrank()
       if(force || confirm('昇階リセットして、階位' + gainrank + 'を得ますか？')){
 
         if(this.player.onchallenge) {
@@ -1162,24 +1178,41 @@ Vue.createApp({
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[8][j]))
           }
         }
-        if(r>=35) this.players[i].maxlevelgained=new Decimal(4000)
+        if(r>=35) this.players[i].maxlevelgained=new Decimal(3000)
         if(r>=36){
           for(let j=0;j<this.rememberdata.givenchalenges[9].length;j++){
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[9][j]))
           }
         }
-        if(r>=37) this.players[i].maxlevelgained=new Decimal(20000)
+        if(r>=37) this.players[i].maxlevelgained=new Decimal(10000)
         if(r>=38){
           for(let j=0;j<this.rememberdata.givenchalenges[10].length;j++){
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[10][j]))
           }
         }
-        if(r>=39) this.players[i].maxlevelgained=new Decimal(100000)
+        if(r>=39) this.players[i].maxlevelgained=new Decimal(30000)
         if(r>=40){
           for(let j=0;j<this.rememberdata.givenchalenges[11].length;j++){
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[11][j]))
           }
         }
+        if(r>=41) this.players[i].levelresettime=new Decimal(1000)
+        if(r>=42) this.players[i].rankresettime=new Decimal(300)
+        if(r>=43) this.players[i].rank=new Decimal(4096)
+        if(r>=44) this.players[i].shine=100000
+        if(r>=45) this.players[i].maxlevelgained=new Decimal(100000)
+        if(r>=46) this.players[i].levelitembought=6400
+        if(r>=47){
+          for(let j=0;j<this.rememberdata.givenchalenges[12].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[12][j]))
+          }
+        }
+        if(r>=48){
+          for(let j=0;j<this.rememberdata.givenchalenges[13].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[13][j]))
+          }
+        }
+
 
         this.players[i].token = this.players[i].challengecleared.length
 
@@ -1199,11 +1232,81 @@ Vue.createApp({
       if(this.world==0){
         if(this.checkremembers()>0)this.player.trophies[6] = true;
       }
+      if(this.player.money.greaterThan(0))this.player.smalltrophies[0] = true
+      if(this.player.money.greaterThan(777))this.player.smalltrophies[1] = true
+      if(this.player.money.greaterThan(7777777))this.player.smalltrophies[2] = true
+      if(this.player.money.greaterThan("1e19"))this.player.smalltrophies[3] = true
+      if(this.player.money.greaterThan("1e36"))this.player.smalltrophies[4] = true
+      if(this.player.money.greaterThan("1e73"))this.player.smalltrophies[5] = true
+      if(this.player.money.greaterThan("1e81"))this.player.smalltrophies[6] = true
+      if(this.player.money.greaterThan("1e303"))this.player.smalltrophies[7] = true
+      if(this.player.generatorsBought[0].greaterThan(0))this.player.smalltrophies[8] = true
+      if(this.player.generatorsBought[1].greaterThan(0))this.player.smalltrophies[9] = true
+      if(this.player.generatorsBought[2].greaterThan(0))this.player.smalltrophies[10] = true
+      if(this.player.generatorsBought[3].greaterThan(0))this.player.smalltrophies[11] = true
+      if(this.player.generatorsBought[4].greaterThan(0))this.player.smalltrophies[12] = true
+      if(this.player.generatorsBought[5].greaterThan(0))this.player.smalltrophies[13] = true
+      if(this.player.generatorsBought[6].greaterThan(0))this.player.smalltrophies[14] = true
+      if(this.player.generatorsBought[7].greaterThan(0))this.player.smalltrophies[15] = true
+      if(this.player.acceleratorsBought[0].greaterThan(0))this.player.smalltrophies[16] = true
+      if(this.player.acceleratorsBought[1].greaterThan(0))this.player.smalltrophies[17] = true
+      if(this.player.acceleratorsBought[2].greaterThan(0))this.player.smalltrophies[18] = true
+      if(this.player.acceleratorsBought[3].greaterThan(0))this.player.smalltrophies[19] = true
+      if(this.player.acceleratorsBought[4].greaterThan(0))this.player.smalltrophies[20] = true
+      if(this.player.acceleratorsBought[5].greaterThan(0))this.player.smalltrophies[21] = true
+      if(this.player.acceleratorsBought[6].greaterThan(0))this.player.smalltrophies[22] = true
+      if(this.player.acceleratorsBought[7].greaterThan(0))this.player.smalltrophies[23] = true
+      if(this.player.levelresettime.greaterThan(200))this.player.smalltrophies[24] = true
+      if(this.player.levelresettime.greaterThan(999))this.player.smalltrophies[25] = true
+      if(this.player.challengecleared.includes(128))this.player.smalltrophies[26] = true
+      if(this.player.challengecleared.includes(64))this.player.smalltrophies[27] = true
+      if(this.player.challengecleared.includes(32))this.player.smalltrophies[28] = true
+      if(this.player.challengecleared.includes(16))this.player.smalltrophies[29] = true
+      if(this.player.challengecleared.includes(8))this.player.smalltrophies[30] = true
+      if(this.player.challengecleared.includes(4))this.player.smalltrophies[31] = true
+      if(this.player.challengecleared.includes(2))this.player.smalltrophies[32] = true
+      if(this.player.challengecleared.includes(1))this.player.smalltrophies[33] = true
+      if(this.player.challengecleared.length>=32)this.player.smalltrophies[34] = true
+      if(this.player.challengecleared.length>=64)this.player.smalltrophies[35] = true
+      if(this.player.challengecleared.length>=96)this.player.smalltrophies[36] = true
+      if(this.player.challengecleared.length>=128)this.player.smalltrophies[37] = true
+      if(this.player.challengecleared.length>=160)this.player.smalltrophies[38] = true
+      if(this.player.challengecleared.length>=192)this.player.smalltrophies[39] = true
+      if(this.player.challengecleared.length>=224)this.player.smalltrophies[40] = true
+      if(this.player.challengecleared.length>=255)this.player.smalltrophies[41] = true
+      if(this.player.rankresettime.greaterThan(1))this.player.smalltrophies[42] = true
+      if(this.player.rankresettime.greaterThan(4))this.player.smalltrophies[43] = true
+      if(this.player.rankresettime.greaterThan(9))this.player.smalltrophies[44] = true
+      if(this.player.rankresettime.greaterThan(99))this.player.smalltrophies[45] = true
+      if(this.player.rankresettime.greaterThan(999))this.player.smalltrophies[46] = true
+      if(this.player.levelitembought>=4)this.player.smalltrophies[47] = true
+      if(this.player.levelitembought>=108)this.player.smalltrophies[48] = true
+      if(this.player.levelitembought>=256)this.player.smalltrophies[49] = true
+      if(this.player.levelitembought>=1728)this.player.smalltrophies[50] = true
+      if(this.player.levelitembought>=12500)this.player.smalltrophies[51] = true
+      if(this.player.shine>=100)this.player.smalltrophies[52] = true
+      if(this.player.shine>=1000)this.player.smalltrophies[53] = true
+      if(this.player.shine>=10000)this.player.smalltrophies[54] = true
+      if(this.player.shine>=100000)this.player.smalltrophies[55] = true
+      if(this.player.shine>=1000000)this.player.smalltrophies[56] = true
+      if(this.player.shine>=1000000)this.player.smalltrophies[57] = true
+      if(this.exported.length>=2)this.player.smalltrophies[58] = true
+      if(this.player.tweeting.length>=2)this.player.smalltrophies[59] = true
+
+
     },
+
     counttrophies(index){
       let cnt = 0
       for(let i=0;i<8;i++){
         if(this.players[index].trophies[i])cnt++;
+      }
+      return cnt
+    },
+    countsmalltrophies(index){
+      let cnt = 0;
+      for(let i=0;i<100;i++){
+        if(this.player.smalltrophies[i])cnt++;
       }
       return cnt
     },
@@ -1229,7 +1332,7 @@ Vue.createApp({
       if(this.players[0].challengecleared.includes(238))this.worldopened[1] = true
       if(this.players[0].challengecleared.length>=100)this.worldopened[2] = true
       if(this.players[0].rankchallengecleared.length>=16)this.worldopened[3] = true
-      if(this.players[0].levelitembought>=100000)this.worldopened[4] = true
+      if(this.players[0].levelitembought>=12500)this.worldopened[4] = true
       if(new Decimal(this.players[0].darkmoney).greaterThanOrEqualTo('1e8'))this.worldopened[5] = true
       if(new Decimal(this.players[0].rank).greaterThanOrEqualTo(262142))this.worldopened[6] = true
       if(this.players[0].rankchallengecleared.includes(238))this.worldopened[7] = true

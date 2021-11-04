@@ -14,6 +14,11 @@
   color: gray;
 }
 
+td{
+  width:24px;
+  height:24px;
+}
+
 .generator{
   font-size: 24px;
   vertical-align: middle;

@@ -36,13 +36,13 @@ function Shinedata(){
    }
 
    this.getmaxbr = function(clear){
-     if(clear>=32*8-1) return 3000
-     if(clear>=32*7) return 2000
-     if(clear>=32*6) return 1500
-     if(clear>=32*5) return 1000
-     if(clear>=32*4) return 700
-     if(clear>=32*3) return 400
-     if(clear>=32*2) return 200
+     if(clear>=32*8-1) return 10000
+     if(clear>=32*7) return 6000
+     if(clear>=32*6) return 3500
+     if(clear>=32*5) return 2000
+     if(clear>=32*4) return 1200
+     if(clear>=32*3) return 700
+     if(clear>=32*2) return 300
      if(clear>=32*1) return 100
      return 0
    }
