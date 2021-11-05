@@ -94,6 +94,7 @@ Vue.createApp({
 
       players: new Array(10).fill(null).map(() => initialData()),
 
+      commonmult: new Decimal(0),
       showmult:true,
 
       challengedata: new Challengedata(),
@@ -116,6 +117,7 @@ Vue.createApp({
 
       shinepersent:0,
       memory:0,
+      smalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
 
       world:0
@@ -206,15 +208,47 @@ Vue.createApp({
       }
     },
 
-    calcincrementmult(i,to){
+    calccommonmult(){
       let mult = new Decimal(1);
-      if(!(this.player.onchallenge && this.player.challenges.includes(4))){
-        mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
-      }
       if(!(this.player.onchallenge && this.player.challenges.includes(7))){
         let cap = new Decimal(100).mul(this.player.levelitems[2]+1)
         mult = mult.mul(this.softCap(this.player.levelresettime.add(1),cap))
       }
+
+      if(this.activechallengebonuses.includes(3)){
+        mult = mult.mul(new Decimal(2))
+      }
+
+      if(this.player.rankchallengebonuses.includes(3)){
+        mult = mult.mul(new Decimal(3))
+      }
+
+      mult = mult.mul(1+this.smalltrophy*0.01+this.memory*0.25)
+
+      if(this.player.rankchallengebonuses.includes(11)){
+        mult = mult.mul(new Decimal(2).pow(new Decimal(this.memory).div(12)))
+      }
+
+      if(this.player.onchallenge && this.player.rankchallengebonuses.includes(4)){
+        mult = mult.mul(1+this.player.challenges.length*0.25)
+      }
+
+      if(this.player.darkmoney.greaterThanOrEqualTo(1)){
+        mult = mult.mul(this.player.darkmoney.add(10).log10())
+      }
+
+      mult = mult.mul(this.multbyac)
+      if(this.multbyac.gt(1)) mult = mult.mul(this.multbyac)
+
+      this.commonmult = mult
+    },
+
+    calcincrementmult(i,to){
+      let mult = new Decimal(this.commonmult);
+      if(!(this.player.onchallenge && this.player.challenges.includes(4))){
+        mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
+      }
+
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
       let highest = 0;
       for(let j=0;j<8;j++){
@@ -239,10 +273,6 @@ Vue.createApp({
         }
       }
 
-      if(this.activechallengebonuses.includes(3)){
-        mult = mult.mul(new Decimal(2))
-      }
-
       if(i==0&&this.activechallengebonuses.includes(7)){
         if(this.player.rankchallengebonuses.includes(7)){
           mult = mult.mul(this.strongsoftcap(this.player.maxlevelgained,new Decimal(100000)))
@@ -251,30 +281,9 @@ Vue.createApp({
         }
       }
 
-      if(this.player.rankchallengebonuses.includes(3)){
-        mult = mult.mul(new Decimal(3))
-      }
-
-      mult = mult.mul(1+0.01*this.countsmalltrophies()+this.memory*0.25)
-
-      if(this.player.rankchallengebonuses.includes(11)){
-        mult = mult.mul(new Decimal(2).pow(new Decimal(this.memory).div(12)))
-      }
-
-      if(this.player.onchallenge && this.player.rankchallengebonuses.includes(4)){
-        mult = mult.mul(1+this.player.challenges.length*0.25)
-      }
-
       if(this.player.darkgenerators[i].greaterThanOrEqualTo(1)){
         mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
       }
-
-      if(this.player.darkmoney.greaterThanOrEqualTo(1)){
-        mult = mult.mul(this.player.darkmoney.add(10).log10())
-      }
-
-      mult = mult.mul(this.multbyac)
-      if(this.multbyac.gt(1)) mult = mult.mul(this.multbyac)
 
       return mult;
 
@@ -365,7 +374,9 @@ Vue.createApp({
 
       this.checktrophies()
       this.checkmemories()
-      this.checkworlds();
+      this.checkworlds()
+      this.countsmalltrophies()
+      this.calccommonmult()
 
       this.updategenerators(new Decimal(1))
       this.updateaccelerators(new Decimal(1))
@@ -1308,7 +1319,7 @@ Vue.createApp({
       for(let i=0;i<100;i++){
         if(this.player.smalltrophies[i])cnt++;
       }
-      return cnt
+      this.smalltrophy = cnt
     },
     checkmemories(){
       let cnt = 0;
