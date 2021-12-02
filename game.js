@@ -1397,31 +1397,31 @@ Vue.createApp({
       if(this.player.shine>=10000000)this.player.smalltrophies[57] = true
       if(this.exported.length>=2)this.player.smalltrophies[58] = true
       if(this.player.tweeting.length>=2)this.player.smalltrophies[59] = true
-      if(this.player.darkgenerators[0].greaterThanOrEqualTo(1))this.player.smalltrophies[59] = true
-      if(this.player.darkgenerators[1].greaterThanOrEqualTo(1))this.player.smalltrophies[60] = true
-      if(this.player.darkgenerators[2].greaterThanOrEqualTo(1))this.player.smalltrophies[61] = true
-      if(this.player.darkgenerators[3].greaterThanOrEqualTo(1))this.player.smalltrophies[62] = true
-      if(this.player.darkgenerators[4].greaterThanOrEqualTo(1))this.player.smalltrophies[63] = true
-      if(this.player.darkgenerators[5].greaterThanOrEqualTo(1))this.player.smalltrophies[64] = true
-      if(this.player.darkgenerators[6].greaterThanOrEqualTo(1))this.player.smalltrophies[65] = true
-      if(this.player.darkgenerators[7].greaterThanOrEqualTo(1))this.player.smalltrophies[66] = true
-      if(this.player.rankchallengecleared.length>=32)this.player.smalltrophies[67] = true
-      if(this.player.rankchallengecleared.length>=64)this.player.smalltrophies[68] = true
-      if(this.player.rankchallengecleared.length>=96)this.player.smalltrophies[69] = true
-      if(this.player.rankchallengecleared.length>=128)this.player.smalltrophies[70] = true
-      if(this.player.rankchallengecleared.length>=160)this.player.smalltrophies[71] = true
-      if(this.player.rankchallengecleared.length>=192)this.player.smalltrophies[72] = true
-      if(this.player.rankchallengecleared.length>=224)this.player.smalltrophies[73] = true
-      if(this.player.rankchallengecleared.length>=255)this.player.smalltrophies[74] = true
-      if(this.player.brightness>=10)this.player.smalltrophies[75] = true
-      if(this.player.brightness>=100)this.player.smalltrophies[76] = true
-      if(this.player.brightness>=1000)this.player.smalltrophies[77] = true
-      if(this.player.brightness>=10000)this.player.smalltrophies[78] = true
-      if(this.player.darkmoney.greaterThanOrEqualTo(1))this.player.smalltrophies[79] = true
-      if(this.player.darkmoney.greaterThanOrEqualTo(777))this.player.smalltrophies[80] = true
-      if(this.player.darkmoney.greaterThanOrEqualTo(7777777))this.player.smalltrophies[81] = true
-      if(this.player.darkmoney.greaterThanOrEqualTo("1e18"))this.player.smalltrophies[82] = true
-      if(this.player.darkmoney.greaterThanOrEqualTo("1e72"))this.player.smalltrophies[83] = true
+      if(this.player.darkgenerators[0].greaterThanOrEqualTo(1))this.player.smalltrophies[60] = true
+      if(this.player.darkgenerators[1].greaterThanOrEqualTo(1))this.player.smalltrophies[61] = true
+      if(this.player.darkgenerators[2].greaterThanOrEqualTo(1))this.player.smalltrophies[62] = true
+      if(this.player.darkgenerators[3].greaterThanOrEqualTo(1))this.player.smalltrophies[63] = true
+      if(this.player.darkgenerators[4].greaterThanOrEqualTo(1))this.player.smalltrophies[64] = true
+      if(this.player.darkgenerators[5].greaterThanOrEqualTo(1))this.player.smalltrophies[65] = true
+      if(this.player.darkgenerators[6].greaterThanOrEqualTo(1))this.player.smalltrophies[66] = true
+      if(this.player.darkgenerators[7].greaterThanOrEqualTo(1))this.player.smalltrophies[67] = true
+      if(this.player.rankchallengecleared.length>=32)this.player.smalltrophies[68] = true
+      if(this.player.rankchallengecleared.length>=64)this.player.smalltrophies[69] = true
+      if(this.player.rankchallengecleared.length>=96)this.player.smalltrophies[70] = true
+      if(this.player.rankchallengecleared.length>=128)this.player.smalltrophies[71] = true
+      if(this.player.rankchallengecleared.length>=160)this.player.smalltrophies[72] = true
+      if(this.player.rankchallengecleared.length>=192)this.player.smalltrophies[73] = true
+      if(this.player.rankchallengecleared.length>=224)this.player.smalltrophies[74] = true
+      if(this.player.rankchallengecleared.length>=255)this.player.smalltrophies[75] = true
+      if(this.player.brightness>=10)this.player.smalltrophies[76] = true
+      if(this.player.brightness>=100)this.player.smalltrophies[77] = true
+      if(this.player.brightness>=1000)this.player.smalltrophies[78] = true
+      if(this.player.brightness>=10000)this.player.smalltrophies[79] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(1))this.player.smalltrophies[80] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(777))this.player.smalltrophies[81] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(7777777))this.player.smalltrophies[82] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo("1e18"))this.player.smalltrophies[83] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo("1e72"))this.player.smalltrophies[84] = true
 
 
     },
