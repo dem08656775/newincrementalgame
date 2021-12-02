@@ -82,7 +82,9 @@ const initialData = () => {
     levelitembought: 0,
 
     remember: 0,
-    rememberspent: 0
+    rememberspent: 0,
+
+    chip:[0,0,0,0]
 
   }
 }
@@ -94,14 +96,18 @@ Vue.createApp({
 
       players: new Array(10).fill(null).map(() => initialData()),
 
+      highest:0,
       commonmult: new Decimal(0),
+      incrementalmults: new Array(8).fill(null).map(() => new Decimal(1)),
       showmult:true,
+      trophycheck:true,
 
       challengedata: new Challengedata(),
       levelshopdata: new Levelshopdata(),
       shinedata: new Shinedata(),
       trophydata: new Trophydata(),
       rememberdata: new Rememberdata(),
+      chipdata: new Chipdata(),
       exported: "",
       activechallengebonuses:[],
       genautobuy:false,
@@ -117,10 +123,14 @@ Vue.createApp({
 
       shinepersent:0,
       memory:0,
+      trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
 
-      world:0
+      world:0,
+
+      time:0,
+      diff:0,
 
 
     }
@@ -244,18 +254,18 @@ Vue.createApp({
     },
 
     calcincrementmult(i,to){
-      let mult = new Decimal(this.commonmult);
+      let mult = this.incrementalmults[i]
       if(!(this.player.onchallenge && this.player.challenges.includes(4))){
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
 
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
-      let highest = 0;
-      for(let j=0;j<8;j++){
-        if(this.player.generators[j].greaterThan(0)){
-          highest = j;
-        }
-      }
+
+      return mult
+    },
+
+    calcbasicincrementmult(i){
+      let mult = new Decimal(this.commonmult);
 
       if(!(this.player.onchallenge && this.player.challenges.includes(2))){
         let mm = new Decimal(1)
@@ -264,7 +274,7 @@ Vue.createApp({
           mm = mm.mul(new Decimal(mm.add(2).log2()))
         }
 
-        if(i<highest && mm.greaterThanOrEqualTo(1)){
+        if(i<this.highest && mm.greaterThanOrEqualTo(1)){
           mult = mult.mul(mm)
         }else{
           if(this.activechallengebonuses.includes(2) && mm.greaterThanOrEqualTo(1)){
@@ -285,7 +295,7 @@ Vue.createApp({
         mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
       }
 
-      return mult;
+      this.incrementalmults[i] = mult
 
     },
 
@@ -369,14 +379,31 @@ Vue.createApp({
       }
       this.player.ranktoken = this.player.rankchallengecleared.length - spent
     },
+    findhighestgenerator(){
+      this.highest = 0;
+      for(let j=0;j<8;j++){
+        if(this.player.generators[j].greaterThan(0)){
+          this.highest = j;
+        }
+      }
+    },
     update() {
+
+      let diffm = this.diff
+      this.diff = Date.now()-this.time-this.player.tickspeed
+
+      this.time = Date.now()
       this.activechallengebonuses = (this.player.challengebonuses.includes(4) || !this.player.onchallenge)?this.player.challengebonuses:[]
 
-      this.checktrophies()
+      if(this.trophycheck)this.checktrophies()
       this.checkmemories()
       this.checkworlds()
       this.countsmalltrophies()
       this.calccommonmult()
+      this.findhighestgenerator()
+      for(let i=0;i<8;i++){
+        this.calcbasicincrementmult(i)
+      }
 
       this.updategenerators(new Decimal(1))
       this.updateaccelerators(new Decimal(1))
@@ -464,7 +491,8 @@ Vue.createApp({
         this.multbyac = new Decimal(1)
       }
 
-      setTimeout(this.update, this.player.tickspeed);
+
+      setTimeout(this.update, Math.max(this.player.tickspeed-(this.diff+diffm)/2,1));
     },
     exportsave(){
       this.exported = btoa(JSON.stringify(this.players))
@@ -573,6 +601,9 @@ Vue.createApp({
         if(!('smalltrophies' in saveData)){
           saveData.smalltrophies = new Array(100).fill(null).map(() => false)
         }
+        if(!('chip' in saveData)){
+          saveData.chip = [0,0,0,0]
+        }
 
 
         this.players[i] = saveData
@@ -639,7 +670,9 @@ Vue.createApp({
           levelitembought :saveData.levelitembought ?? 0,
 
           remember: saveData.remember ?? 0,
-          rememberspent: saveData.rememberspent ?? 0
+          rememberspent: saveData.rememberspent ?? 0,
+
+          chip:saveData.chip ?? [0,0,0,0]
         };
         if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
       this.calcaccost()
@@ -863,6 +896,12 @@ Vue.createApp({
       if(this.activechallengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
       return gainlevel;
     },
+
+    calcgainchip(){
+      let level = this.chipdata.getcl(this.player.money)
+      return this.chipdata.getchipid(level)
+    },
+
     resetLevel(force,exit) {
       if(this.player.onchallenge && this.player.challenges.includes(0)){
         if(this.player.money.lt(new Decimal('1e24'))){
@@ -889,6 +928,16 @@ Vue.createApp({
           }
           this.activechallengebonuses = this.player.challengebonuses;
         }
+
+        if(this.checkremembers()>=32 && this.player.money.greaterThan(1e120)){
+          let gainchip = this.calcgainchip()
+          console.log(gainchip)
+          if(gainchip!=-1 && this.player.chip[gainchip]<10000){
+            this.player.chip[gainchip] = this.player.chip[gainchip]+1
+          }
+        }
+
+
         this.player.money = new Decimal(1)
         this.player.level = this.player.level.add(exit?new Decimal(0):gainlevel)
         this.player.levelresettime = this.player.levelresettime.add(gainlevelreset)
@@ -919,7 +968,7 @@ Vue.createApp({
           new Decimal('1e160'),
           new Decimal('1e320'),
           new Decimal('1e640'),
-        ],
+        ]
 
         this.player.tickspeed = 1000
 
@@ -927,6 +976,8 @@ Vue.createApp({
         if(this.activechallengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
         if(this.player.rankchallengebonuses.includes(0))this.player.money = this.player.money.add(new Decimal("1e9"))
         if(this.player.rankchallengebonuses.includes(1))this.player.accelerators[0] = this.player.accelerators[0].add(256)
+
+
 
       }
     },
@@ -1106,16 +1157,16 @@ Vue.createApp({
       this.world = i
     },
     shrinkworld(i){
-      if(4>this.counttrophies(i)){
+      if(4>this.trophynumber[i]){
         alert("実績が4つ未満なので、世界を収縮できません。")
         return
       }
-      if(this.players[i].remember>=this.counttrophies(i)){
+      if(this.players[i].remember>=this.trophynumber[i]){
         alert("実績が思い出より多くありません。")
         return
       }
       if(confirm("世界"+(i+1)+"を収縮させ、記憶を思い出に変化させますか？収縮した世界は最初からになります。")){
-        let u = this.counttrophies(i)
+        let u = this.trophynumber[i]
         let r = this.checkremembers()
         this.players[i] = initialData()
         this.players[i].remember = u
@@ -1223,6 +1274,46 @@ Vue.createApp({
             this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[13][j]))
           }
         }
+        if(r>=49){
+          for(let j=0;j<this.rememberdata.givenchalenges[14].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[14][j]))
+          }
+        }
+        if(r>=50){
+          for(let j=0;j<this.rememberdata.givenchalenges[15].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[15][j]))
+          }
+        }
+        if(r>=51){
+          for(let j=0;j<this.rememberdata.givenchalenges[16].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[16][j]))
+          }
+        }
+        if(r>=52){
+          for(let j=0;j<this.rememberdata.givenchalenges[17].length;j++){
+            this.players[i].challengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[17][j]))
+          }
+        }
+        if(r>=53){
+          for(let j=0;j<this.rememberdata.givenchalenges[0].length;j++){
+            this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[0][j]))
+          }
+        }
+        if(r>=54){
+          for(let j=0;j<this.rememberdata.givenchalenges[1].length;j++){
+            this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[1][j]))
+          }
+        }
+        if(r>=55){
+          for(let j=0;j<this.rememberdata.givenchalenges[2].length;j++){
+            this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[2][j]))
+          }
+        }
+        if(r>=56){
+          for(let j=0;j<this.rememberdata.givenchalenges[3].length;j++){
+            this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[3][j]))
+          }
+        }
 
 
         this.players[i].token = this.players[i].challengecleared.length
@@ -1230,6 +1321,9 @@ Vue.createApp({
 
 
       }
+    },
+    confchecktrophies(){
+      this.trophycheck = !this.trophycheck
     },
 
     checktrophies(){
@@ -1303,6 +1397,31 @@ Vue.createApp({
       if(this.player.shine>=10000000)this.player.smalltrophies[57] = true
       if(this.exported.length>=2)this.player.smalltrophies[58] = true
       if(this.player.tweeting.length>=2)this.player.smalltrophies[59] = true
+      if(this.player.darkgenerators[0].greaterThanOrEqualTo(1))this.player.smalltrophies[59] = true
+      if(this.player.darkgenerators[1].greaterThanOrEqualTo(1))this.player.smalltrophies[60] = true
+      if(this.player.darkgenerators[2].greaterThanOrEqualTo(1))this.player.smalltrophies[61] = true
+      if(this.player.darkgenerators[3].greaterThanOrEqualTo(1))this.player.smalltrophies[62] = true
+      if(this.player.darkgenerators[4].greaterThanOrEqualTo(1))this.player.smalltrophies[63] = true
+      if(this.player.darkgenerators[5].greaterThanOrEqualTo(1))this.player.smalltrophies[64] = true
+      if(this.player.darkgenerators[6].greaterThanOrEqualTo(1))this.player.smalltrophies[65] = true
+      if(this.player.darkgenerators[7].greaterThanOrEqualTo(1))this.player.smalltrophies[66] = true
+      if(this.player.rankchallengecleared.length>=32)this.player.smalltrophies[67] = true
+      if(this.player.rankchallengecleared.length>=64)this.player.smalltrophies[68] = true
+      if(this.player.rankchallengecleared.length>=96)this.player.smalltrophies[69] = true
+      if(this.player.rankchallengecleared.length>=128)this.player.smalltrophies[70] = true
+      if(this.player.rankchallengecleared.length>=160)this.player.smalltrophies[71] = true
+      if(this.player.rankchallengecleared.length>=192)this.player.smalltrophies[72] = true
+      if(this.player.rankchallengecleared.length>=224)this.player.smalltrophies[73] = true
+      if(this.player.rankchallengecleared.length>=255)this.player.smalltrophies[74] = true
+      if(this.player.brightness>=10)this.player.smalltrophies[75] = true
+      if(this.player.brightness>=100)this.player.smalltrophies[76] = true
+      if(this.player.brightness>=1000)this.player.smalltrophies[77] = true
+      if(this.player.brightness>=10000)this.player.smalltrophies[78] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(1))this.player.smalltrophies[79] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(777))this.player.smalltrophies[80] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo(7777777))this.player.smalltrophies[81] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo("1e18"))this.player.smalltrophies[82] = true
+      if(this.player.darkmoney.greaterThanOrEqualTo("1e72"))this.player.smalltrophies[83] = true
 
 
     },
@@ -1312,7 +1431,8 @@ Vue.createApp({
       for(let i=0;i<8;i++){
         if(this.players[index].trophies[i])cnt++;
       }
-      return cnt
+      this.trophynumber[index] = cnt
+
     },
     countsmalltrophies(index){
       let cnt = 0;
@@ -1325,8 +1445,9 @@ Vue.createApp({
       let cnt = 0;
 
       for(let i=0;i<10;i++){
+        this.counttrophies(i)
         if(this.world==i) continue
-        cnt += this.counttrophies(i)
+        cnt += this.trophynumber[i]
       }
       this.memory = cnt
     },
@@ -1364,6 +1485,8 @@ Vue.createApp({
 
     this.checkmemories();
     this.checkworlds();
+
+    this.time = Date.now()
 
 
     setTimeout(this.update, this.player.tickspeed);

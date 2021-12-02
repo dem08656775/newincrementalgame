@@ -42,9 +42,14 @@
 				<span id="world" v-if="worldopened[1] || worldopened[2]">
 					<button type="button" @click="changeTab('world')">世界</button>
 				</span>
+				<span id="chip" v-if="checkremembers()>=32">
+					<button type="button" @click="changeTab('chip')">鋳片</button>
+				</span>
 				<span id="trophy">
 					<button type="button" @click="changeTab('trophy')">実績</button>
 				</span>
+
+
 			</div>
 			<div class="basictabcontents" v-show="player.currenttab == 'basic'">
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
@@ -88,7 +93,7 @@
 								変更
 							</button>
 						</div>
-						<span v-show="showmult">
+						<span v-show="showmult  && !activechallengebonuses.includes(13)">
 							倍率: {{ calcincrementmult(i-1,player.generatorsMode[i-1]).toExponential(2) }}
 						</span>
 					</div>
@@ -323,6 +328,12 @@
 					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 160" @click="spendshine(1000)">
 						輝き消費:1000
 					</button>
+					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 192" @click="spendshine(10000)">
+						輝き消費:10000
+					</button>
+					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 224" @click="spendshine(100000)">
+						輝き消費:100000
+					</button>
 				</div>
 				<div>輝き入手率: {{ Math.round(shinedata.getp(player.challengecleared.length) * 100) }}%</div>
 				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length)　}}</div>
@@ -360,7 +371,7 @@
 				<div>
 					記憶は、他世界での実績の個数の合計です。記憶が多くなるほど、発生器の生産量が増加します。
 				</div>
-				<div v-if="counttrophies(0)>=6">
+				<div v-if="trophynumber[0]>=6">
 					合計思い出: {{ checkremembers() }}
 					<button type="button"  v-if="false" @click="spendremember()">
 						思い出消費
@@ -373,13 +384,13 @@
 					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
 						世界 {{ i }}
 					</button>
-					<button type="button" v-if="counttrophies(0)>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= counttrophies(i-1) ||  counttrophies(i-1) < 4}" @click="shrinkworld(i-1)">
+					<button type="button" v-if="trophynumber[0]>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= trophynumber[i-1] ||  trophynumber[i-1] < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
 					<span>
-						記憶: {{ counttrophies(i-1) }}
+						記憶: {{ trophynumber[i-1] }}
 					</span>
-					<span v-if="counttrophies(0)>=6">
+					<span v-if="trophynumber[0]>=6">
 						思い出:{{ players[i-1].remember }}
 					</span>
 				</div>
@@ -390,7 +401,31 @@
 					</div>
 				</div>
 			</div>
+
+
+			<div v-show="player.currenttab == 'chip'">
+				鋳片は、ポイントを多く貯めて段位リセットすると入手できることがあります。
+				ポイントをより多く貯めるほど、鋳片が入手できる確率が上昇し、また上位の鋳辺が入手しやすくなります。
+				<br>
+				入手可能鋳片
+				<div v-for="i in 3" :key="i">
+					<div v-show="chipdata.getcl(player.money)>=i*3-2">
+						{{ chipdata.chipname[i-1] }}
+					</div>
+				</div>
+				所持鋳片
+				<div v-for="i in 3" :key="i">
+					<div v-show="player.chip[i-1]>0">
+						{{ chipdata.chipname[i-1] }}: {{ player.chip[i-1] }}
+					</div>
+				</div>
+			</div>
 			<div v-show="player.currenttab == 'trophy'">
+				<button type="button" @click="confchecktrophies()">
+					実績更新:
+				</button>
+				現在 {{ trophycheck?"する":"しない" }}
+				<br>
 				実績
 				<div class="levelitem" v-for="i in 8" :key="i">
 					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
@@ -443,6 +478,7 @@
 	<script type="text/javascript" src="shine.js"></script>
 	<script type="text/javascript" src="trophy.js"></script>
 	<script type="text/javascript" src="remember.js"></script>
+	<script type="text/javascript" src="chip.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>
