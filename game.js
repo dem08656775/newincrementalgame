@@ -929,7 +929,7 @@ Vue.createApp({
           this.activechallengebonuses = this.player.challengebonuses;
         }
 
-        if(this.checkremembers()>=32 && this.player.money.greaterThan(1e120)){
+        if(this.checkremembers()>=16 && this.player.money.greaterThan(1e120)){
           let gainchip = this.calcgainchip()
           console.log(gainchip)
           if(gainchip!=-1 && this.player.chip[gainchip]<10000){
