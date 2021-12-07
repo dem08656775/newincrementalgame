@@ -1,4 +1,5 @@
 const version = 2;
+const setchipnum = 100;
 
 const initialData = () => {
   return {
@@ -84,7 +85,8 @@ const initialData = () => {
     remember: 0,
     rememberspent: 0,
 
-    chip:[0,0,0,0]
+    chip:[0,0,0,0],
+    setchip: new Array(100).fill(setchipnum).map(() => 0),
 
   }
 }
@@ -260,6 +262,7 @@ Vue.createApp({
       }
 
       mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
+      mult = mult.mul(1+this.player.setchip[i+1]*0.2)
 
       return mult
     },
@@ -294,6 +297,8 @@ Vue.createApp({
       if(this.player.darkgenerators[i].greaterThanOrEqualTo(1)){
         mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
       }
+
+      mult = mult.mul(1+this.player.setchip[0]*0.05)
 
       this.incrementalmults[i] = mult
 
@@ -339,6 +344,7 @@ Vue.createApp({
         }else if(i!=1&&this.player.rankchallengebonuses.includes(6)){
           mult = this.player.rankchallengebonuses.includes(10)?mult.add(this.player.acceleratorsBought[i].pow_base(2)):mult.add(this.player.acceleratorsBought[i])
         }
+        mult = mult.mul(new Decimal(1.5).pow(this.player.setchip[i+10]))
         this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(mult).mul(mu))
 
       }
@@ -472,7 +478,7 @@ Vue.createApp({
         }
       }
 
-      let acnum = this.player.accelerators[0]
+      let acnum = this.player.accelerators[0].mul(new Decimal(1.5).pow(this.player.setchip[10]))
 
       if(this.player.rankchallengebonuses.includes(13)){
         for(let i=1;i<8;i++){
@@ -482,7 +488,7 @@ Vue.createApp({
 
 
       //this.player.tickspeed = 10
-      this.player.tickspeed = (1000-this.player.levelitems[1]*this.player.challengebonuses.length) / acnum.add(10).mul(amult).log10()
+      this.player.tickspeed = (1000-this.player.setchip[9]*50-this.player.levelitems[1]*this.player.challengebonuses.length * (1+this.player.setchip[27]*0.5)) / acnum.add(10).mul(amult).log10()
 
       if(this.player.rankchallengebonuses.includes(9)){
         this.multbyac = new Decimal(50).div(this.player.tickspeed)
@@ -592,6 +598,7 @@ Vue.createApp({
           ]
         }
 
+
         if(!('remember' in saveData)){
           saveData.remember = 0
         }
@@ -603,6 +610,9 @@ Vue.createApp({
         }
         if(!('chip' in saveData)){
           saveData.chip = [0,0,0,0]
+        }
+        if(!('setchip' in saveData)){
+          saveData.setchip = new Array(setchipnum).fill(null).map(() => 0)
         }
 
 
@@ -672,7 +682,8 @@ Vue.createApp({
           remember: saveData.remember ?? 0,
           rememberspent: saveData.rememberspent ?? 0,
 
-          chip:saveData.chip ?? [0,0,0,0]
+          chip:saveData.chip ?? [0,0,0,0],
+          setchip:saveData.setchip ?? new Array(setchipnum).fill(null).map(() => 0)
         };
         if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
       this.calcaccost()
@@ -870,7 +881,9 @@ Vue.createApp({
     calcgainlevel(){
       let dividing = 19-this.player.rank.add(2).log2()
       if(dividing<1) dividing = 1
-      let gainlevel = new Decimal(this.player.money.log10()).div(dividing).pow_base(2)
+      let mny = this.player.money.log10()-17
+      mny = new Decimal(mny).pow(this.player.setchip[18])
+      let gainlevel = new Decimal(this.player.money.mul(mny).log10()).div(dividing).pow_base(2)
 
       let glmin = new Decimal(18).div(dividing).pow_base(2)
       let glmax = this.player.maxlevelgained.div(2)
@@ -879,10 +892,10 @@ Vue.createApp({
         if(gainlevel.lt(glmax)){
           let persent = new Decimal(1).sub(gainlevel.sub(glmin).div(glmax.sub(glmin)))
 
-          persent = persent.pow(1+this.player.levelitems[0])
+          persent = persent.pow(1+this.player.levelitems[0]*(1+this.player.setchip[26]*2))
           persent = new Decimal(1).sub(persent)
           if(persent.lt("1e-5")){
-            gainlevel = gainlevel.mul(1+this.player.levelitems[0])
+            gainlevel = gainlevel.mul(1+this.player.levelitems[0]*(1+this.player.setchip[26]*2))
           }else{
             gainlevel = glmax.sub(glmin).mul(persent).add(glmin)
           }
@@ -1424,6 +1437,14 @@ Vue.createApp({
       if(this.player.darkmoney.greaterThanOrEqualTo("1e72"))this.player.smalltrophies[84] = true
 
 
+    },
+
+    chipset(i,j){
+      if(this.player.setchip == j) return
+      let oldchip = this.player.setchip[i]-1
+      if(oldchip!=-1)this.player.chip[oldchip] = this.player.chip[oldchip]+1
+      this.player.setchip[i] = j
+      if(j!=0)this.player.chip[j-1] = this.player.chip[j-1] - 1
     },
 
     counttrophies(index){

@@ -407,18 +407,35 @@
 				鋳片は、ポイントを多く貯めて段位リセットすると入手できることがあります。
 				ポイントをより多く貯めるほど、鋳片が入手できる確率が上昇し、また上位の鋳辺が入手しやすくなります。
 				<br>
+				<br>
 				入手可能鋳片
 				<div v-for="i in 3" :key="i">
 					<div v-show="chipdata.getcl(player.money)>=i*3-2">
 						{{ chipdata.chipname[i-1] }}
 					</div>
 				</div>
+				<br>
 				所持鋳片
 				<div v-for="i in 3" :key="i">
 					<div v-show="player.chip[i-1]>0">
 						{{ chipdata.chipname[i-1] }}: {{ player.chip[i-1] }}
 					</div>
 				</div>
+				<br>
+				鋳片使用
+				<div v-for="i in 32" :key="i">
+					鋳片効力 {{ i }} : {{ chipdata.chipbonusname[i-1] }}
+					<span v-for="j in 3" :key="j">
+						<button v-show="player.chip[j-1]>0" @click="chipset(i-1,j)">
+							{{ chipdata.chipname[j-1] }}
+						</button>
+					</span>
+					<button @click="chipset(i-1,0)">
+						外す
+					</button>
+					現在: {{ player.setchip[i-1]==0?"なし":chipdata.chipname[player.setchip[i-1]-1] }}
+				</div>
+
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
 				<button type="button" @click="confchecktrophies()">
