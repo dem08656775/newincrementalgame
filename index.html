@@ -42,7 +42,7 @@
 				<span id="world" v-if="worldopened[1] || worldopened[2]">
 					<button type="button" @click="changeTab('world')">世界</button>
 				</span>
-				<span id="chip" v-if="checkremembers()>=16">
+				<span id="chip" v-if="player.smalltrophies[5]">
 					<button type="button" @click="changeTab('chip')">鋳片</button>
 				</span>
 				<span id="trophy">
@@ -335,7 +335,7 @@
 						輝き消費:100000
 					</button>
 				</div>
-				<div>輝き入手率: {{ Math.round(shinedata.getp(player.challengecleared.length) * 100) }}%</div>
+				<div>輝き入手率: {{ Math.round(shinepersent * 100)  }}%</div>
 				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length)　}}</div>
 				<br>
 				<div>
@@ -362,7 +362,7 @@
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
 					</button>
-					<div>煌き入手率: {{ shinedata.getbp(player.rankchallengecleared.length) * 100 }}%</div>
+					<div>煌き入手率: {{ brightpersent * 100 }}%</div>
 					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
 				</div>
 			</div>
@@ -409,14 +409,14 @@
 				<br>
 				<br>
 				入手可能鋳片
-				<div v-for="i in 3" :key="i">
-					<div v-show="chipdata.getcl(player.money)>=i*3-2">
+				<div v-for="i in 4" :key="i">
+					<div v-show="chipdata.getcl(player.money)>=i*4-3">
 						{{ chipdata.chipname[i-1] }}
 					</div>
 				</div>
 				<br>
 				所持鋳片
-				<div v-for="i in 3" :key="i">
+				<div v-for="i in 4" :key="i">
 					<div v-show="player.chip[i-1]>0">
 						{{ chipdata.chipname[i-1] }}: {{ player.chip[i-1] }}
 					</div>
@@ -425,15 +425,27 @@
 				鋳片使用
 				<div v-for="i in 32" :key="i">
 					鋳片効力 {{ i }} : {{ chipdata.chipbonusname[i-1] }}
-					<span v-for="j in 3" :key="j">
+					<span v-for="j in 4" :key="j">
 						<button v-show="player.chip[j-1]>0" @click="chipset(i-1,j)">
-							{{ chipdata.chipname[j-1] }}
+							{{ chipdata.chipname[j-1] }} コスト:{{ chipused[j-1]+1 }}
 						</button>
 					</span>
 					<button @click="chipset(i-1,0)">
 						外す
 					</button>
 					現在: {{ player.setchip[i-1]==0?"なし":chipdata.chipname[player.setchip[i-1]-1] }}
+				</div>
+				<div v-if="checkremembers()>=16" v-for="i in 8" :key="i">
+					鋳片効力 {{ i+32 }} : {{ chipdata.chipbonusname[i+32-1] }}
+					<span v-for="j in 4" :key="j">
+						<button v-show="player.chip[j-1]>0" @click="chipset(i+32-1,j)">
+							{{ chipdata.chipname[j-1] }} コスト:{{ chipused[j-1]+1 }}
+						</button>
+					</span>
+					<button @click="chipset(i+32-1,0)">
+						外す
+					</button>
+					現在: {{ player.setchip[i+32-1]==0?"なし":chipdata.chipname[player.setchip[i+32-1]-1] }}
 				</div>
 
 			</div>

@@ -124,10 +124,13 @@ Vue.createApp({
       multbyac:new Decimal(1),
 
       shinepersent:0,
+      brightpersent:0,
       memory:0,
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
+
+      chipused:[0,0,0,0],
 
       world:0,
 
@@ -223,7 +226,7 @@ Vue.createApp({
     calccommonmult(){
       let mult = new Decimal(1);
       if(!(this.player.onchallenge && this.player.challenges.includes(7))){
-        let cap = new Decimal(100).mul(this.player.levelitems[2]+1)
+        let cap = new Decimal(100).mul(this.player.levelitems[2]*(1+this.player.setchip[28]*0.3)+1)
         mult = mult.mul(this.softCap(this.player.levelresettime.add(1),cap))
       }
 
@@ -252,6 +255,11 @@ Vue.createApp({
       mult = mult.mul(this.multbyac)
       if(this.multbyac.gt(1)) mult = mult.mul(this.multbyac)
 
+      mult = mult.mul(1+this.player.setchip[0]*0.05)
+
+      let d = new Date()
+      if(d.getMonth()==0&&d.getDate()<=7)mult = mult.mul(5)
+
       this.commonmult = mult
     },
 
@@ -261,8 +269,9 @@ Vue.createApp({
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
 
-      mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow(i - to))
-      mult = mult.mul(1+this.player.setchip[i+1]*0.2)
+      let lv = this.player.level.pow(1+0.5*this.player.setchip[19])
+
+      mult = mult.mul(new Decimal(lv.add(2).log2()).pow(i - to))
 
       return mult
     },
@@ -298,9 +307,9 @@ Vue.createApp({
         mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
       }
 
-      mult = mult.mul(1+this.player.setchip[0]*0.05)
-
       this.incrementalmults[i] = mult
+
+      mult = mult.mul(1+this.player.setchip[i+1]*0.2)
 
     },
 
@@ -425,15 +434,16 @@ Vue.createApp({
         }
       }
 
-      let p = this.shinedata.getp(this.player.challengecleared.length)
+      this.shinepersent = this.shinedata.getp(this.player.challengecleared.length)
+      this.shinepersent += 0.02 * this.player.setchip[30]
 
-      if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) && Math.random()<p){
+      if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) && Math.random()<this.shinepersent){
         this.player.shine += this.player.rankchallengebonuses.includes(2)?2:1
       }
 
-      let bp = this.shinedata.getbp(this.player.rankchallengecleared.length)
+      this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
 
-      if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) && Math.random()<bp){
+      if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) && Math.random()<this.brightpersent){
         this.player.brightness += 1
       }
 
@@ -926,7 +936,7 @@ Vue.createApp({
       let dividing = 19-this.player.rank.add(2).log2()
       if(dividing<1) dividing = 1
       let gainlevel = this.calcgainlevel()
-      let gainlevelreset =  this.player.rankresettime.add(1).mul(new Decimal(exit?0:this.activechallengebonuses.includes(8)?2:1))
+      let gainlevelreset =  this.player.rankresettime.add(1).mul(1+this.player.setchip[20]).mul(new Decimal(exit?0:this.activechallengebonuses.includes(8)?2:1))
 
       if (force || confirm('昇段リセットして、段位' + gainlevel + 'を得ますか？')) {
         if(this.player.onchallenge) {
@@ -942,10 +952,10 @@ Vue.createApp({
           this.activechallengebonuses = this.player.challengebonuses;
         }
 
-        if(this.checkremembers()>=16 && this.player.money.greaterThan(1e120)){
+        if(this.player.money.greaterThan(1e80)){
           let gainchip = this.calcgainchip()
           console.log(gainchip)
-          if(gainchip!=-1 && this.player.chip[gainchip]<10000){
+          if(gainchip!=-1 && this.player.chip[gainchip]<100000){
             this.player.chip[gainchip] = this.player.chip[gainchip]+1
           }
         }
@@ -1060,7 +1070,7 @@ Vue.createApp({
         this.player.tickspeed = 1000
 
         this.player.rank = this.player.rank.add(gainrank)
-        this.player.rankresettime = this.player.rankresettime.add(this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1))
+        this.player.rankresettime = this.player.rankresettime.add((this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1)).mul(this.player.setchip[24]))
 
         this.player.levelitems = [0,0,0,0,0]
 
@@ -1355,7 +1365,7 @@ Vue.createApp({
       if(this.player.money.greaterThan(7777777))this.player.smalltrophies[2] = true
       if(this.player.money.greaterThan("1e19"))this.player.smalltrophies[3] = true
       if(this.player.money.greaterThan("1e36"))this.player.smalltrophies[4] = true
-      if(this.player.money.greaterThan("1e73"))this.player.smalltrophies[5] = true
+      if(this.player.money.greaterThan("1e77"))this.player.smalltrophies[5] = true
       if(this.player.money.greaterThan("1e81"))this.player.smalltrophies[6] = true
       if(this.player.money.greaterThan("1e303"))this.player.smalltrophies[7] = true
       if(this.player.generatorsBought[0].greaterThan(0))this.player.smalltrophies[8] = true
@@ -1440,11 +1450,20 @@ Vue.createApp({
     },
 
     chipset(i,j){
-      if(this.player.setchip == j) return
+      if(this.player.setchip[i] == j) return
+      if(this.player.chip[j-1]<=this.chipused[j-1]) return
       let oldchip = this.player.setchip[i]-1
-      if(oldchip!=-1)this.player.chip[oldchip] = this.player.chip[oldchip]+1
+      if(oldchip!=-1)this.player.chip[oldchip] = this.player.chip[oldchip]+this.chipused[oldchip]
       this.player.setchip[i] = j
-      if(j!=0)this.player.chip[j-1] = this.player.chip[j-1] - 1
+      if(j!=0)this.player.chip[j-1] = this.player.chip[j-1] - (this.chipused[j-1]+1)
+      this.checkusedchips()
+    },
+
+    checkusedchips(){
+      this.chipused.fill(0)
+      for(let v of this.player.setchip){
+        if(v!=0)this.chipused[v-1] = this.chipused[v-1]+1
+      }
     },
 
     counttrophies(index){
@@ -1506,6 +1525,7 @@ Vue.createApp({
 
     this.checkmemories();
     this.checkworlds();
+    this.checkusedchips();
 
     this.time = Date.now()
 
