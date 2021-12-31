@@ -1070,7 +1070,7 @@ Vue.createApp({
         this.player.tickspeed = 1000
 
         this.player.rank = this.player.rank.add(gainrank)
-        this.player.rankresettime = this.player.rankresettime.add((this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1)).mul(this.player.setchip[24]))
+        this.player.rankresettime = this.player.rankresettime.add((this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1)).mul(this.player.setchip[24]+1))
 
         this.player.levelitems = [0,0,0,0,0]
 
