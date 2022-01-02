@@ -698,6 +698,7 @@ Vue.createApp({
         if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
       this.calcaccost()
       this.calcdgcost()
+      this.checkusedchips()
     },
     changeTab(tabname){
       this.player.currenttab = tabname;
