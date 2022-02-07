@@ -145,6 +145,12 @@
 				<div id="darkcoinamount" v-show="player.rankchallengecleared.length>=32">裏ポイント: {{ player.darkmoney.toExponential(3) }}</div>
 				裏発生器iは発生器iを強化します。
 				<div v-show = "player.rankchallengecleared.length>=32">裏発生器は、煌きを消費すると発生器のように動作し、裏ポイントや下位の裏発生器を生み出します。裏ポイントは全ての発生器を強化します。</div>
+				<div id="darklevelreset" v-if="player.darkmoney.greaterThanOrEqualTo('1e18')">
+					<button type="button" @click="resetDarklevel()">裏昇段リセット</button>
+				</div>
+				<div v-if="player.darklevel.gt(0)">
+					裏段位: {{ toFormated(player.darklevel,5) }}
+				</div>
 				<div class="darkgenerator" v-for="i in 8" :key="i">
 					<span>
 						裏発生器{{ i }}: {{ player.darkgenerators[i-1].toExponential(3)+' '}}
@@ -362,7 +368,7 @@
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
 					</button>
-					<div>煌き入手率: {{ brightpersent * 100 }}%</div>
+					<div>煌き入手率: {{ (brightpersent * 100).toFixed(1) }}%</div>
 					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
 				</div>
 			</div>
@@ -435,7 +441,7 @@
 					</button>
 					現在: {{ player.setchip[i-1]==0?"なし":chipdata.chipname[player.setchip[i-1]-1] }}
 				</div>
-				<div v-if="checkremembers()>=16" v-for="i in 8" :key="i">
+				<div v-if="checkremembers()>=16" v-for="i in 20" :key="i">
 					鋳片効力 {{ i+32 }} : {{ chipdata.chipbonusname[i+32-1] }}
 					<span v-for="j in 4" :key="j">
 						<button v-show="player.chip[j-1]>0" @click="chipset(i+32-1,j)">
@@ -447,6 +453,7 @@
 					</button>
 					現在: {{ player.setchip[i+32-1]==0?"なし":chipdata.chipname[player.setchip[i+32-1]-1] }}
 				</div>
+
 
 			</div>
 			<div v-show="player.currenttab == 'trophy'">

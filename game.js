@@ -58,6 +58,8 @@ const initialData = () => {
       new Decimal('1e612')
     ],
 
+    darklevel:new Decimal(0),
+
     tickspeed: 1000,
     saveversion: version,
 
@@ -249,7 +251,7 @@ Vue.createApp({
       }
 
       if(this.player.darkmoney.greaterThanOrEqualTo(1)){
-        mult = mult.mul(this.player.darkmoney.add(10).log10())
+        mult = mult.mul(new Decimal(this.player.darkmoney.add(10).log10()).pow(1+this.player.setchip[40]*0.1))
       }
 
       mult = mult.mul(this.multbyac)
@@ -258,7 +260,8 @@ Vue.createApp({
       mult = mult.mul(1+this.player.setchip[0]*0.05)
 
       let d = new Date()
-      if(d.getMonth()==0&&d.getDate()<=7)mult = mult.mul(5)
+      if(d.getMonth()==0&&d.getDate()<=7)mult = mult.mul(5)//新年キャンペーン
+      if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)mult = mult.mul(5)//バレンタインキャンペーン
 
       this.commonmult = mult
     },
@@ -304,7 +307,7 @@ Vue.createApp({
       }
 
       if(this.player.darkgenerators[i].greaterThanOrEqualTo(1)){
-        mult = mult.mul(i+2+this.player.darkgenerators[i].log10())
+        mult = mult.mul(new Decimal(i+2+this.player.darkgenerators[i].log10()).pow(1+this.player.setchip[i+32]*0.25))
       }
 
       this.incrementalmults[i] = mult
@@ -360,9 +363,11 @@ Vue.createApp({
     },
 
     updatedarkgenerators(mu){
-      this.player.darkmoney = this.player.darkmoney.add(this.player.darkgenerators[0].mul(mu))
+      let darkmult = this.player.darklevel.add(1)
+      darkmult = this.softCap(darkmult,new Decimal(1e10))
+      this.player.darkmoney = this.player.darkmoney.add(this.player.darkgenerators[0].mul(mu).mul(darkmult).mul(1+this.player.setchip[41]*0.25))
       for (let i = 1; i < 8; i++) {
-        this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(this.player.darkgenerators[i].mul(mu))
+        this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(this.player.darkgenerators[i].mul(mu).mul(darkmult).mul(1+this.player.setchip[41+i]*0.25))
       }
     },
 
@@ -442,6 +447,7 @@ Vue.createApp({
       }
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
+      this.brightpersent += 0.001 * this.player.setchip[49]
 
       if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) && Math.random()<this.brightpersent){
         this.player.brightness += 1
@@ -624,6 +630,9 @@ Vue.createApp({
         if(!('setchip' in saveData)){
           saveData.setchip = new Array(setchipnum).fill(null).map(() => 0)
         }
+        if(!('darklevel' in saveData)){
+          saveData.darklevel = new Decimal(0)
+        }
 
 
         this.players[i] = saveData
@@ -662,6 +671,8 @@ Vue.createApp({
           darkgenerators: saveData.darkgenerators.map(v => new Decimal(v)),
           darkgeneratorsBought: saveData.darkgeneratorsBought.map(v => new Decimal(v)),
           darkgeneratorsCost: saveData.darkgeneratorsCost.map(v => new Decimal(v)),
+
+          darklevel: new Decimal(saveData.darklevel),
 
           tickspeed: parseFloat(saveData.tickspeed),
           saveversion: parseInt(saveData.saveversion),
@@ -925,6 +936,28 @@ Vue.createApp({
       let level = this.chipdata.getcl(this.player.money)
       return this.chipdata.getchipid(level)
     },
+
+    resetDarklevel(){
+      let gaindarklevel = new Decimal(this.player.darkmoney.log10()).div(18).pow_base(2).round()
+      if(confirm('裏昇段リセットして、裏段位' + gaindarklevel + 'を得ますか？')){
+        this.player.darkmoney = new Decimal(0)
+        this.player.darkgenerators = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.darkgeneratorsBought = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.darkgeneratorsCost = [
+          new Decimal('1e100'),
+          new Decimal('1e108'),
+          new Decimal('1e127'),
+          new Decimal('1e164'),
+          new Decimal('1e225'),
+          new Decimal('1e316'),
+          new Decimal('1e423'),
+          new Decimal('1e612')
+        ],
+        this.player.darklevel = this.player.darklevel.add(gaindarklevel)
+      }
+    },
+
+
 
     resetLevel(force,exit) {
       if(this.player.onchallenge && this.player.challenges.includes(0)){
