@@ -70,10 +70,12 @@ const initialData = () => {
     challengecleared:[],
     challengebonuses:[],
 
-    boughttype:[false,false,false],
+    boughttype:[false,false,false,false,false],
     setmodes: new Array(8).fill(null).map((_, i) => i),
     setchallengebonusesfst:[],
     setchallengebonusessnd:[],
+    setrankchallengebonusesfst:[],
+    setrankchallengebonusessnd:[],
 
     rankchallengecleared:[],
     rankchallengebonuses:[],
@@ -128,6 +130,7 @@ Vue.createApp({
       shinepersent:0,
       brightpersent:0,
       memory:0,
+
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
@@ -165,6 +168,9 @@ Vue.createApp({
 
       if(this.player.tweeting.includes('level')){
         tweetText += '段位:' + this.player.level + '%0A';
+      }
+      if(this.player.tweeting.includes('darklevel')){
+        tweetText += '裏段位:' + this.player.darklevel + '%0A';
       }
       if(this.player.tweeting.includes('achieved')){
         tweetText += '挑戦達成:' + this.player.challengecleared.length + '%0A';
@@ -364,7 +370,7 @@ Vue.createApp({
 
     updatedarkgenerators(mu){
       let darkmult = this.player.darklevel.add(1)
-      darkmult = this.softCap(darkmult,new Decimal(1e10))
+      darkmult = this.softCap(darkmult,new Decimal(1e3))
       this.player.darkmoney = this.player.darkmoney.add(this.player.darkgenerators[0].mul(mu).mul(darkmult).mul(1+this.player.setchip[41]*0.25))
       for (let i = 1; i < 8; i++) {
         this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(this.player.darkgenerators[i].mul(mu).mul(darkmult).mul(1+this.player.setchip[41+i]*0.25))
@@ -430,6 +436,8 @@ Vue.createApp({
 
       this.calctoken()
 
+      let rememberlevel = Math.floor((this.checkremembers()+16)/16)
+
       let amult = new Decimal(1)
       if(this.activechallengebonuses.includes(6)){
         if(this.player.rankchallengebonuses.includes(10)){
@@ -442,14 +450,14 @@ Vue.createApp({
       this.shinepersent = this.shinedata.getp(this.player.challengecleared.length)
       this.shinepersent += 0.02 * this.player.setchip[30]
 
-      if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) && Math.random()<this.shinepersent){
+      if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) * rememberlevel && Math.random()<this.shinepersent){
         this.player.shine += this.player.rankchallengebonuses.includes(2)?2:1
       }
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
 
-      if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) && Math.random()<this.brightpersent){
+      if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
         this.player.brightness += 1
       }
 
@@ -578,7 +586,10 @@ Vue.createApp({
           saveData.rankchallengebonuses = []
         }
         if(!('boughttype' in saveData)){
-          saveData.boughttype = [false,false,false]
+          saveData.boughttype = [false,false,false,false,false]
+        }
+        if(saveData.boughttype.length<5){
+          saveData.boughttype.push(false)
         }
         if(!('setmodes' in saveData)){
           saveData.setmodes = new Array(8).fill(null).map((_, i) => i)
@@ -588,6 +599,12 @@ Vue.createApp({
         }
         if(!('setchallengebonusessnd' in saveData)){
           saveData.setchallengebonusessnd = []
+        }
+        if(!('setrankchallengebonusesfst' in saveData)){
+          saveData.setrankchallengebonusesfst = []
+        }
+        if(!('setrankchallengebonusessnd' in saveData)){
+          saveData.setrankchallengebonusessnd = []
         }
         if(!('brightness' in saveData)){
           saveData.brightness = 0
@@ -689,10 +706,12 @@ Vue.createApp({
           rankchallengecleared: saveData.rankchallengecleared ?? [],
           rankchallengebonuses: saveData.rankchallengebonuses ?? [],
 
-          boughttype: saveData.boughttype ?? [false,false,false],
+          boughttype: saveData.boughttype ?? [false,false,false,false,false],
           setmodes: saveData.setmodes ?? new Array(8).fill(null).map((_, i) => i),
           setchallengebonusesfst:saveData.setchallengebonusesfst ?? [],
           setchallengebonusessnd:saveData.setchallengebonusessnd ?? [],
+          setrankchallengebonusesfst:saveData.setrankchallengebonusesfst ?? [],
+          setrankchallengebonusessnd:saveData.setrankchallengebonusessnd ?? [],
 
           trophies: saveData.trophies ?? new Array(8).fill(null).map(() => false),
           smalltrophies: saveData.smalltrophies ?? new Array(100).fill(null).map(() => false),
@@ -805,6 +824,23 @@ Vue.createApp({
       }
 
     },
+    setrankbonusetype(index){
+      if(confirm("現在の上位効力を登録します。よろしいですか？")){
+        let ans = []
+        for(let i=0;i<15;i++){
+          if(this.player.rankchallengebonuses.includes(i)){
+            ans.push(i)
+          }
+        }
+        if(index==1){
+          this.player.setrankchallengebonusesfst = ans
+        }
+        if(index==2){
+          this.player.setrankchallengebonusessnd = ans
+        }
+      }
+
+    },
     changebonusetype(index){
       for(let i=0;i<15;i++){
         if(this.player.challengebonuses.includes(i)){
@@ -822,6 +858,28 @@ Vue.createApp({
         for(let i=0;i<15;i++){
           if(this.player.setchallengebonusessnd.includes(i)){
             this.buyRewards(i)
+          }
+        }
+      }
+
+    },
+    changerankbonusetype(index){
+      for(let i=0;i<15;i++){
+        if(this.player.rankchallengebonuses.includes(i)){
+          this.buyrankRewards(i)
+        }
+      }
+      if(index==1){
+        for(let i=0;i<15;i++){
+          if(this.player.setrankchallengebonusesfst.includes(i)){
+            this.buyrankRewards(i)
+          }
+        }
+      }
+      if(index==2){
+        for(let i=0;i<15;i++){
+          if(this.player.setrankchallengebonusessnd.includes(i)){
+            this.buyrankRewards(i)
           }
         }
       }

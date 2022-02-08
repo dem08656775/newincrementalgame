@@ -11,8 +11,4 @@ function Trophydata(){
     "有冠者",
   ]
 
-
-
-
-
 }

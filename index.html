@@ -170,6 +170,7 @@
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darkmoney') }" @click="configtweet('darkmoney')" v-if="player.darkmoney.gt(0)">裏ポイント</button>
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darklevel') }" @click="configtweet('darklevel')" v-if="player.darklevel.gt(0)">裏段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rankachieved') }" @click="configtweet('rankachieved')" v-if="player.rankchallengecleared.length>=1">上位挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rank') }" @click="configtweet('rank')" v-if="player.rankresettime.gt(0)">階位</button>
@@ -261,6 +262,25 @@
 						</button>
 						<span> ・{{ challengedata.rankrewardtext[i-1] }} </span>
 					</div>
+					<div v-if="player.boughttype[3]">
+						型設定
+						<button type="button" @click="setrankbonusetype(1)">
+							上位効力型登録1
+						</button>
+						<button type="button" @click="changerankbonusetype(1)">
+							上位効力型適用1
+						</button>
+					</div>
+					<div v-if="player.boughttype[4]">
+						型設定
+						<button type="button" @click="setrankbonusetype(2)">
+							上位効力型登録2
+						</button>
+						<button type="button" @click="changerankbonusetype(2)">
+							上位効力型適用2
+						</button>
+
+					</div>
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'rank'">
@@ -342,7 +362,7 @@
 					</button>
 				</div>
 				<div>輝き入手率: {{ Math.round(shinepersent * 100)  }}%</div>
-				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length)　}}</div>
+				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
 				<br>
 				<div>
 					型
@@ -354,6 +374,12 @@
 					</button>
 					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[2] }" @click="buytype(2)">
 						効力型2購入:コスト100000
+					</button>
+					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[3] }" @click="buytype(3)" v-if="player.rankchallengecleared.length>=1">
+						上位効力型1購入:コスト300000
+					</button>
+					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[4] }" @click="buytype(4)" v-if="player.rankchallengecleared.length>=1">
+						上位効力型2購入:コスト300000
 					</button>
 				</div>
 				<br>
@@ -369,7 +395,7 @@
 						煌き消費:100
 					</button>
 					<div>煌き入手率: {{ (brightpersent * 100).toFixed(1) }}%</div>
-					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length)　}}</div>
+					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'world'">
