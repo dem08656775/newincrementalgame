@@ -54,7 +54,7 @@ const initialData = () => {
       new Decimal('1e164'),
       new Decimal('1e225'),
       new Decimal('1e316'),
-      new Decimal('1e423'),
+      new Decimal('1e443'),
       new Decimal('1e612')
     ],
 
@@ -91,6 +91,8 @@ const initialData = () => {
 
     chip:[0,0,0,0],
     setchip: new Array(100).fill(setchipnum).map(() => 0),
+
+    worldpipe:new Array(10).fill(null).map(() => 0)
 
   }
 }
@@ -133,6 +135,7 @@ Vue.createApp({
 
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
+      pipedsmalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
 
       chipused:[0,0,0,0],
@@ -251,6 +254,8 @@ Vue.createApp({
       if(this.player.rankchallengebonuses.includes(11)){
         mult = mult.mul(new Decimal(2).pow(new Decimal(this.memory).div(12)))
       }
+
+      mult = mult.mul(1+Math.sqrt(this.pipedsmalltrophy))
 
       if(this.player.onchallenge && this.player.rankchallengebonuses.includes(4)){
         mult = mult.mul(1+this.player.challenges.length*0.25)
@@ -521,6 +526,8 @@ Vue.createApp({
         this.multbyac = new Decimal(1)
       }
 
+      console.log(this.pipedsmalltrophy)
+
 
       setTimeout(this.update, Math.max(this.player.tickspeed-(this.diff+diffm)/2,1));
     },
@@ -626,7 +633,7 @@ Vue.createApp({
             new Decimal('1e164'),
             new Decimal('1e225'),
             new Decimal('1e316'),
-            new Decimal('1e423'),
+            new Decimal('1e443'),
             new Decimal('1e612'),
           ]
         }
@@ -649,6 +656,9 @@ Vue.createApp({
         }
         if(!('darklevel' in saveData)){
           saveData.darklevel = new Decimal(0)
+        }
+        if(!('worldpipe' in saveData)){
+          saveData.worldpipe = new Array(10).fill(null).map(() => 0)
         }
 
 
@@ -723,12 +733,23 @@ Vue.createApp({
           rememberspent: saveData.rememberspent ?? 0,
 
           chip:saveData.chip ?? [0,0,0,0],
-          setchip:saveData.setchip ?? new Array(setchipnum).fill(null).map(() => 0)
+          setchip:saveData.setchip ?? new Array(setchipnum).fill(null).map(() => 0),
+
+          worldpipe:saveData.worldpipe ?? new Array(10).fill(null).map(() => 0)
         };
         if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
       this.calcaccost()
       this.calcdgcost()
       this.checkusedchips()
+
+      this.checktrophies()
+      this.checkmemories()
+      this.checkworlds()
+      this.countsmalltrophies()
+      this.calccommonmult()
+      this.findhighestgenerator()
+
+      this.checkpipedsmalltrophies()
     },
     changeTab(tabname){
       this.player.currenttab = tabname;
@@ -1008,7 +1029,7 @@ Vue.createApp({
           new Decimal('1e164'),
           new Decimal('1e225'),
           new Decimal('1e316'),
-          new Decimal('1e423'),
+          new Decimal('1e443'),
           new Decimal('1e612')
         ],
         this.player.darklevel = this.player.darklevel.add(gaindarklevel)
@@ -1430,13 +1451,24 @@ Vue.createApp({
           }
         }
 
-
         this.players[i].token = this.players[i].challengecleared.length
-
-
 
       }
     },
+
+    openpipe(i){
+
+      if(this.player.worldpipe[i]==1)return
+
+      let havepipe = Math.floor((this.smalltrophy-72)/3)
+      for(let j=0;j<10;j++){
+        havepipe -= this.player.worldpipe[j]
+      }
+
+      if(havepipe>0)this.player.worldpipe[i] = 1
+
+    },
+
     confchecktrophies(){
       this.trophycheck = !this.trophycheck
     },
@@ -1537,6 +1569,22 @@ Vue.createApp({
       if(this.player.darkmoney.greaterThanOrEqualTo(7777777))this.player.smalltrophies[82] = true
       if(this.player.darkmoney.greaterThanOrEqualTo("1e18"))this.player.smalltrophies[83] = true
       if(this.player.darkmoney.greaterThanOrEqualTo("1e72"))this.player.smalltrophies[84] = true
+      if(this.player.chip[0]>0)this.player.smalltrophies[85] = true
+      if(this.player.chip[0]>=210)this.player.smalltrophies[86] = true
+      if(this.player.chip[0]>=1275)this.player.smalltrophies[87] = true
+      if(this.player.chip[1]>0)this.player.smalltrophies[88] = true
+      if(this.player.chip[1]>=210)this.player.smalltrophies[89] = true
+      if(this.player.chip[1]>=1275)this.player.smalltrophies[90] = true
+      if(this.player.chip[2]>0)this.player.smalltrophies[91] = true
+      if(this.player.chip[2]>=210)this.player.smalltrophies[92] = true
+      if(this.player.chip[2]>=1275)this.player.smalltrophies[93] = true
+      if(this.player.chip[3]>0)this.player.smalltrophies[94] = true
+      if(this.player.chip[3]>=210)this.player.smalltrophies[95] = true
+      if(this.player.chip[3]>=1275)this.player.smalltrophies[96] = true
+      if(this.player.darklevel.greaterThan(0))this.player.smalltrophies[97] = true
+      if(this.player.darklevel.greaterThan('1e3'))this.player.smalltrophies[98] = true
+      if(this.player.darklevel.greaterThan('1e10'))this.player.smalltrophies[99] = true
+
 
 
     },
@@ -1565,6 +1613,18 @@ Vue.createApp({
       }
       this.trophynumber[index] = cnt
 
+    },
+    checkpipedsmalltrophies(){
+      let cnt = 0
+      for(i=0;i<10;i++){
+        if(this.players[i].worldpipe[this.world]==1){
+          for(let j=0;j<100;j++){
+            if(this.players[i].smalltrophies[j])cnt++;
+          }
+          cnt -= 75
+        }
+      }
+      this.pipedsmalltrophy = cnt
     },
     countsmalltrophies(index){
       let cnt = 0;

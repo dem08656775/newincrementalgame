@@ -412,6 +412,14 @@
 						思い出は、自分より番号が大きい世界の思い出の合計です。思い出が多くなるほど、階位リセットに必要なポイントが減少します。
 					</div>
 				</div>
+				<div v-if="smalltrophy>=75">
+					世界管所持数: {{ Math.floor((smalltrophy-72)/3) }}
+					<div>
+						世界管を開通すると、開通先の世界での生産力が、開通元の世界の里程の個数に応じて強化されます。
+					</div>
+
+
+				</div>
 				<div class="worlds" v-for="i in 10" :key="i">
 					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
 						世界 {{ i }}
@@ -419,12 +427,19 @@
 					<button type="button" v-if="trophynumber[0]>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= trophynumber[i-1] ||  trophynumber[i-1] < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
+					<button type="button" v-if="i-1!=world && worldopened[i-1]" class="wdbutton" :class="{'unavailable': this.player.worldpipe[i-1]==1 }" @click="openpipe(i-1)">
+						開通
+					</button>
 					<span>
 						記憶: {{ trophynumber[i-1] }}
 					</span>
 					<span v-if="trophynumber[0]>=6">
 						思い出:{{ players[i-1].remember }}
 					</span>
+					<span v-if="smalltrophy>=75">
+						世界管開通:{{ player.worldpipe[i-1]==1?"済":"未" }}
+					</span>
+
 				</div>
 				<div v-if="checkremembers()>0">
 					思い出ボーナス:世界収縮後、思い出ボーナスに応じた状態から新しい世界をスタートすることができます。
@@ -432,6 +447,7 @@
 						達成数 {{ i }} : {{ rememberdata.contents[i-1] }}
 					</div>
 				</div>
+
 			</div>
 
 
