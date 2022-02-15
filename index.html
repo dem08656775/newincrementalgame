@@ -427,7 +427,7 @@
 					<button type="button" v-if="trophynumber[0]>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= trophynumber[i-1] ||  trophynumber[i-1] < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
-					<button type="button" v-if="i-1!=world && worldopened[i-1]" class="wdbutton" :class="{'unavailable': this.player.worldpipe[i-1]==1 }" @click="openpipe(i-1)">
+					<button type="button" v-if="i-1!=world && worldopened[i-1]" class="wdbutton" :class="{'unavailable': player.worldpipe[i-1]==1 }" @click="openpipe(i-1)">
 						開通
 					</button>
 					<span>
