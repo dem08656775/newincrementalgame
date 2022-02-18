@@ -135,7 +135,7 @@ Vue.createApp({
 
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
-      eachpipedsmalltrophy:new Array(10).fill(null).map(() => -1),
+      eachpipedsmalltrophy:new Array(10).fill(null).map(() => 0),
       pipedsmalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
 
