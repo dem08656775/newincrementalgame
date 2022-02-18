@@ -135,6 +135,7 @@ Vue.createApp({
 
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
+      eachpipedsmalltrophy:new Array(10).fill(null).map(() => -1),
       pipedsmalltrophy:0,
       worldopened:new Array(10).fill(null).map(() => false),
 
@@ -217,11 +218,27 @@ Vue.createApp({
       return cap.mul(capped).min(num)
     },
 
+    calcgncost(){
+      for(let i=0;i<8;i++){
+        let p = i === 0 ?
+        this.player.generatorsBought[0] :
+        this.player.generatorsBought[i].add(i + 1).mul(i + 1)
+        if(this.player.onchallenge && this.player.challenges.includes(1) && this.player.generatorsBought[i].gt(0)){
+          p = p.mul(2)
+        }
+        p = p.sub(this.eachpipedsmalltrophy[0]*0.2)
+
+        this.player.generatorsCost[i] = new Decimal(10).pow(p)
+
+      }
+    },
+
     calcaccost(){
       for(let i=0;i<8;i++){
         let p = this.player.acceleratorsBought[i].add(1)
         p = p.mul(p.add(1)).div(2)
         p = p.mul(i === 0 ? 1:new Decimal(10).mul(new Decimal(2).pow(i-1)))
+        p = p.sub(this.eachpipedsmalltrophy[3]*0.2*(i+1))
         this.player.acceleratorsCost[i] = p.pow_base(10)
       }
     },
@@ -230,6 +247,7 @@ Vue.createApp({
         let p = 100 + (i==0?0:(i+1)*(i+1)*(i+1))
         let q = this.player.darkgeneratorsBought[i].mul(i+1).mul(i+1)
         q = q.add(p)
+        q = q.sub(this.eachpipedsmalltrophy[8]*0.02*(i+1)*(i+1))
         this.player.darkgeneratorsCost[i] = new Decimal(10).pow(q)
       }
     },
@@ -368,6 +386,7 @@ Vue.createApp({
           mult = this.player.rankchallengebonuses.includes(10)?mult.add(this.player.acceleratorsBought[i].pow_base(2)):mult.add(this.player.acceleratorsBought[i])
         }
         mult = mult.mul(new Decimal(1.5).pow(this.player.setchip[i+10]))
+        mult = mult.mul(1+this.eachpipedsmalltrophy[1]*0.2)
         this.player.accelerators[i - 1] = this.player.accelerators[i - 1].add(this.player.accelerators[i].mul(mult).mul(mu))
 
       }
@@ -378,7 +397,7 @@ Vue.createApp({
       darkmult = this.softCap(darkmult,new Decimal(1e3))
       this.player.darkmoney = this.player.darkmoney.add(this.player.darkgenerators[0].mul(mu).mul(darkmult).mul(1+this.player.setchip[41]*0.25))
       for (let i = 1; i < 8; i++) {
-        this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(this.player.darkgenerators[i].mul(mu).mul(darkmult).mul(1+this.player.setchip[41+i]*0.25))
+        this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(this.player.darkgenerators[i].mul(mu).mul(darkmult).mul(1+this.player.setchip[41+i]*0.25).mul(1+this.eachpipedsmalltrophy[5]*0.2))
       }
     },
 
@@ -436,6 +455,10 @@ Vue.createApp({
         this.calcbasicincrementmult(i)
       }
 
+      this.calcgncost()
+      this.calcaccost()
+      this.calcdgcost()
+
       this.updategenerators(new Decimal(1))
       this.updateaccelerators(new Decimal(1))
 
@@ -454,6 +477,7 @@ Vue.createApp({
 
       this.shinepersent = this.shinedata.getp(this.player.challengecleared.length)
       this.shinepersent += 0.02 * this.player.setchip[30]
+      this.shinepersent += 0.01 * this.eachpipedsmalltrophy[6] * 0.5
 
       if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) * rememberlevel && Math.random()<this.shinepersent){
         this.player.shine += this.player.rankchallengebonuses.includes(2)?2:1
@@ -461,6 +485,7 @@ Vue.createApp({
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
+      this.shinepersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.2
 
       if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
         this.player.brightness += 1
@@ -738,6 +763,7 @@ Vue.createApp({
           worldpipe:saveData.worldpipe ?? new Array(10).fill(null).map(() => 0)
         };
         if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
+      this.calcgncost()
       this.calcaccost()
       this.calcdgcost()
       this.checkusedchips()
@@ -779,12 +805,7 @@ Vue.createApp({
         this.player.money = this.player.money.sub(this.player.generatorsCost[index])
         this.player.generators[index] = this.player.generators[index].add(1)
         this.player.generatorsBought[index] = this.player.generatorsBought[index].add(1)
-        this.player.generatorsCost[index] = index === 0 ?
-          new Decimal(10).pow(this.player.generatorsBought[0]) :
-          new Decimal(10).pow(this.player.generatorsBought[index].add(index + 1).mul(index + 1))
-        if(this.player.onchallenge && this.player.challenges.includes(1)){
-          this.player.generatorsCost[index] = this.player.generatorsCost[index].pow(2)
-        }
+        this.calcgncost()
       }
     },
     buyAccelerator(index) {
@@ -1006,13 +1027,14 @@ Vue.createApp({
 
       gainlevel = gainlevel.round()
 
-
+      gainlevel = gainlevel.mul(1+this.eachpipedsmalltrophy[2]*0.2)
       if(this.activechallengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
       return gainlevel;
     },
 
     calcgainchip(){
-      let level = this.chipdata.getcl(this.player.money)
+      let bonus = new Decimal(10).pow(this.eachpipedsmalltrophy[7]*0.4)
+      let level = this.chipdata.getcl(this.player.money.mul(bonus))
       return this.chipdata.getchipid(level)
     },
 
@@ -1122,6 +1144,8 @@ Vue.createApp({
       if(this.player.rankchallengebonuses.includes(12)){
         gainrank = gainrank.mul(3)
       }
+      gainrank = gainrank.mul(1+this.player.setchip[22]*0.5)
+      gainrank = gainrank.mul(1+this.eachpipedsmalltrophy[4]*0.2)
       return gainrank
     },
     resetRankborder(){
@@ -1615,16 +1639,21 @@ Vue.createApp({
 
     },
     checkpipedsmalltrophies(){
-      let cnt = 0
+      let sum = 0
       for(i=0;i<10;i++){
+        let cnt = 0
         if(this.players[i].worldpipe[this.world]==1){
           for(let j=0;j<100;j++){
             if(this.players[i].smalltrophies[j])cnt++;
           }
           cnt -= 75
+          this.eachpipedsmalltrophy[i] = cnt;
+          sum += cnt
+        }else{
+          this.eachpipedsmalltrophy[i] = 0;
         }
       }
-      this.pipedsmalltrophy = cnt
+      this.pipedsmalltrophy = sum
     },
     countsmalltrophies(index){
       let cnt = 0;
