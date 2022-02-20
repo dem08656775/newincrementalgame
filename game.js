@@ -306,7 +306,6 @@ Vue.createApp({
 
       let rk = this.player.rank.div(262142).log2()
       rk += new Decimal(this.player.rank.log2()).log2()*this.player.setchip[23]
-      console.log(1 + Math.max(rk,0) * 0.05)
       mult = mult.mul(new Decimal(lv.pow((i - to) * (1 + Math.max(rk,0) * 0.05))))
 
 
