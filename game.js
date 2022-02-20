@@ -301,9 +301,7 @@ Vue.createApp({
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
 
-      let lv = this.player.level.pow(1+0.5*this.player.setchip[19])
-
-      mult = mult.mul(new Decimal(lv.add(2).log2()).pow(i - to))
+      mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow((i - to) * (1+0.5*this.player.setchip[19])))
 
       return mult
     },
