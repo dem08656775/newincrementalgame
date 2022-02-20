@@ -301,7 +301,14 @@ Vue.createApp({
         mult = mult.mul(new Decimal(10).pow((i + 1) * (i - to)))
       }
 
-      mult = mult.mul(new Decimal(this.player.level.add(2).log2()).pow((i - to) * (1+0.5*this.player.setchip[19])))
+      let lv = new Decimal(this.player.level.pow(1+0.5*this.player.setchip[19]).add(2).log2())
+
+
+      let rk = this.player.rank.div(262142).log2()
+      rk += new Decimal(this.player.rank.log2()).log2()*this.player.setchip[23]
+      console.log(1 + Math.max(rk,0) * 0.05)
+      mult = mult.mul(new Decimal(lv.pow((i - to) * (1 + Math.max(rk,0) * 0.05))))
+
 
       return mult
     },
@@ -1138,7 +1145,7 @@ Vue.createApp({
       }
     },
     calcgainrank(){
-      let gainrank = new Decimal(this.player.money.log10()).div(36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]).pow_base(2).round()
+      let gainrank = new Decimal(this.player.money.log10()).div(36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]*(1+0.2*this.player.setchip[29])).pow_base(2).round()
       if(this.player.rankchallengebonuses.includes(12)){
         gainrank = gainrank.mul(3)
       }
