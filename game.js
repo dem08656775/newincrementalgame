@@ -304,9 +304,8 @@ Vue.createApp({
       let lv = new Decimal(this.player.level.pow(1+0.5*this.player.setchip[19]).add(2).log2())
 
 
-      let rk = this.player.rank.div(262142).add(2).log2()
+      let rk = this.player.rank.add(2).div(262142).log2()
       rk += new Decimal(this.player.rank.add(2).log2()).log2()*this.player.setchip[23]
-      console.log(rk)
       mult = mult.mul(new Decimal(lv.pow((i - to) * (1 + Math.max(rk,0) * 0.05))))
 
 
@@ -556,7 +555,6 @@ Vue.createApp({
         this.multbyac = new Decimal(1)
       }
 
-      console.log(this.pipedsmalltrophy)
 
 
       setTimeout(this.update, Math.max(this.player.tickspeed-(this.diff+diffm)/2,1));
