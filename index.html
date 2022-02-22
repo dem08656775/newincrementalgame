@@ -81,7 +81,7 @@
 						<span>
               発生器{{ i }}: {{ player.generators[i-1].toExponential(3)+' '}}
             </span>
-						<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) || i>3&&(player.onchallenge && player.challenges.includes(6)) }" @click="buyGenerator(i-1)">
+						<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.generatorsCost[i-1]) }" @click="buyGenerator(i-1)">
 							購入 コスト: {{ player.generatorsCost[i-1].toExponential(1) }}
 						</button>
 						<span>
