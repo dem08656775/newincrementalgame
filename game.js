@@ -557,7 +557,7 @@ Vue.createApp({
       //this.player.tickspeed = 10
       let tsp = 1000 * (1 + 0.5*this.player.accelevelused)
       this.player.tickspeed = (tsp-this.player.setchip[9]*50-this.player.levelitems[1]*this.player.challengebonuses.length * (1+this.player.setchip[27]*0.5)) / acnum.add(10).mul(amult).log10()
-    
+
       if(this.player.rankchallengebonuses.includes(9)){
         this.multbyac = new Decimal(50).div(this.player.tickspeed)
         this.player.tickspeed = 50
@@ -1175,7 +1175,7 @@ Vue.createApp({
     },
     resetRankborder(){
       let p = (this.player.onchallenge && this.player.challenges.includes(0))?96:72
-      p -= Math.max(this.checkremembers()/2.0,36)
+      p -= Math.min(this.checkremembers()/2.0,36)
       return new Decimal(10).pow(p)
     },
     resetRank(force){
