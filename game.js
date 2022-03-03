@@ -1720,6 +1720,7 @@ Vue.createApp({
       if(new Decimal(this.players[0].rank).greaterThanOrEqualTo(262142))this.worldopened[6] = true
       if(this.players[0].rankchallengecleared.includes(238))this.worldopened[7] = true
       if(this.players[0].challengecleared.length>=200)this.worldopened[8] = true
+      if(this.players[0].rankchallengecleared.length>=200)this.worldopened[9] = true
 
     },
 
