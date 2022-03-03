@@ -557,14 +557,15 @@ Vue.createApp({
       //this.player.tickspeed = 10
       let tsp = 1000 * (1 + 0.5*this.player.accelevelused)
       this.player.tickspeed = (tsp-this.player.setchip[9]*50-this.player.levelitems[1]*this.player.challengebonuses.length * (1+this.player.setchip[27]*0.5)) / acnum.add(10).mul(amult).log10()
-      if(this.player.accelevelused == this.player.accelevel && this.player.tickspeed<=10) this.player.accelevel = this.player.accelevel + 1
-
+    
       if(this.player.rankchallengebonuses.includes(9)){
         this.multbyac = new Decimal(50).div(this.player.tickspeed)
         this.player.tickspeed = 50
       }else{
         this.multbyac = new Decimal(1)
       }
+      if(this.player.accelevelused == this.player.accelevel && this.player.tickspeed<=10) this.player.accelevel = this.player.accelevel + 1
+
 
 
 
