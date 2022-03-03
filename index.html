@@ -24,6 +24,9 @@
 				<span id="dark" v-if="player.money.greaterThanOrEqualTo('1e100') || player.darkgenerators[0].greaterThanOrEqualTo(1)">
           <button type="button" @click="changeTab('dark')">裏</button>
         </span>
+				<span id="time" v-if="player.accelevel>0">
+          <button type="button" @click="changeTab('time')">時</button>
+        </span>
 				<span id="option">
           <button type="button" @click="changeTab('option')">設定</button>
         </span>
@@ -58,8 +61,9 @@
 				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
 					階位: {{ player.rank.toNumber() }} 階位リセット: {{ player.rankresettime.toNumber() }}回
 				</div>
-				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
-					段位リセット条件: 1e+18
+				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
+					<span v-if="player.onchallenge&&player.challenges.includes(0)">段位リセット条件: 1e+24</span>
+					<span v-if="!(player.onchallenge&&player.challenges.includes(0))">段位リセット条件: 1e+18</span>
 				</div>
 				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
 					階位リセット条件: {{ resetRankborder().toExponential(3)}}
@@ -176,15 +180,28 @@
 				</div>
 
 			</div>
+
+			<div v-show="player.currenttab == 'time'">
+				<div>時間回帰力: {{ player.accelevel }}</div>
+				<div>起動時間回帰力: {{ player.accelevelused }}</div>
+				<div>
+					<button type="button" @click="worktime(player.accelevelused-1)">起動-</button>
+					<button type="button" @click="worktime(player.accelevelused+1)">起動+</button>
+				</div>
+				<div v-if="player.accelevelused>=1">新年キャンペーン2022 発生器+4倍</div>
+				<div v-if="player.accelevelused>=2">バレンタインキャンペーン2022 発生器+4倍</div>
+			</div>
+
+
 			<div v-show="player.currenttab == 'option'">
 				<button type="button" id="resetbutton" @click="resetData(false)">リセット</button>
         <div class="tweetconfig">
           ツイート機能設定
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darkmoney') }" @click="configtweet('darkmoney')" v-if="player.darkmoney.gt(0)">裏ポイント</button>
-          <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)">段位</button>
+          <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)||player.rankresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darklevel') }" @click="configtweet('darklevel')" v-if="player.darklevel.gt(0)">裏段位</button>
-					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)">挑戦達成</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)||player.rankresettime.gt(0)">挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rankachieved') }" @click="configtweet('rankachieved')" v-if="player.rankchallengecleared.length>=1">上位挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rank') }" @click="configtweet('rank')" v-if="player.rankresettime.gt(0)">階位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('levelitemboughttime') }" @click="configtweet('levelitemboughttime')" v-if="player.rankresettime.gt(0)">段位効力購入</button>

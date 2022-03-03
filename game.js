@@ -61,6 +61,8 @@ const initialData = () => {
     darklevel:new Decimal(0),
 
     tickspeed: 1000,
+    accelevel: 0,
+    accelevelused:0,
     saveversion: version,
 
     currenttab: 'basic',
@@ -147,6 +149,7 @@ Vue.createApp({
       diff:0,
 
 
+
     }
   },
   computed: {
@@ -188,6 +191,7 @@ Vue.createApp({
       if(this.player.tweeting.includes('levelitemboughttime')){
         tweetText += '段位効力購入:' + this.player.levelitembought+ '%0A';
       }
+
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
 
@@ -286,12 +290,16 @@ Vue.createApp({
       mult = mult.mul(this.multbyac)
       if(this.multbyac.gt(1)) mult = mult.mul(this.multbyac)
 
-      mult = mult.mul(1+this.player.setchip[0]*0.05)
+      mult = mult.mul(1+this.player.setchip[0]*0.1)
+
+      camp = this.player.accelevelused
 
       let d = new Date()
-      //if(d.getMonth()==0&&d.getDate()<=7)mult = mult.mul(5)//新年キャンペーン
-      //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)mult = mult.mul(5)//バレンタインキャンペーン
-      if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))mult = mult.mul(5)//桃の節句キャンペーン
+      //if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
+      //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
+      if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
+      if(camp>3)camp=3
+      mult = mult.mul(1 + 4 * camp)
 
       this.commonmult = mult
     },
@@ -344,9 +352,9 @@ Vue.createApp({
         mult = mult.mul(new Decimal(i+2+this.player.darkgenerators[i].log10()).pow(1+this.player.setchip[i+32]*0.25))
       }
 
-      this.incrementalmults[i] = mult
+      mult = mult.mul(1+this.player.setchip[i+1]*0.5)
 
-      mult = mult.mul(1+this.player.setchip[i+1]*0.2)
+      this.incrementalmults[i] = mult
 
     },
 
@@ -547,7 +555,9 @@ Vue.createApp({
 
 
       //this.player.tickspeed = 10
-      this.player.tickspeed = (1000-this.player.setchip[9]*50-this.player.levelitems[1]*this.player.challengebonuses.length * (1+this.player.setchip[27]*0.5)) / acnum.add(10).mul(amult).log10()
+      let tsp = 1000 * (1 + 0.5*this.player.accelevelused)
+      this.player.tickspeed = (tsp-this.player.setchip[9]*50-this.player.levelitems[1]*this.player.challengebonuses.length * (1+this.player.setchip[27]*0.5)) / acnum.add(10).mul(amult).log10()
+      if(this.player.accelevelused == this.player.accelevel && this.player.tickspeed<=10) this.player.accelevel = this.player.accelevel + 1
 
       if(this.player.rankchallengebonuses.includes(9)){
         this.multbyac = new Decimal(50).div(this.player.tickspeed)
@@ -689,7 +699,12 @@ Vue.createApp({
         if(!('worldpipe' in saveData)){
           saveData.worldpipe = new Array(10).fill(null).map(() => 0)
         }
-
+        if(!('accelevel' in saveData)){
+          saveData.accelevel = 0
+        }
+        if(!('accelevelused' in saveData)){
+          saveData.accelevelused = 0
+        }
 
         this.players[i] = saveData
       }
@@ -731,6 +746,9 @@ Vue.createApp({
           darklevel: new Decimal(saveData.darklevel),
 
           tickspeed: parseFloat(saveData.tickspeed),
+          accelevel: saveData.accelevel ?? 0,
+          accelevelused:saveData.accelevelused ?? 0,
+
           saveversion: parseInt(saveData.saveversion),
 
           currenttab: 'basic',
@@ -1144,7 +1162,9 @@ Vue.createApp({
       }
     },
     calcgainrank(){
-      let gainrank = new Decimal(this.player.money.log10()).div(36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]*(1+0.2*this.player.setchip[29])).pow_base(2).round()
+      let dv = 36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]*(1+0.2*this.player.setchip[29])
+      dv = Math.max(dv,6)
+      let gainrank = new Decimal(this.player.money.log10()).div(dv).pow_base(2).round()
       if(this.player.rankchallengebonuses.includes(12)){
         gainrank = gainrank.mul(3)
       }
@@ -1154,7 +1174,7 @@ Vue.createApp({
     },
     resetRankborder(){
       let p = (this.player.onchallenge && this.player.challenges.includes(0))?96:72
-      p -= this.checkremembers()/2.0
+      p -= Math.max(this.checkremembers()/2.0,36)
       return new Decimal(10).pow(p)
     },
     resetRank(force){
@@ -1631,6 +1651,12 @@ Vue.createApp({
       this.chipused.fill(0)
       for(let v of this.player.setchip){
         if(v!=0)this.chipused[v-1] = this.chipused[v-1]+1
+      }
+    },
+
+    worktime(val){
+      if(0<=val&&val<=this.player.accelevel){
+        this.player.accelevelused = val
       }
     },
 
