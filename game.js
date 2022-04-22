@@ -14,6 +14,9 @@ const initialData = () => {
     rank:new Decimal(0),
     rankresettime: new Decimal(0),
 
+    crown:new Decimal(0),
+    crownresettime: new Decimal(0),
+
     ranktoken:0,
 
     generators: new Array(8).fill(null).map(() => new Decimal(0)),
@@ -191,6 +194,12 @@ Vue.createApp({
       if(this.player.tweeting.includes('levelitemboughttime')){
         tweetText += '段位効力購入:' + this.player.levelitembought+ '%0A';
       }
+      if(this.player.tweeting.includes('crown')){
+        tweetText += '冠位:' + this.player.crown + '%0A';
+      }
+      if(this.player.tweeting.includes('crownresettime')){
+        tweetText += '冠位リセット:' + this.player.crownresettime +　'%0A';
+      }
 
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
@@ -297,8 +306,8 @@ Vue.createApp({
       let d = new Date()
       //if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
-      if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
-      if(camp>3)camp=3
+      //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
+      if(camp>4)camp=4
       mult = mult.mul(1 + 4 * camp)
 
       this.commonmult = mult
@@ -706,6 +715,12 @@ Vue.createApp({
         if(!('accelevelused' in saveData)){
           saveData.accelevelused = 0
         }
+        if(!('crown' in saveData)){
+          saveData.crown = new Decimal(0)
+        }
+        if(!('crownresettime' in saveData)){
+          saveData.crownresettime = new Decimal(0)
+        }
 
         this.players[i] = saveData
       }
@@ -728,6 +743,9 @@ Vue.createApp({
           rank: new Decimal(saveData.rank ?? 0),
           rankresettime: new Decimal(saveData.rankresettime ?? 0),
           ranktoken: new Decimal(saveData.ranktoken ?? 0),
+
+          crown: new Decimal(saveData.crown ?? 0),
+          crownresettime: new Decimal(saveData.crownresettime ?? 0),
 
           generators: saveData.generators.map(v => new Decimal(v)),
           generatorsBought: saveData.generatorsBought.map(v => new Decimal(v)),
@@ -1057,8 +1075,8 @@ Vue.createApp({
 
     calcgainchip(){
       let bonus = new Decimal(10).pow(this.eachpipedsmalltrophy[7]*0.4)
-      let level = this.chipdata.getcl(this.player.money.mul(bonus))
-      return this.chipdata.getchipid(level)
+      let clevel = this.chipdata.getcl(this.player.money.mul(bonus))
+      return this.chipdata.getchipid(clevel)
     },
 
     resetDarklevel(){
@@ -1165,6 +1183,8 @@ Vue.createApp({
     calcgainrank(){
       let dv = 36-0.25*this.checkremembers()-1.2*this.player.levelitems[4]*(1+0.2*this.player.setchip[29])
       dv = Math.max(dv,6)
+      dv = dv-this.player.crown.add(2).log2()*0.1
+      dv = Math.max(dv,3)
       let gainrank = new Decimal(this.player.money.log10()).div(dv).pow_base(2).round()
       if(this.player.rankchallengebonuses.includes(12)){
         gainrank = gainrank.mul(3)
@@ -1232,7 +1252,7 @@ Vue.createApp({
         this.player.tickspeed = 1000
 
         this.player.rank = this.player.rank.add(gainrank)
-        this.player.rankresettime = this.player.rankresettime.add((this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1)).mul(this.player.setchip[24]+1))
+        this.player.rankresettime = this.player.rankresettime.add((this.player.rankchallengebonuses.includes(8)?new Decimal(3):new Decimal(1)).mul(this.player.setchip[24]+1).mul(this.player.crownresettime.add(1)))
 
         this.player.levelitems = [0,0,0,0,0]
 
@@ -1245,6 +1265,81 @@ Vue.createApp({
 
       }
     },
+    calcgaincrown(){
+      let dv = 72
+      return new Decimal(2).pow(this.player.money.log10()/72).round()
+    },
+    resetCrownborder(){
+      return new Decimal("1e216")
+    },
+    resetCrown(force){
+      if(this.player.onchallenge){
+        alert('現在挑戦中のため、昇冠リセットができません。')
+        //あとで消す
+        return;
+      }
+      if(this.player.onchallenge && this.player.challenges.includes(0)){
+        if(this.player.money.lt(this.resetRankborder())){
+          alert('現在挑戦1が適用されているため、まだ昇階リセットができません。')
+          return;
+        }
+      }
+
+      let gaincrown = this.calcgaincrown()
+      if(force || confirm('昇冠リセットして、冠位' + gaincrown + 'を得ますか？')){
+
+        this.player.money = new Decimal(1)
+        this.player.level = new Decimal(0)
+        this.player.levelresettime = new Decimal(0)
+
+        this.player.rank =  new Decimal(0)
+        this.player.rankresettime = new Decimal(0)
+
+        this.player.generators = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.generatorsBought = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.generatorsCost = [
+          new Decimal(1),
+          new Decimal('1e4'),
+          new Decimal('1e9'),
+          new Decimal('1e16'),
+          new Decimal('1e25'),
+          new Decimal('1e36'),
+          new Decimal('1e49'),
+          new Decimal('1e64')
+        ],
+
+
+        this.player.accelerators = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.acceleratorsBought = new Array(8).fill(null).map(() => new Decimal(0)),
+        this.player.acceleratorsCost = [
+          new Decimal(10),
+          new Decimal('1e10'),
+          new Decimal('1e20'),
+          new Decimal('1e40'),
+          new Decimal('1e80'),
+          new Decimal('1e160'),
+          new Decimal('1e320'),
+          new Decimal('1e640'),
+        ],
+
+        this.player.crown = this.player.crown.add(gaincrown)
+        this.player.crownresettime = this.player.crownresettime.add(1)
+
+        this.player.tickspeed = 1000
+
+        this.player.levelitems = [0,0,0,0,0]
+
+        this.activechallengebonuses = this.player.challengebonuses
+
+        if(this.activechallengebonuses.includes(0))this.player.money = new Decimal(10001)
+        if(this.activechallengebonuses.includes(1))this.player.accelerators[0] = new Decimal(10)
+        if(this.player.rankchallengebonuses.includes(0))this.player.money = this.player.money.add(new Decimal("1e9"))
+        if(this.player.rankchallengebonuses.includes(1))this.player.accelerators[0] = this.player.accelerators[0].add(256)
+
+      }
+    },
+
+
     calcchallengeid(){
       let challengeid = 0;
       for(let i=0;i<8;i++){
@@ -1499,6 +1594,23 @@ Vue.createApp({
             this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[3][j]))
           }
         }
+        if(r>57) this.players[i].chip[0] = 1;
+        if(r>58) this.players[i].chip[0] = 15;
+        if(r>59) this.players[i].chip[0] = 55;
+        if(r>60) this.players[i].chip[0] = 120;
+        if(r>61) this.players[i].chip[1] = 1;
+        if(r>62) this.players[i].chip[1] = 15;
+        if(r>63) this.players[i].chip[1] = 55;
+        if(r>64) this.players[i].chip[1] = 120;
+        if(r>65) this.players[i].chip[2] = 1;
+        if(r>66) this.players[i].chip[2] = 15;
+        if(r>67) this.players[i].chip[2] = 55;
+        if(r>68) this.players[i].chip[2] = 120;
+        if(r>69) this.players[i].chip[3] = 1;
+        if(r>70) this.players[i].chip[3] = 15;
+        if(r>71) this.players[i].chip[3] = 55;
+        if(r>72) this.players[i].chip[3] = 120;
+
 
         this.players[i].token = this.players[i].challengecleared.length
 
@@ -1533,6 +1645,8 @@ Vue.createApp({
       if(this.world==0){
         if(this.checkremembers()>0)this.player.trophies[6] = true;
       }
+      if(this.player.crownresettime.greaterThan(0))this.player.trophies[1] = true;
+
       if(this.player.money.greaterThan(0))this.player.smalltrophies[0] = true
       if(this.player.money.greaterThan(777))this.player.smalltrophies[1] = true
       if(this.player.money.greaterThan(7777777))this.player.smalltrophies[2] = true
@@ -1712,7 +1826,13 @@ Vue.createApp({
     },
     checkworlds(){
 
-      this.worldopened[0] = true;
+      this.worldopened[0] = true
+      if(new Decimal(this.players[0].crownresettime).gt(0)){
+        for(let i=1;i<10;i++){
+          this.worldopened[i] = true
+        }
+      }
+
       if(this.players[0].challengecleared.includes(238))this.worldopened[1] = true
       if(this.players[0].challengecleared.length>=100)this.worldopened[2] = true
       if(this.players[0].rankchallengecleared.length>=16)this.worldopened[3] = true

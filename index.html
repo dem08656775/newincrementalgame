@@ -30,13 +30,13 @@
 				<span id="option">
           <button type="button" @click="changeTab('option')">設定</button>
         </span>
-				<span id="level" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
+				<span id="level" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || player.crownresettime.gt(0)">
           <button type="button" @click="changeTab('level')">段位</button>
         </span>
-				<span id="rank" v-if="player.rankresettime.gt(0)">
+				<span id="rank" v-if="player.rankresettime.gt(0) || player.crownresettime.gt(0)">
           <button type="button" @click="changeTab('rank')">階位</button>
         </span>
-				<span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0)">
+				<span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || player.crownresettime.gt(0)">
           <button type="button" @click="changeTab('auto')">自動</button>
         </span>
 				<span id="shine" v-if="player.challengecleared.length >= 64">
@@ -61,6 +61,9 @@
 				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
 					階位: {{ player.rank.toNumber() }} 階位リセット: {{ player.rankresettime.toNumber() }}回
 				</div>
+				<div class="crownrcontents" v-if="player.crownresettime.gt(0)">
+					 冠位: {{ player.crown.toNumber() }} 冠位リセット: {{ player.crownresettime.toNumber() }}回
+				</div>
 				<div class="levelrcontents" v-if="player.levelresettime.gt(0)">
 					<span v-if="player.onchallenge&&player.challenges.includes(0)">段位リセット条件: 1e+24</span>
 					<span v-if="!(player.onchallenge&&player.challenges.includes(0))">段位リセット条件: 1e+18</span>
@@ -68,12 +71,18 @@
 				<div class="rankrcontents" v-if="player.rankresettime.gt(0)">
 					階位リセット条件: {{ resetRankborder().toExponential(3)}}
 				</div>
+				<div class="crownrcontents" v-if="player.crownresettime.gt(0)">
+					冠位リセット条件: {{ resetCrownborder().toExponential(3)}}
+				</div>
 				<div class="softreset">
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
 						<button type="button" @click="resetLevel(false,false)">昇段リセット</button>
 					</div>
 					<div id="rankreset" v-if="player.money.greaterThanOrEqualTo(resetRankborder())">
 						<button type="button" @click="resetRank(false)">昇階リセット</button>
+					</div>
+					<div id="crownreset" v-if="player.money.greaterThanOrEqualTo(resetCrownborder())">
+						<button type="button" @click="resetCrown(false)">昇冠リセット</buttton>
 					</div>
 				</div>
 				<br>
@@ -190,6 +199,7 @@
 				</div>
 				<div v-if="player.accelevelused>=1">新年キャンペーン2022 発生器+4倍</div>
 				<div v-if="player.accelevelused>=2">バレンタインキャンペーン2022 発生器+4倍</div>
+				<div v-if="player.accelevelused>=3">ひなまつりキャンペーン 発生器+4倍</div>
 			</div>
 
 
