@@ -1080,7 +1080,9 @@ Vue.createApp({
     },
 
     resetDarklevel(){
-      let gaindarklevel = new Decimal(this.player.darkmoney.log10()).div(18).pow_base(2).round()
+      let dv = 18 - this.player.crown.add(2).log2()
+      dv = Math.max(dv,1)
+      let gaindarklevel = new Decimal(this.player.darkmoney.log10()).div(dv).pow_base(2).round()
       if(confirm('裏昇段リセットして、裏段位' + gaindarklevel + 'を得ますか？')){
         this.player.darkmoney = new Decimal(0)
         this.player.darkgenerators = new Array(8).fill(null).map(() => new Decimal(0)),
@@ -1267,7 +1269,7 @@ Vue.createApp({
     },
     calcgaincrown(){
       let dv = 72
-      return new Decimal(2).pow(this.player.money.log10()/72).round()
+      return new Decimal(2).pow(this.player.money.log10()/dv).round()
     },
     resetCrownborder(){
       return new Decimal("1e216")
@@ -1279,7 +1281,7 @@ Vue.createApp({
         return;
       }
       if(this.player.onchallenge && this.player.challenges.includes(0)){
-        if(this.player.money.lt(this.resetRankborder())){
+        if(this.player.money.lt(this.resetCrownborder())){
           alert('現在挑戦1が適用されているため、まだ昇階リセットができません。')
           return;
         }
@@ -1645,7 +1647,7 @@ Vue.createApp({
       if(this.world==0){
         if(this.checkremembers()>0)this.player.trophies[6] = true;
       }
-      if(this.player.crownresettime.greaterThan(0))this.player.trophies[1] = true;
+      if(this.player.crownresettime.greaterThan(0))this.player.trophies[7] = true;
 
       if(this.player.money.greaterThan(0))this.player.smalltrophies[0] = true
       if(this.player.money.greaterThan(777))this.player.smalltrophies[1] = true
