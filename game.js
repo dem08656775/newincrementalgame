@@ -1282,7 +1282,7 @@ Vue.createApp({
       }
       if(this.player.onchallenge && this.player.challenges.includes(0)){
         if(this.player.money.lt(this.resetCrownborder())){
-          alert('現在挑戦1が適用されているため、まだ昇階リセットができません。')
+          alert('現在挑戦1が適用されているため、まだ昇冠リセットができません。')
           return;
         }
       }
