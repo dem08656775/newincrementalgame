@@ -1596,22 +1596,22 @@ Vue.createApp({
             this.players[i].rankchallengecleared.push(this.getchallengeid(this.rememberdata.givenchalenges[3][j]))
           }
         }
-        if(r>57) this.players[i].chip[0] = 1;
-        if(r>58) this.players[i].chip[0] = 15;
-        if(r>59) this.players[i].chip[0] = 55;
-        if(r>60) this.players[i].chip[0] = 120;
-        if(r>61) this.players[i].chip[1] = 1;
-        if(r>62) this.players[i].chip[1] = 15;
-        if(r>63) this.players[i].chip[1] = 55;
-        if(r>64) this.players[i].chip[1] = 120;
-        if(r>65) this.players[i].chip[2] = 1;
-        if(r>66) this.players[i].chip[2] = 15;
-        if(r>67) this.players[i].chip[2] = 55;
-        if(r>68) this.players[i].chip[2] = 120;
-        if(r>69) this.players[i].chip[3] = 1;
-        if(r>70) this.players[i].chip[3] = 15;
-        if(r>71) this.players[i].chip[3] = 55;
-        if(r>72) this.players[i].chip[3] = 120;
+        if(r>=57) this.players[i].chip[0] = 1;
+        if(r>=58) this.players[i].chip[0] = 15;
+        if(r>=59) this.players[i].chip[0] = 55;
+        if(r>=60) this.players[i].chip[0] = 120;
+        if(r>=61) this.players[i].chip[1] = 1;
+        if(r>=62) this.players[i].chip[1] = 15;
+        if(r>=63) this.players[i].chip[1] = 55;
+        if(r>=64) this.players[i].chip[1] = 120;
+        if(r>=65) this.players[i].chip[2] = 1;
+        if(r>=66) this.players[i].chip[2] = 15;
+        if(r>=67) this.players[i].chip[2] = 55;
+        if(r>=68) this.players[i].chip[2] = 120;
+        if(r>=69) this.players[i].chip[3] = 1;
+        if(r>=70) this.players[i].chip[3] = 15;
+        if(r>=71) this.players[i].chip[3] = 55;
+        if(r>=72) this.players[i].chip[3] = 120;
 
 
         this.players[i].token = this.players[i].challengecleared.length
