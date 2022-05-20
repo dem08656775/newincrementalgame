@@ -426,14 +426,14 @@ Vue.createApp({
     spendshine(num){
       if(this.player.shine<num)return;
       this.player.shine -= num
-      let val = new Decimal(11).pow(new Decimal(num).log10())
+      let val = new Decimal(11+this.player.setchip[31]).pow(new Decimal(num).log10())
       this.updategenerators(new Decimal(val))
       this.updateaccelerators(new Decimal(val))
     },
     spendbrightness(num){
       if(this.player.brightness<num)return;
       this.player.brightness -= num
-      let val = new Decimal(11).pow(new Decimal(num*100).log10())
+      let val = new Decimal(11+this.player.setchip[50]).pow(new Decimal(num*100).log10())
       this.updategenerators(new Decimal(val))
       this.updateaccelerators(new Decimal(val))
       this.updatedarkgenerators(new Decimal(num))
@@ -1615,6 +1615,8 @@ Vue.createApp({
 
 
         this.players[i].token = this.players[i].challengecleared.length
+
+        checkpipedsmalltrophies()
 
       }
     },
