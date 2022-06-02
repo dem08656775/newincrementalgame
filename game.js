@@ -87,6 +87,7 @@ const initialData = () => {
 
     trophies: new Array(8).fill(null).map(() => false),
     smalltrophies: new Array(100).fill(null).map(() => false),
+    smalltrophies2nd: new Array(100).fill(null).map(() => false),
 
     levelitems:[0,0,0,0,0],
     levelitembought: 0,
@@ -697,6 +698,9 @@ Vue.createApp({
         if(!('smalltrophies' in saveData)){
           saveData.smalltrophies = new Array(100).fill(null).map(() => false)
         }
+        if(!('smalltrophies2nd' in saveData)){
+          saveData.smalltrophies2nd = new Array(100).fill(null).map(() => false)
+        }
         if(!('chip' in saveData)){
           saveData.chip = [0,0,0,0]
         }
@@ -791,6 +795,7 @@ Vue.createApp({
 
           trophies: saveData.trophies ?? new Array(8).fill(null).map(() => false),
           smalltrophies: saveData.smalltrophies ?? new Array(100).fill(null).map(() => false),
+          smalltrophies2nd: saveData.smalltrophies2nd ?? new Array(100).fill(null).map(() => false),
 
           levelitems: saveData.levelitems ?? [0,0,0,0,0],
           levelitembought :saveData.levelitembought ?? 0,
@@ -1623,14 +1628,21 @@ Vue.createApp({
 
     openpipe(i){
 
-      if(this.player.worldpipe[i]==1)return
+      console.log("a")
+
+      let maxpipe = 1
+      if(this.player.trophies[7]) maxpipe = 2
+
+      if(this.player.worldpipe[i]>=maxpipe)return
 
       let havepipe = Math.floor((this.smalltrophy-72)/3)
       for(let j=0;j<10;j++){
         havepipe -= this.player.worldpipe[j]
       }
 
-      if(havepipe>0)this.player.worldpipe[i] = 1
+
+
+      if(havepipe>0&&this.player.worldpipe[i]<maxpipe)this.player.worldpipe[i] = this.player.worldpipe[i]+1
 
     },
 
@@ -1752,6 +1764,22 @@ Vue.createApp({
       if(this.player.darklevel.greaterThan('1e3'))this.player.smalltrophies[98] = true
       if(this.player.darklevel.greaterThan('1e10'))this.player.smalltrophies[99] = true
 
+      if(this.player.crownresettime.gt(0)){
+        
+        if(this.player.crownresettime.gt(0))this.player.smalltrophies2nd[0] = true
+        if(this.player.crownresettime.greaterThanOrEqualTo(5))this.player.smalltrophies2nd[1] = true
+        if(this.player.crownresettime.greaterThanOrEqualTo(20))this.player.smalltrophies2nd[2] = true
+        if(this.player.crownresettime.greaterThanOrEqualTo(100))this.player.smalltrophies2nd[3] = true
+        if(this.player.accelevel>=1)this.player.smalltrophies2nd[4] = true
+        if(this.player.accelevel>=3)this.player.smalltrophies2nd[5] = true
+        if(this.player.accelevel>=6)this.player.smalltrophies2nd[6] = true
+        if(this.player.accelevel>=10)this.player.smalltrophies2nd[7] = true
+        if(this.player.rank.gt('1e8'))this.player.smalltrophies2nd[8] = true
+        if(this.player.rank.gt('1e10'))this.player.smalltrophies2nd[9] = true
+        if(this.player.rank.gt('1e12'))this.player.smalltrophies2nd[10] = true
+
+      }
+
 
 
     },
@@ -1791,11 +1819,15 @@ Vue.createApp({
       let sum = 0
       for(i=0;i<10;i++){
         let cnt = 0
-        if(this.players[i].worldpipe[this.world]==1){
+        if(this.players[i].worldpipe[this.world]>=1){
           for(let j=0;j<100;j++){
             if(this.players[i].smalltrophies[j])cnt++;
           }
+          for(let j=0;j<100;j++){
+            if(this.players[i].smalltrophies2nd[j])cnt++;
+          }
           cnt -= 75
+          cnt *= this.players[i].worldpipe[this.world]
           this.eachpipedsmalltrophy[i] = cnt;
           sum += cnt
         }else{
@@ -1808,6 +1840,9 @@ Vue.createApp({
       let cnt = 0;
       for(let i=0;i<100;i++){
         if(this.player.smalltrophies[i])cnt++;
+      }
+      for(let i=0;i<100;i++){
+        if(this.player.smalltrophies2nd[i])cnt++;
       }
       this.smalltrophy = cnt
     },

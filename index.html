@@ -218,6 +218,7 @@
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('world') }" @click="configtweet('world')" v-if="worldopened[1] || worldopened[2]">世界</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('memory') }" @click="configtweet('memory')" v-if="worldopened[1] || worldopened[2]">記憶</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('remember') }" @click="configtweet('remember')" v-if="checkremembers()>0">思い出</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('crown') }" @click="configtweet('crown')" v-if="player.crownresettime.gt(0)">冠位</button>
 				</div>
 				<div class="export">
 					データ
@@ -458,6 +459,8 @@
 						世界管を開通すると、開通先の世界での生産力が、開通元の世界の里程の個数に応じて強化されます。
 					</div>
 
+					世界管開通可能数: {{ player.crownresettime.gt(0)?2:1 }}
+
 
 				</div>
 				<div class="worlds" v-for="i in 10" :key="i">
@@ -467,7 +470,7 @@
 					<button type="button" v-if="trophynumber[0]>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= trophynumber[i-1] ||  trophynumber[i-1] < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
-					<button type="button" v-if="i-1!=world && worldopened[i-1] && smalltrophy>=75" class="wdbutton" :class="{'unavailable': player.worldpipe[i-1]==1 }" @click="openpipe(i-1)">
+					<button type="button" v-if="i-1!=world && worldopened[i-1] && smalltrophy>=75" class="wdbutton" :class="{'unavailable': player.worldpipe[i-1] == (player.crownresettime.gt(0)?2:1) }" @click="openpipe(i-1)">
 						開通
 					</button>
 					<span>
@@ -477,7 +480,7 @@
 						思い出:{{ players[i-1].remember }}
 					</span>
 					<span v-if="smalltrophy>=75">
-						世界管開通:{{ player.worldpipe[i-1]==1?"済":"未" }}
+						世界管開通数:{{ player.worldpipe[i-1] }}
 					</span>
 
 				</div>
@@ -559,6 +562,20 @@
 								<template v-for="j in 10" :key="j">
 									<td>
 										<span v-show="player.smalltrophies[(i-1)*10+(j-1)]">{{ (i-1)*10+j }}</span>
+									</td>
+								</template>
+							</tr>
+						</template>
+					</table>
+				</div>
+
+				<div class="smalltrophy2nd" v-if="player.crownresettime.gt(0)">
+					<table border="1">
+						<template v-for="i in 10" :key="i">
+							<tr>
+								<template v-for="j in 10" :key="j">
+									<td>
+										<span v-show="player.smalltrophies2nd[(i-1)*10+(j-1)]">{{ 100+(i-1)*10+j }}</span>
 									</td>
 								</template>
 							</tr>
