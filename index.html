@@ -435,7 +435,7 @@
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
 					</button>
-					<div>煌き入手率: {{ (brightpersent * 100).toFixed(2) }}%</div>
+					<div>煌き入手率: {{ (brightpersent * 100).toFixed(3) }}%</div>
 					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
 				</div>
 			</div>

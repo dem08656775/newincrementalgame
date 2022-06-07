@@ -508,7 +508,7 @@ Vue.createApp({
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
-      this.shinepersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.2
+      this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.2
 
       if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
         this.player.brightness += 1
@@ -1765,7 +1765,7 @@ Vue.createApp({
       if(this.player.darklevel.greaterThan('1e10'))this.player.smalltrophies[99] = true
 
       if(this.player.crownresettime.gt(0)){
-        
+
         if(this.player.crownresettime.gt(0))this.player.smalltrophies2nd[0] = true
         if(this.player.crownresettime.greaterThanOrEqualTo(5))this.player.smalltrophies2nd[1] = true
         if(this.player.crownresettime.greaterThanOrEqualTo(20))this.player.smalltrophies2nd[2] = true
