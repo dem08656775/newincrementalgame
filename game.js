@@ -586,6 +586,10 @@ Vue.createApp({
     },
     importsave(){
       let input = window.prompt("データを入力","")
+      if(input.length<=50){
+        console.log("returned")
+        return
+      }
       let k = atob(input).charAt(0)
       console.log(k)
       if(k=='{') return
