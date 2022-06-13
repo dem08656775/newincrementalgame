@@ -827,6 +827,23 @@ Vue.createApp({
 
       this.checkpipedsmalltrophies()
     },
+    listenKeyEvents(){
+      document.addEventListener('keydown', ev => this.onKeyDown(ev));
+    },
+    onKeyDown(ev){
+      switch (ev && ev.key) {
+        case 'l':
+          this.tryResetLevel();
+          break;
+        default:
+          return;
+      }
+    },
+    tryResetLevel(){
+      if (this.player.money.greaterThanOrEqualTo('1e18')) {
+        this.resetLevel(false, false);
+      }
+    },
     changeTab(tabname){
       this.player.currenttab = tabname;
     },
@@ -1908,6 +1925,8 @@ Vue.createApp({
 
     setTimeout(this.update, this.player.tickspeed);
     setInterval(this.save, 2000);
+
+    this.listenKeyEvents();
 
   },
 }).mount('#app');
