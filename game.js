@@ -804,9 +804,9 @@ Vue.createApp({
       darkmult = this.softCap(darkmult,new Decimal(1e3))
       let dgtocalc = Array.from(this.player.darkgenerators)
       for(let i = 0; i < 8; i++){
-        dgtocalc[i] = dgtocalc[i].mul(this.player.lightgenerators[i])
+        dgtocalc[i] = dgtocalc[i].mul(this.player.lightgenerators[i].add(1))
       }
-      this.player.darkmoney = this.player.darkmoney.add(dgtocalc[0].mul(mu).mul(darkmult).mul(1+this.player.setchip[41]*0.25))
+      this.player.darkmoney = this.player.darkmoney.add(dgtocalc[0].mul(mu).mul(darkmult).mul(1+this.player.setchip[41]*0.25).mul(1+this.eachpipedsmalltrophy[5]*0.2))
       for (let i = 1; i < 8; i++) {
         this.player.darkgenerators[i - 1] = this.player.darkgenerators[i - 1].add(dgtocalc[i].mul(mu).mul(darkmult).mul(1+this.player.setchip[41+i]*0.25).mul(1+this.eachpipedsmalltrophy[5]*0.2))
       }
