@@ -24,6 +24,9 @@
 				<span id="dark" v-if="player.money.greaterThanOrEqualTo('1e100') || player.darkgenerators[0].greaterThanOrEqualTo(1)">
           <button type="button" @click="changeTab('dark')">裏</button>
         </span>
+				<span id="dark" v-if="(player.money.greaterThanOrEqualTo('1e200')&&player.crownresettime.gt(0)) || player.lightgenerators[0].greaterThanOrEqualTo(1)">
+          <button type="button" @click="changeTab('light')">天上</button>
+        </span>
 				<span id="time" v-if="player.accelevel>0">
           <button type="button" @click="changeTab('time')">時</button>
         </span>
@@ -36,6 +39,9 @@
 				<span id="rank" v-if="player.rankresettime.gt(0) || player.crownresettime.gt(0)">
           <button type="button" @click="changeTab('rank')">階位</button>
         </span>
+				<span id="rank" v-if="player.crownresettime.gt(0)">
+					<button type="button" @click="changeTab('crown')">冠位</button>
+				</span>
 				<span id="auto" v-if="player.levelresettime.gt(0) || player.rankresettime.gt(0) || player.crownresettime.gt(0)">
           <button type="button" @click="changeTab('auto')">自動</button>
         </span>
@@ -47,6 +53,9 @@
 				</span>
 				<span id="chip" v-if="player.smalltrophies[5]">
 					<button type="button" @click="changeTab('chip')">鋳片</button>
+				</span>
+				<span id="statue" v-if="player.chip[0] >= 10000 || player.statue[0] >= 1">
+					<button type="button" @click="changeTab('statue')">像</button>
 				</span>
 				<span id="trophy">
 					<button type="button" @click="changeTab('trophy')">実績</button>
@@ -186,7 +195,29 @@
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
 					</button>
+					<button type="button" v-if="player.rankchallengecleared.length>=255" class="spendbrightnessbutton"  @click="spendbrightness(1000)">
+						煌き消費:1000
+					</button>
 				</div>
+
+			</div>
+
+			<div v-show= "player.currenttab == 'light'">
+				<div id="darkcoinamount" v-show="player.rankchallengecleared.length>=32">裏ポイント: {{ player.darkmoney.toExponential(3) }}</div>
+				天上発生器iは裏発生器iを強化します。
+
+				<div class="lightgenerator" v-for="i in 8" :key="i">
+					<span>
+						天上発生器{{ i }}: {{ player.lightgenerators[i-1].toExponential(3)+' '}}
+					</span>
+					<button type="button" class="gbutton" :class="{ 'unavailable': player.money.lt(player.lightgeneratorsCost[i-1]) }" @click="buylightgenerator(i-1)">
+						購入 コスト: {{ player.lightgeneratorsCost[i-1].toExponential(1) }}
+					</button>
+					<span>
+						購入数: {{ player.lightgeneratorsBought[i-1].toNumber()+' '}}
+					</span>
+				</div>
+
 
 			</div>
 
@@ -340,6 +371,41 @@
 					累計購入回数: {{player.levelitembought}}
 				</div>
 			</div>
+			<div v-show="player.currenttab == 'crown'">
+
+				<div class="challenges-container">
+          完全挑戦:完全階位挑戦とは厳しい条件で昇階リセットを目指すことです。
+          完全挑戦の突入時には段位と段位リセット、階位と階位リセット、今までの挑戦と階位挑戦がリセットされ、
+					改めて255個の挑戦および階位挑戦の達成を目指すことになります。
+					完全挑戦は、条件を1つも選択しなくても開始することができます。
+          <div class="challenge" v-for="i in 10" :key="i">
+					  <button type="button" class="challengeconfigbutton" :class="{ 'selected': player.pchallenges.includes(i-1) }" @click="configpchallenge(i-1)">
+              完全挑戦 {{ i }}
+            </button>
+						<span> ・{{ challengedata.pchallengetext[i-1] }} </span>
+					</div>
+					<br>
+					<div>
+						挑戦番号:{{ getpchallengeid(player.pchallenges) }}
+						進行度:
+						通常:{{ player.pchallengecleared[getpchallengeid(player.pchallenges)] }}
+						上位:{{ player.prchallengecleared[getpchallengeid(player.pchallenges)] }}
+					</div>
+          <br>
+          <div v-if="!player.onpchallenge">
+            <button type="button" class="challengeconfigbutton" @click="startpChallenge()">
+              挑戦開始
+            </button>
+          </div>
+          <div v-if="player.onpchallenge">
+            <button type="button" class="challengeconfigbutton" @click="exitpChallenge()">
+              挑戦終了
+            </button>
+          </div>
+
+
+        </div>
+			</div>
 			<div v-show="player.currenttab == 'auto'">
 				自動購入器設定
 				<div v-if="player.challengebonuses.includes(5)">
@@ -422,6 +488,9 @@
 					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[4] }" @click="buytype(4)" v-if="player.rankchallengecleared.length>=1">
 						上位効力型2購入:コスト300000
 					</button>
+					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[5] }" @click="buytype(5)" v-if="player.crownresettime.gt(0)">
+						モード型購入:コスト5000000
+					</button>
 				</div>
 				<br>
 				<div v-if = "player.rankchallengecleared.length>=32">
@@ -502,44 +571,75 @@
 				入手可能鋳片
 				<div v-for="i in 4" :key="i">
 					<div v-show="chipdata.getcl(player.money)>=i*4-3">
-						{{ chipdata.chipname[i-1] }}
+						{{ chipdata.chipname[i-1] + "片"}}
+					</div>
+				</div>
+				<div v-for="i in 1" :key="i">
+					<div v-show="chipdata.getcl(player.money)>=i*5+13">
+						{{ chipdata.chipname[i+3] + "片"}}
 					</div>
 				</div>
 				<br>
 				所持鋳片
-				<div v-for="i in 4" :key="i">
+				<div v-for="i in 10" :key="i">
 					<div v-show="player.chip[i-1]>0">
-						{{ chipdata.chipname[i-1] }}: {{ player.chip[i-1] }}
+						{{ chipdata.chipname[i-1] + "片"　}}: {{ player.chip[i-1] }}
 					</div>
 				</div>
 				<br>
 				鋳片使用
 				<div v-for="i in 32" :key="i">
 					鋳片効力 {{ i }} : {{ chipdata.chipbonusname[i-1] }}
-					<span v-for="j in 4" :key="j">
+					<span v-show = "player.disabledchip[i-1]">（無効）</span>
+					<span v-for="j in 10" :key="j">
 						<button v-show="player.chip[j-1]>0" @click="chipset(i-1,j)">
-							{{ chipdata.chipname[j-1] }} コスト:{{ chipused[j-1]+1 }}
+							{{ chipdata.chipname[j-1] + "片" }} コスト:{{ chipused[j-1]+1 }}
 						</button>
 					</span>
 					<button @click="chipset(i-1,0)">
 						外す
 					</button>
-					現在: {{ player.setchip[i-1]==0?"なし":chipdata.chipname[player.setchip[i-1]-1] }}
+					現在: {{ player.setchip[i-1]==0?"なし":chipdata.chipname[player.setchip[i-1]-1] +"片"}}
 				</div>
 				<div v-if="checkremembers()>=16" v-for="i in 20" :key="i">
 					鋳片効力 {{ i+32 }} : {{ chipdata.chipbonusname[i+32-1] }}
-					<span v-for="j in 4" :key="j">
+					<span v-show = "player.disabledchip[i-1]">（無効）</span>
+					<span v-for="j in 10" :key="j">
 						<button v-show="player.chip[j-1]>0" @click="chipset(i+32-1,j)">
-							{{ chipdata.chipname[j-1] }} コスト:{{ chipused[j-1]+1 }}
+							{{ chipdata.chipname[j-1] + "片"}} コスト:{{ chipused[j-1]+1 }}
 						</button>
 					</span>
 					<button @click="chipset(i+32-1,0)">
 						外す
 					</button>
-					現在: {{ player.setchip[i+32-1]==0?"なし":chipdata.chipname[player.setchip[i+32-1]-1] }}
+					現在: {{ player.setchip[i+32-1]==0?"なし":chipdata.chipname[player.setchip[i+32-1]-1] +"片"}}
+				</div>
+				<button @click="clearsetchip()">
+					すべて外す
+				</button>
+				<div v-if="player.boughttype[0]">
+					<div>型設定</div>
+					<button type="button" @click="setchiptype()">
+						鋳片型登録
+					</button>
+					<button type="button" @click="changechiptype()">
+						鋳片型適用
+					</button>
 				</div>
 
 
+			</div>
+			<div v-show="player.currenttab == 'statue'">
+				像は、対応する鋳片を使用して作成することができます。像を作成するたびに、必要な鋳片の量は増加します。
+				像は、完全挑戦に入るのに規定数が必要となり（消費はされません）、今後追加の変更で、別の用途で有効となる予定です。
+				<div v-for="i in 10" :key="i">
+					<div v-show = "player.chip[i-1]>0 || chipused[i-1]>0">
+						{{chipdata.chipname[i-1] + "像"}}: {{ player.statue[i-1] }}
+						<button type="button" @click="buildstatue(i-1)">
+							設像 コスト:{{ calcstatuecost(i-1) }}
+						</button>
+					</div>
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
 				<button type="button" @click="confchecktrophies()">
@@ -548,7 +648,7 @@
 				現在 {{ trophycheck?"する":"しない" }}
 				<br>
 				実績
-				<div class="levelitem" v-for="i in 8" :key="i">
+				<div class="levelitem" v-for="i in 9" :key="i">
 					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
 						実績 {{ i }}: {{ gettrophyname(i-1) }}
 					</button>
