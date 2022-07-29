@@ -704,7 +704,7 @@ Vue.createApp({
       }
 
 
-      return mult.mul("1e100")
+      return mult
     },
 
     calcbasicincrementmult(i){
