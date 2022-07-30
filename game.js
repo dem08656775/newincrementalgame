@@ -853,7 +853,7 @@ Vue.createApp({
       }
       let rt = this.player.rankchallengecleared.length
       if(this.player.onpchallenge){
-        rt = Math.max(t,this.player.prchallengecleared[this.getpchallengeid(this.player.pchallenges)])
+        rt = Math.max(rt,this.player.prchallengecleared[this.getpchallengeid(this.player.pchallenges)])
       }
       this.player.ranktoken = rt - rspent
 
