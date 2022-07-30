@@ -1565,8 +1565,10 @@ Vue.createApp({
           new Decimal('1e640'),
         ],
 
-        this.player.crown = this.player.crown.add(gaincrown)
-        this.player.crownresettime = this.player.crownresettime.add(1)
+        if(!force){
+          this.player.crown = this.player.crown.add(gaincrown)
+          this.player.crownresettime = this.player.crownresettime.add(1)
+        }
 
         this.player.tickspeed = 1000
 
