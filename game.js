@@ -1563,7 +1563,7 @@ Vue.createApp({
           new Decimal('1e160'),
           new Decimal('1e320'),
           new Decimal('1e640'),
-        ],
+        ]
 
         if(!force){
           this.player.crown = this.player.crown.add(gaincrown)
