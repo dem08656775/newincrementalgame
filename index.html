@@ -489,7 +489,7 @@
 						上位効力型2購入:コスト300000
 					</button>
 					<button type="button" class="buytypebutton" :class="{ 'selected': player.boughttype[5] }" @click="buytype(5)" v-if="player.crownresettime.gt(0)">
-						モード型購入:コスト5000000
+						鋳片型購入:コスト5000000
 					</button>
 				</div>
 				<br>
@@ -503,6 +503,9 @@
 					</button>
 					<button type="button" v-if="player.rankchallengecleared.length>=128" class="spendbrightnessbutton"  @click="spendbrightness(100)">
 						煌き消費:100
+					</button>
+					<button type="button" v-if="player.rankchallengecleared.length>=255" class="spendbrightnessbutton"  @click="spendbrightness(1000)">
+						煌き消費:1000
 					</button>
 					<div>煌き入手率: {{ (brightpersent * 100).toFixed(3) }}%</div>
 					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>

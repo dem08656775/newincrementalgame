@@ -204,7 +204,7 @@ Vue.createApp({
         tweetText += '裏ポイント:' + this.player.darkmoney +
         '(' + this.player.darkmoney.toExponential().replace('+', '%2B') + ')%0A';
       }
-      if(this.player.tweeting.includes('darkmoney')){
+      if(this.player.tweeting.includes('lightmoney')){
         tweetText += '天上ポイント:' + this.player.darkmoney +
         '(' + this.player.darkmoney.toExponential().replace('+', '%2B') + ')%0A';
       }
@@ -2076,13 +2076,13 @@ Vue.createApp({
         if(this.player.lightgenerators[5].greaterThanOrEqualTo(1))this.player.smalltrophies2nd[16] = true
         if(this.player.lightgenerators[6].greaterThanOrEqualTo(1))this.player.smalltrophies2nd[17] = true
         if(this.player.lightgenerators[7].greaterThanOrEqualTo(1))this.player.smalltrophies2nd[18] = true
-        if(this.player.chip[4]>0)this.player.smalltrophies[19] = true
-        if(this.player.chip[4]>=210)this.player.smalltrophies[20] = true
-        if(this.player.chip[4]>=1275)this.player.smalltrophies[21] = true
-        if(this.player.statue[0]>=10)this.player.smalltrophies[22] = true
-        if(this.player.statue[1]>=10)this.player.smalltrophies[23] = true
-        if(this.player.statue[2]>=10)this.player.smalltrophies[24] = true
-        if(this.player.statue[3]>=10)this.player.smalltrophies[25] = true
+        if(this.player.chip[4]>0)this.player.smalltrophies2nd[19] = true
+        if(this.player.chip[4]>=210)this.player.smalltrophies2nd[20] = true
+        if(this.player.chip[4]>=1275)this.player.smalltrophies2nd[21] = true
+        if(this.player.statue[0]>=10)this.player.smalltrophies2nd[22] = true
+        if(this.player.statue[1]>=10)this.player.smalltrophies2nd[23] = true
+        if(this.player.statue[2]>=10)this.player.smalltrophies2nd[24] = true
+        if(this.player.statue[3]>=10)this.player.smalltrophies2nd[25] = true
 
 
       }
