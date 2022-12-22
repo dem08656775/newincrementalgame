@@ -678,8 +678,9 @@ Vue.createApp({
       //if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
-      if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1周年キャンペーン
-      if(camp>6)camp=6
+      //if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1周年キャンペーン
+
+      if(camp>7)camp=7
       mult = mult.mul(1 + 4 * camp)
 
       this.commonmult = mult
@@ -910,7 +911,15 @@ Vue.createApp({
       this.shinepersent += 0.01 * this.eachpipedsmalltrophy[6] * 0.5
 
       if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) * rememberlevel && Math.random()<this.shinepersent){
-        this.player.shine += this.player.rankchallengebonuses.includes(2)?2:1
+        let shineget = 1
+        if(this.player.rankchallengebonuses.includes(2)) shineget = 2
+        let d = new Date()
+        if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
+          if(Math.random()<=0.5){
+            shineget = shineget + 1//クリスマスキャンペーン
+          }
+        }
+        this.player.shine += shineget
       }
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
@@ -918,7 +927,14 @@ Vue.createApp({
       this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.2
 
       if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
-        this.player.brightness += 1
+        let brightget = 1
+        let d = new Date()
+        if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
+          if(Math.random()<=0.5){
+            brightget = brightget + 1//クリスマスキャンペーン
+          }
+        }
+        this.player.brightness += brightget
       }
 
       let autorankshine = 1000 - this.checkremembers()*10
@@ -1674,6 +1690,11 @@ Vue.createApp({
 
       if(!(this.player.challengecleared.length>=255 && this.player.rankchallengecleared.length>=255)){
         alert("まだ挑戦や階位挑戦を完了していないので、完全挑戦を開始できません。")
+        return;
+      }
+
+      if(this.player.onchallenge){
+        alert("現在挑戦中のため、完全挑戦を開始できません。")
         return;
       }
 

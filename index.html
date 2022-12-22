@@ -606,7 +606,7 @@
 				</div>
 				<div v-if="checkremembers()>=16" v-for="i in 20" :key="i">
 					鋳片効力 {{ i+32 }} : {{ chipdata.chipbonusname[i+32-1] }}
-					<span v-show = "player.disabledchip[i-1]">（無効）</span>
+					<span v-show = "player.disabledchip[i+32-1]">（無効）</span>
 					<span v-for="j in 10" :key="j">
 						<button v-show="player.chip[j-1]>0" @click="chipset(i+32-1,j)">
 							{{ chipdata.chipname[j-1] + "片"}} コスト:{{ chipused[j-1]+1 }}
