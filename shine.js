@@ -24,6 +24,10 @@ function Shinedata(){
      return 0
    }
 
+   this.getfp = function(stage){
+     return 1/1000000 * stage
+   }
+
    this.getmaxshine = function(clear){
      if(clear>=32*8-1) return 10000000
      if(clear>=32*7) return 3000000
@@ -45,6 +49,10 @@ function Shinedata(){
      if(clear>=32*2) return 300
      if(clear>=32*1) return 100
      return 0
+   }
+
+   this.getmaxfl = function(stage){
+     return stage * stage * 2
    }
 
    this.shineshopcost = [

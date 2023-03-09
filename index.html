@@ -11,6 +11,37 @@
 　<div id="app">
 		<div class="container" v-cloak>
 			<div id="coinamount">ポイント: {{ player.money.toExponential(3) }}</div>
+			<span v-if="player.boughttype[0]">
+				<button type="button" @click="changemodetype()">
+					モード型適用
+				</button>
+			</span>
+			<span v-if="player.boughttype[1]">
+				<button type="button" @click="changebonusetype(1)">
+					効力型適用1
+				</button>
+			</span>
+			<span v-if="player.boughttype[2]">
+				<button type="button" @click="changebonusetype(2)">
+					効力型適用2
+				</button>
+			</span>
+			<span v-if="player.boughttype[3]">
+				<button type="button" @click="changerankbonusetype(1)">
+					上位効力型適用1
+				</button>
+			</span>
+			<span v-if="player.boughttype[4]">
+				<button type="button" @click="changerankbonusetype(2)">
+					上位効力型適用2
+				</button>
+			</span>
+			<span v-if="player.boughttype[5]">
+				<button type="button" @click="changechiptype()">
+					鋳片型適用
+				</button>
+			</span>
+
 			<div id="tickspeed">
 				間隙: {{ Math.round(player.tickspeed) }}毛秒
 				<span v-if="player.accelerators[0].gt(0)">
@@ -203,7 +234,7 @@
 			</div>
 
 			<div v-show= "player.currenttab == 'light'">
-				<div id="darkcoinamount" v-show="player.rankchallengecleared.length>=32">裏ポイント: {{ player.darkmoney.toExponential(3) }}</div>
+				<div id="lightcoinamount" v-show="pchallengestage>=1">天上ポイント: {{ player.lightmoney.toExponential(3) }}</div>
 				天上発生器iは裏発生器iを強化します。
 
 				<div class="lightgenerator" v-for="i in 8" :key="i">
@@ -391,6 +422,9 @@
 						通常:{{ player.pchallengecleared[getpchallengeid(player.pchallenges)] }}
 						上位:{{ player.prchallengecleared[getpchallengeid(player.pchallenges)] }}
 					</div>
+					<div>
+						完全挑戦段階: {{ pchallengestage }}
+					</div>
           <br>
           <div v-if="!player.onpchallenge">
             <button type="button" class="challengeconfigbutton" @click="startpChallenge()">
@@ -510,6 +544,15 @@
 					<div>煌き入手率: {{ (brightpersent * 100).toFixed(3) }}%</div>
 					<div>最大煌き保有数: {{ shinedata.getmaxbr(player.rankchallengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
 				</div>
+				<div v-if = "pchallengestage>=1">
+				瞬き所持数:{{ player.flicker }}
+					<button type="button" class="spendbrightnessbutton"  @click="spendflicker(1)">
+						瞬き消費:1
+					</button>
+
+					<div>瞬き入手率: {{ (flickerpersent * 100).toFixed(5) }}%</div>
+					<div>最大瞬き保有数: {{ shinedata.getmaxfl(pchallengestage) }}</div>
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'world'">
 				記憶: {{ memory }}
@@ -620,7 +663,7 @@
 				<button @click="clearsetchip()">
 					すべて外す
 				</button>
-				<div v-if="player.boughttype[0]">
+				<div v-if="player.boughttype[5]">
 					<div>型設定</div>
 					<button type="button" @click="setchiptype()">
 						鋳片型登録
