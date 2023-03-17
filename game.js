@@ -257,6 +257,14 @@ Vue.createApp({
     exportsave(){
       this.exported = btoa(JSON.stringify(this.players))
     },
+    exportsavefile(){
+      let result = btoa(JSON.stringify(this.players))
+      const file = new Blob([result], {type: 'text/plain'})
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(file)
+      a.download = `newincremantal_savedata${new Date()}.txt`
+      a.click()
+    },
     importsave(){
       let input = window.prompt("データを入力","")
       if(input.length<=50){
@@ -1792,6 +1800,7 @@ Vue.createApp({
     },
 
     exitpChallenge(){
+
       if (confirm('完全挑戦を中断しますか？現在のポイントや発生器、時間加速器を引き継いだまま、通常の状態に入ります。')) {
         if(this.player.onchallenge)this.exitChallenge()
         this.player.onpchallenge = false;
