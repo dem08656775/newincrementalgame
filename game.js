@@ -1463,6 +1463,7 @@ Vue.createApp({
           console.log(gainchip)
           if(gainchip!=-1 && this.player.chip[gainchip]<1000000){
             this.player.chip[gainchip] = this.player.chip[gainchip]+1
+            let d = new Date()
             if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
               if(gainchip==2)this.player.chip[gainchip]+4
             }//ゴールデンウィークキャンペーン
