@@ -3,6 +3,10 @@ function Chipdata(){
 
 
   this.getcl = function(mny){
+    if(mny.greaterThanOrEqualTo("1e350")) return 22
+    if(mny.greaterThanOrEqualTo("1e325")) return 21
+    if(mny.greaterThanOrEqualTo("1e300")) return 20
+    if(mny.greaterThanOrEqualTo("1e275")) return 19
     if(mny.greaterThanOrEqualTo("1e250")) return 18
     if(mny.greaterThanOrEqualTo("1e240")) return 17
     if(mny.greaterThanOrEqualTo("1e230")) return 16
@@ -49,6 +53,15 @@ function Chipdata(){
     [0.00,0.00,0.00,0.50,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
 
     [0.00,0.00,0.00,0.40,0.95,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.00,0.00,0.00,0.30,0.95,1.01,1.01,1.01,1.01,1.01,1.01],
+
+    [0.00,0.00,0.00,0.20,0.95,0.99,1.01,1.01,1.01,1.01,1.01],
+    [0.00,0.00,0.00,0.20,0.93,0.98,1.01,1.01,1.01,1.01,1.01],
+
+    [0.00,0.00,0.00,0.20,0.90,0.97,0.995,1.01,1.01,1.01,1.01],
+
+
+
   ]
 
   this.getchipid = function(lv){

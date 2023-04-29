@@ -1,5 +1,5 @@
 const version = 2;
-const trophynum = 9;
+const trophynum = 12;
 const setchipkind = 10;
 const setchipnum = 100;
 
@@ -13,6 +13,9 @@ const initialData = () => {
     shine: 0,
     brightness: 0,
     flicker: 0,
+
+    shineloader:new Array(8).fill(null).map(() => 0),
+    brightloader:new Array(8).fill(null).map(() => 0),
 
     rank:new Decimal(0),
     rankresettime: new Decimal(0),
@@ -462,6 +465,12 @@ Vue.createApp({
         if(!('flicker' in saveData)){
           saveData.flicker = 0
         }
+        if(!('shineloader' in saveData)){
+          saveData.shineloader = new Array(8).fill(null).map(() => 0)
+        }
+        if(!('brightloader' in saveData)){
+          saveData.brightloader = new Array(8).fill(null).map(() => 0)
+        }
 
         this.players[i] = saveData
       }
@@ -481,6 +490,8 @@ Vue.createApp({
           shine: saveData.shine ?? 0,
           brightness: saveData.brightness ?? 0,
           flicker: saveData.flicker ?? 0,
+          shineloader:saveData.shineloader ?? new Array(8).fill(null).map(() => 0),
+          brightloader:saveData.brightloader ?? new Array(8).fill(null).map(() => 0),
 
           rank: new Decimal(saveData.rank ?? 0),
           rankresettime: new Decimal(saveData.rankresettime ?? 0),
@@ -696,7 +707,8 @@ Vue.createApp({
       camp = this.player.accelevelused
 
       let d = new Date()
-      if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
+      if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7)camp = camp + 1//ゴールデンウィークキャンペーン
+      //if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
       //if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1周年キャンペーン
@@ -1444,14 +1456,16 @@ Vue.createApp({
           let randomint = Math.floor(Math.random() * 100)
           this.chipset(randomint,0)
           this.player.disabledchip[randomint] = true
-
         }
 
         if(this.player.money.greaterThan(1e80)){
           let gainchip = this.calcgainchip()
           console.log(gainchip)
-          if(gainchip!=-1 && this.player.chip[gainchip]<160000){
+          if(gainchip!=-1 && this.player.chip[gainchip]<1000000){
             this.player.chip[gainchip] = this.player.chip[gainchip]+1
+            if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
+              if(gainchip==2)this.player.chip[gainchip]+4
+            }//ゴールデンウィークキャンペーン
           }
         }
 
@@ -2017,6 +2031,7 @@ Vue.createApp({
 
       let maxpipe = 1
       if(this.player.trophies[7]) maxpipe = 2
+      if(this.player.trophies[9]) maxpipe = 3
 
       if(this.player.worldpipe[i]>=maxpipe)return
 
@@ -2048,6 +2063,8 @@ Vue.createApp({
       }
       if(this.player.crownresettime.greaterThan(0))this.player.trophies[7] = true;
       if(this.player.lightgenerators[0].greaterThan(0))this.player.trophies[8] = true;
+      if(this.player.flicker>0)this.player.trophies[9] = true;
+
 
       if(this.player.money.greaterThan(0))this.player.smalltrophies[0] = true
       if(this.player.money.greaterThan(777))this.player.smalltrophies[1] = true
@@ -2178,6 +2195,36 @@ Vue.createApp({
         if(this.player.statue[1]>=10)this.player.smalltrophies2nd[23] = true
         if(this.player.statue[2]>=10)this.player.smalltrophies2nd[24] = true
         if(this.player.statue[3]>=10)this.player.smalltrophies2nd[25] = true
+        if(this.player.crown.greaterThanOrEqualTo(100))this.player.smalltrophies2nd[26] = true
+        if(this.player.crown.greaterThanOrEqualTo(10000))this.player.smalltrophies2nd[27] = true
+        if(this.player.crown.greaterThanOrEqualTo("1e8"))this.player.smalltrophies2nd[28] = true
+        if(this.player.lightmoney.greaterThanOrEqualTo(1))this.player.smalltrophies2nd[29] = true
+        if(this.player.lightmoney.greaterThanOrEqualTo("1e9"))this.player.smalltrophies2nd[30] = true
+        if(this.player.lightmoney.greaterThanOrEqualTo("1e18"))this.player.smalltrophies2nd[31] = true
+        if(this.player.lightmoney.greaterThanOrEqualTo("1e36"))this.player.smalltrophies2nd[32] = true
+        if(this.player.flicker>=10)this.player.smalltrophies2nd[33] = true
+        if(this.player.flicker>=100)this.player.smalltrophies2nd[34] = true
+        if(this.player.flicker>=1000)this.player.smalltrophies2nd[35] = true
+        if(this.player.flicker>=10000)this.player.smalltrophies2nd[36] = true
+        if(this.player.flicker>=100000)this.player.smalltrophies2nd[37] = true
+        if(this.player.flicker>=1000000)this.player.smalltrophies2nd[38] = true
+        if(this.player.chip[5]>0)this.player.smalltrophies2nd[39] = true
+        if(this.player.chip[5]>=210)this.player.smalltrophies2nd[40] = true
+        if(this.player.chip[5]>=1275)this.player.smalltrophies2nd[41] = true
+        if(this.player.chip[6]>0)this.player.smalltrophies2nd[42] = true
+        if(this.player.chip[6]>=210)this.player.smalltrophies2nd[43] = true
+        if(this.player.chip[6]>=1275)this.player.smalltrophies2nd[44] = true
+        if(this.player.statue[4]>=10)this.player.smalltrophies2nd[45] = true
+        if(this.player.statue[5]>=10)this.player.smalltrophies2nd[46] = true
+        if(this.player.statue[6]>=10)this.player.smalltrophies2nd[47] = true
+        if(this.player.statue[0]>=64)this.player.smalltrophies2nd[48] = true
+        if(this.player.statue[1]>=64)this.player.smalltrophies2nd[49] = true
+        if(this.player.statue[2]>=64)this.player.smalltrophies2nd[50] = true
+        if(this.player.statue[3]>=64)this.player.smalltrophies2nd[51] = true
+        if(this.player.statue[4]>=64)this.player.smalltrophies2nd[52] = true
+        if(this.player.statue[5]>=64)this.player.smalltrophies2nd[53] = true
+        if(this.player.statue[6]>=64)this.player.smalltrophies2nd[54] = true
+
 
 
       }

@@ -575,7 +575,7 @@
 						世界管を開通すると、開通先の世界での生産力が、開通元の世界の里程の個数に応じて強化されます。
 					</div>
 
-					世界管開通可能数: {{ player.crownresettime.gt(0)?2:1 }}
+					世界管開通可能数: {{ player.trophies[9]?3:player.crownresettime.gt(0)?2:1 }}
 
 
 				</div>
@@ -616,16 +616,7 @@
 				<br>
 				<br>
 				入手可能鋳片
-				<div v-for="i in 4" :key="i">
-					<div v-show="chipdata.getcl(player.money)>=i*4-3">
-						{{ chipdata.chipname[i-1] + "片"}}
-					</div>
-				</div>
-				<div v-for="i in 1" :key="i">
-					<div v-show="chipdata.getcl(player.money)>=i*5+13">
-						{{ chipdata.chipname[i+3] + "片"}}
-					</div>
-				</div>
+				{{"調整中です"}}
 				<br>
 				所持鋳片
 				<div v-for="i in 10" :key="i">
@@ -695,7 +686,7 @@
 				現在 {{ trophycheck?"する":"しない" }}
 				<br>
 				実績
-				<div class="levelitem" v-for="i in 9" :key="i">
+				<div class="levelitem" v-for="i in 10" :key="i">
 					<button type="button" class="trbutton" :class="{ 'unavailable': !player.trophies[i-1] }" >
 						実績 {{ i }}: {{ gettrophyname(i-1) }}
 					</button>
