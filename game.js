@@ -835,10 +835,10 @@ Vue.createApp({
 
     updatedarkgenerators(mu){
       let darkmult = this.player.darklevel.add(1)
-      if(this.player.lightmoney.greaterThanOrEqualTo(1)){
-        darkmult.mul(this.player.lightmoney.log10()+1)
-      }
       darkmult = this.softCap(darkmult,new Decimal(1e3))
+      if(this.player.lightmoney.greaterThanOrEqualTo(1)){
+        darkmult = darkmult.mul(this.player.lightmoney.log10()+1)
+      }
       let dgtocalc = Array.from(this.player.darkgenerators)
       for(let i = 0; i < 8; i++){
         dgtocalc[i] = dgtocalc[i].mul(this.player.lightgenerators[i].add(1))
@@ -1465,7 +1465,7 @@ Vue.createApp({
             this.player.chip[gainchip] = this.player.chip[gainchip]+1
             let d = new Date()
             if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
-              if(gainchip==2)this.player.chip[gainchip]+4
+              if(gainchip==2)this.player.chip[gainchip] = this.player.chip[gainchip]+4
             }//ゴールデンウィークキャンペーン
           }
         }
