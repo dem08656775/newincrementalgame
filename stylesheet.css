@@ -70,6 +70,10 @@ button:not(.unavailable) {
   cursor: pointer;
 }
 
+button.unavailable{
+  background: #B0B0B0;
+}
+
 .gbutton{
   background: #FFFFFF;
   color: #000000;

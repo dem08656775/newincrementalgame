@@ -116,13 +116,13 @@
 				</div>
 				<div class="softreset">
 					<div id="levelreset" v-if="player.money.greaterThanOrEqualTo('1e18')">
-						<button type="button" @click="resetLevel(false,false)">昇段リセット</button>
+						<button type="button" :class="{ 'unavailable': player.money.lt('1e24') && player.onchallenge && player.challenges.includes(0) }" @click="resetLevel(false,false)">昇段リセット</button>
 					</div>
 					<div id="rankreset" v-if="player.money.greaterThanOrEqualTo(resetRankborder())">
 						<button type="button" @click="resetRank(false)">昇階リセット</button>
 					</div>
 					<div id="crownreset" v-if="player.money.greaterThanOrEqualTo(resetCrownborder())">
-						<button type="button" @click="resetCrown(false)">昇冠リセット</buttton>
+						<button type="button" :class="{ 'unavailable': player.onchallenge }"@click="resetCrown(false)">昇冠リセット</buttton>
 					</div>
 				</div>
 				<br>
@@ -271,10 +271,12 @@
           ツイート機能設定
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('money') }" @click="configtweet('money')">ポイント</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darkmoney') }" @click="configtweet('darkmoney')" v-if="player.darkmoney.gt(0)">裏ポイント</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('lightmoney') }" @click="configtweet('lightmoney')" v-if="player.lightmoney.gt(0)">天上ポイント</button>
           <button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('level') }" @click="configtweet('level')" v-if="player.levelresettime.gt(0)||player.rankresettime.gt(0)">段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('darklevel') }" @click="configtweet('darklevel')" v-if="player.darklevel.gt(0)">裏段位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('achieved') }" @click="configtweet('achieved')" v-if="player.levelresettime.gt(0)||player.rankresettime.gt(0)">挑戦達成</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rankachieved') }" @click="configtweet('rankachieved')" v-if="player.rankchallengecleared.length>=1">上位挑戦達成</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('pachieved') }" @click="configtweet('pachieved')" v-if="pchallengestage>=1">完全挑戦段階</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('rank') }" @click="configtweet('rank')" v-if="player.rankresettime.gt(0)">階位</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('levelitemboughttime') }" @click="configtweet('levelitemboughttime')" v-if="player.rankresettime.gt(0)">段位効力購入</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('world') }" @click="configtweet('world')" v-if="worldopened[1] || worldopened[2]">世界</button>
@@ -586,7 +588,7 @@
 					<button type="button" v-if="trophynumber[0]>=6 && world==0 && i!=1" class="wdbutton" :class="{'unavailable': players[i-1].remember >= trophynumber[i-1] ||  trophynumber[i-1] < 4}" @click="shrinkworld(i-1)">
 						収縮
 					</button>
-					<button type="button" v-if="i-1!=world && worldopened[i-1] && smalltrophy>=75" class="wdbutton" :class="{'unavailable': player.worldpipe[i-1] == (player.crownresettime.gt(0)?2:1) }" @click="openpipe(i-1)">
+					<button type="button" v-if="i-1!=world && worldopened[i-1] && smalltrophy>=75" class="wdbutton" :class="{'unavailable': player.worldpipe[i-1] >= calcmaxpipe() }" @click="openpipe(i-1)">
 						開通
 					</button>
 					<span>

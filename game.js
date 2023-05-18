@@ -97,6 +97,8 @@ const initialData = () => {
     challengecleared:[],
     challengebonuses:[],
 
+    challengeweight:new Array(20).fill(null).map(() => 0),
+
     onpchallenge: false,
     pchallenges:[],
     pchallengecleared:new Array(1024).fill(null).map(() => 0),
@@ -125,6 +127,7 @@ const initialData = () => {
     chip: new Array(setchipkind).fill(0).map(() => 0),
     setchip: new Array(setchipnum).fill(0).map(() => 0),
     disabledchip: new Array(setchipnum).fill(0).map(() => false),
+    spendchip:new Array(setchipkind).fill(0).map(() => 0),
 
     statue: new Array(setchipkind).fill(0).map(() => 0),
 
@@ -230,6 +233,9 @@ Vue.createApp({
       }
       if(this.player.tweeting.includes('rankachieved')){
         tweetText += '上位挑戦達成:' + this.player.rankchallengecleared.length + '%0A';
+      }
+      if(this.player.tweeting.includes('pachieved')){
+        tweetText += '完全挑戦段階:' + this.pchallengestage + '%0A';
       }
       if(this.player.tweeting.includes('rank')){
         tweetText += '階位:' + this.player.rank + '%0A';
@@ -471,6 +477,12 @@ Vue.createApp({
         if(!('brightloader' in saveData)){
           saveData.brightloader = new Array(8).fill(null).map(() => 0)
         }
+        if(!('challengeweight' in saveData)){
+          saveData.challengeweight = new Array(20).fill(null).map(() => 0)
+        }
+        if(!('spendchip' in saveData)){
+          saveData.spendchip = new Array(setchipkind).fill(null).map(() => 0)
+        }
 
         this.players[i] = saveData
       }
@@ -540,6 +552,8 @@ Vue.createApp({
           challengecleared: saveData.challengecleared ?? [],
           challengebonuses: saveData.challengebonuses ?? [],
 
+          challengeweight:new Array(20).fill(null).map(() => 0),
+
           onpchallenge:saveData.onpchallenge ?? false,
           pchallenges: saveData.pchallenges ?? [],
           pchallengecleared: saveData.pchallengecleared ?? new Array(1024).fill(null).map(() => 0),
@@ -569,6 +583,7 @@ Vue.createApp({
           chip:saveData.chip ??  new Array(setchipkind).fill(null).map(() => 0),
           setchip:saveData.setchip ?? new Array(setchipnum).fill(null).map(() => 0),
           disabledchip:saveData.disabledchip ?? new Array(setchipnum).fill(null).map(() => false),
+          spendchip:new Array(setchipkind).fill(null).map(() => 0),
 
           statue: saveData.statue ?? new Array(setchipkind).fill(null).map(() => 0),
 
@@ -1019,7 +1034,7 @@ Vue.createApp({
 
 
 
-      let autorankshine = 1000 - this.checkremembers()*10
+      let autorankshine = Math.max(0,1000 - this.checkremembers()*10)
 
       if(!this.player.onchallenge && this.player.rankchallengebonuses.includes(14) && this.autorank){
         if(this.player.shine>=autorankshine && this.player.money.greaterThanOrEqualTo(this.resetRankborder())){
@@ -2021,18 +2036,23 @@ Vue.createApp({
 
         this.players[i].token = this.players[i].challengecleared.length
 
-        checkpipedsmalltrophies()
+        this.checkpipedsmalltrophies()
 
       }
+    },
+
+    calcmaxpipe(){
+      if(this.player.trophies[9]) return 3
+      if(this.player.trophies[7]) return 2
+      return 1
+
     },
 
     openpipe(i){
 
       console.log("a")
 
-      let maxpipe = 1
-      if(this.player.trophies[7]) maxpipe = 2
-      if(this.player.trophies[9]) maxpipe = 3
+      let maxpipe = this.calcmaxpipe()
 
       if(this.player.worldpipe[i]>=maxpipe)return
 

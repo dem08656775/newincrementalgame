@@ -53,6 +53,7 @@ function Shinedata(){
 
    this.getmaxfl = function(stage){
      return stage * stage * 2
+     //max:2097152
    }
 
    this.shineshopcost = [
