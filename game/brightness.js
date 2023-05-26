@@ -3,7 +3,7 @@ import { updateAccelerators } from "./accelerator.js";
 import { updateDarkGenerators } from "./darkGenerator.js";
 import { updateGenerators } from "./generator.js";
 
-export const spendbrightness = (self, num) => {
+export const spendBrightness = (self, num) => {
   if (self.player.brightness < num) return;
   if (self.player.onpchallenge && self.player.pchallenges.includes(6)) return;
   self.player.brightness -= num;

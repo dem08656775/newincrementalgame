@@ -279,19 +279,15 @@ export const load = (self, world) => {
     challenges: saveData.challenges ?? [],
     challengecleared: saveData.challengecleared ?? [],
     challengebonuses: saveData.challengebonuses ?? [],
-
     challengeweight: new Array(20).fill(null).map(() => 0),
-
     onpchallenge: saveData.onpchallenge ?? false,
     pchallenges: saveData.pchallenges ?? [],
     pchallengecleared:
       saveData.pchallengecleared ?? new Array(1024).fill(null).map(() => 0),
     prchallengecleared:
       saveData.prchallengecleared ?? new Array(1024).fill(null).map(() => 0),
-
     rankchallengecleared: saveData.rankchallengecleared ?? [],
     rankchallengebonuses: saveData.rankchallengebonuses ?? [],
-
     boughttype: saveData.boughttype ?? [
       false,
       false,
@@ -305,17 +301,14 @@ export const load = (self, world) => {
     setchallengebonusessnd: saveData.setchallengebonusessnd ?? [],
     setrankchallengebonusesfst: saveData.setrankchallengebonusesfst ?? [],
     setrankchallengebonusessnd: saveData.setrankchallengebonusessnd ?? [],
-
     trophies:
       saveData.trophies ?? new Array(trophynum).fill(null).map(() => false),
     smalltrophies:
       saveData.smalltrophies ?? new Array(100).fill(null).map(() => false),
     smalltrophies2nd:
       saveData.smalltrophies2nd ?? new Array(100).fill(null).map(() => false),
-
     levelitems: saveData.levelitems ?? [0, 0, 0, 0, 0],
     levelitembought: saveData.levelitembought ?? 0,
-
     remember: saveData.remember ?? 0,
     rememberspent: saveData.rememberspent ?? 0,
     chip: saveData.chip ?? new Array(setchipkind).fill(null).map(() => 0),

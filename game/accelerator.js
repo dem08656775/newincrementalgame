@@ -25,20 +25,17 @@ export const buyAccelerator = (self, index) => {
   if (index >= 1 && self.player.levelresettime.lessThanOrEqualTo(0)) return;
 
   if (
-    self.player.money.greaterThanOrEqualTo(
-      self.player.acceleratorsCost[index]
-    )
+    self.player.money.greaterThanOrEqualTo(self.player.acceleratorsCost[index])
   ) {
     self.player.money = self.player.money.sub(
       self.player.acceleratorsCost[index]
     );
-    self.player.accelerators[index] =
-      self.player.accelerators[index].add(1);
+    self.player.accelerators[index] = self.player.accelerators[index].add(1);
     self.player.acceleratorsBought[index] =
       self.player.acceleratorsBought[index].add(1);
     calcaccost(self);
   }
-}
+};
 
 export const calcaccost = (self) => {
   for (let i = 0; i < 8; i++) {
