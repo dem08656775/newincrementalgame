@@ -1,6 +1,6 @@
 import Decimal from "../break_eternity.esm.js";
 import { calcchallengeid } from "./challenge.js";
-import { calcgainchip } from "./chip.js";
+import { calcGainChip } from "./chip.js";
 
 export const resetLevel = (self, force, exit) => {
   if (self.player.onchallenge && self.player.challenges.includes(0)) {
@@ -46,7 +46,7 @@ export const resetLevel = (self, force, exit) => {
     }
 
     if (self.player.money.greaterThan(1e80)) {
-      let gainchip = calcgainchip(self);
+      let gainchip = calcGainChip(self);
       console.log(gainchip);
       if (gainchip != -1 && self.player.chip[gainchip] < 1000000) {
         self.player.chip[gainchip] = self.player.chip[gainchip] + 1;
