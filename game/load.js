@@ -10,6 +10,7 @@ import { calccommonmult } from "./commonmult.js";
 import { checkworlds } from "./world.js";
 import { checkmemories } from "./memory.js";
 import { checktrophies } from "./trophy.js";
+import { countpchallengecleared } from "./pchallenge.js";
 
 export const dataload = (self) => {
   if (!localStorage.getItem("playerStored")) return;
@@ -347,7 +348,7 @@ export const load = (self, world) => {
   findhighestgenerator(self);
   checkpipedsmalltrophies(self);
 
-  self.countpchallengecleared();
+  countpchallengecleared(self);
 };
 
 const readOldFormat = (saveData) => {

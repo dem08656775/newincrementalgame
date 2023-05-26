@@ -42,7 +42,7 @@ export const buyDarkGenerator = (self, index) => {
       self.player.darkgenerators[index].add(1);
     self.player.darkgeneratorsBought[index] =
       self.player.darkgeneratorsBought[index].add(1);
-    self.calcdgcost();
+    calcdgcost(self);
   }
 };
 

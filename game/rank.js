@@ -1,4 +1,5 @@
 import Decimal from "../break_eternity.esm.js";
+import { calcchallengeid } from "./challenge.js";
 
 export const resetRankborder = (self) => {
   let p =
@@ -18,16 +19,16 @@ export const resetRank = (self, force) => {
     }
   }
 
-  let gainrank = self.calcgainrank();
+  let gainrank = calcgainrank(self);
   if (force || confirm("昇階リセットして、階位" + gainrank + "を得ますか？")) {
     if (self.player.onchallenge) {
       self.player.onchallenge = false;
       self.activechallengebonuses = self.player.challengebonuses;
       if (
         self.player.challengecleared.length >= 128 &&
-        !self.player.rankchallengecleared.includes(self.calcchallengeid())
+        !self.player.rankchallengecleared.includes(calcchallengeid(self))
       ) {
-        self.player.rankchallengecleared.push(self.calcchallengeid());
+        self.player.rankchallengecleared.push(calcchallengeid(self));
       }
     }
 

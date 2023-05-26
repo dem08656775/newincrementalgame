@@ -1,7 +1,7 @@
 import Decimal from "../break_eternity.esm.js";
 import { calcincrementmult } from "./incrementmult.js";
 
-export const updategenerators = (self, mu) => {
+export const updateGenerators = (self, mu) => {
   for (let i = 0; i < 8; i++) {
     if (!self.activechallengebonuses.includes(13)) {
       let to = self.player.generatorsMode[i];

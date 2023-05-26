@@ -7,7 +7,7 @@ export const calcmaxpipe = (self) => {
 export const openpipe = (self, id) => {
   console.log("a");
 
-  let maxpipe = self.calcmaxpipe();
+  let maxpipe = calcmaxpipe(self);
 
   if (self.player.worldpipe[id] >= maxpipe) return;
 

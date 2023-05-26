@@ -2,7 +2,7 @@ import Decimal from "../break_eternity.esm.js";
 import { calcaccost, updateAccelerators } from "./accelerator.js";
 import { calccommonmult } from "./commonmult.js";
 import { calcdgcost } from "./darkGenerator.js";
-import { calcgncost, findhighestgenerator, updategenerators } from "./generator.js";
+import { calcgncost, findhighestgenerator, updateGenerators } from "./generator.js";
 import { calcbasicincrementmult } from "./incrementmult.js";
 import { buylevelitems } from "./levelitem.js";
 import { checkmemories } from "./memory.js";
@@ -38,7 +38,7 @@ export const update = (self) => {
   calcgncost(self);
   calcaccost(self);
   calcdgcost(self);
-  updategenerators(self, new Decimal(1));
+  updateGenerators(self, new Decimal(1));
   updateAccelerators(self, new Decimal(1));
   calctoken(self);
 

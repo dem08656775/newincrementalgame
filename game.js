@@ -4,7 +4,7 @@ import {
   buyGenerator,
   calcgncost,
   findhighestgenerator,
-  updategenerators,
+  updateGenerators,
 } from "./game/generator.js";
 import {
   calcbasicincrementmult,
@@ -75,7 +75,7 @@ import { changerankbonusetype, setrankbonusetype } from "./game/rankBonus.js";
 import { spendbrightness } from "./game/brightness.js";
 import { spendshine } from "./game/shine.js";
 import { spendflicker } from "./game/flicker.js";
-import { changeMode, changemodetype, setmodetype } from "./game/mode.js";
+import { changeMode, changeModeType, setModeType } from "./game/mode.js";
 import { dataload, load } from "./game/load.js";
 import { update } from "./game/update.js";
 import { checkremembers } from "./game/remember.js";
@@ -136,7 +136,7 @@ Vue.createApp({
     },
 
     updategenerators(mu) {
-      return updategenerators(this, mu);
+      return updateGenerators(this, mu);
     },
 
     updateaccelerators(mu) {
@@ -229,10 +229,10 @@ Vue.createApp({
       return buylevelitems(this, index);
     },
     setmodetype() {
-      return setmodetype(this);
+      return setModeType(this);
     },
     changemodetype() {
-      return changemodetype(this);
+      return changeModeType(this);
     },
     clearsetchip() {
       return clearsetchip(this);

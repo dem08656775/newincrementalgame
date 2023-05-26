@@ -1,5 +1,7 @@
+import { calcgncost } from "./generator";
+
 export const startChallenge = (self) => {
-  let challengeid = self.calcchallengeid();
+  let challengeid = calcchallengeid(self);
 
   if (challengeid == 0) {
     alert("挑戦が一つも選択されていません。");
@@ -43,14 +45,14 @@ export const exitChallenge = (self) => {
   ) {
     self.player.onchallenge = false;
     self.activechallengebonuses = self.player.challengebonuses;
-    self.calcgncost();
+    calcgncost(self);
   }
 };
 
 export const showunclearedchallenges = (self) => {
   if (self.player.challengecleared.length == 255) return;
   if (self.player.onchallenge) return;
-  let challengeid = self.calcchallengeid();
+  let challengeid = calcchallengeid(self);
 
   do {
     if (challengeid == 0) {

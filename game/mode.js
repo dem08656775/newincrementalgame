@@ -1,4 +1,4 @@
-export const setmodetype = (self) => {
+export const setModeType = (self) => {
   if (confirm("現在のモードを登録します。よろしいですか？")) {
     for (let i = 0; i < 8; i++) {
       self.player.setmodes[i] = self.player.generatorsMode[i];
@@ -6,7 +6,7 @@ export const setmodetype = (self) => {
   }
 };
 
-export const changemodetype = (self) => {
+export const changeModeType = (self) => {
   if (self.player.onchallenge && self.player.challenges.includes(3)) return;
   for (let i = 0; i < 8; i++) {
     while (self.player.setmodes[i] !== self.player.generatorsMode[i]) {

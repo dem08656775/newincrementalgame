@@ -1,3 +1,5 @@
+import { resetCrown } from "./crown";
+
 export const configpchallenge = (self, index) => {
   if (self.player.onpchallenge) return;
   if (!self.player.pchallenges.includes(index)) {
@@ -45,7 +47,7 @@ export const startpChallenge = (self) => {
     "完全挑戦を開始しますか？現在のポイントや発生器、段位や段位リセット、階位などは失われます。";
 
   if (confirm(conf)) {
-    self.resetCrown(true);
+    resetCrown(self, true);
     self.player.onpchallenge = true;
     self.player.challengecleared = [];
     self.player.challengebonuses = [];
@@ -63,18 +65,18 @@ export const exitpChallenge = (self) => {
     if (self.player.onchallenge) self.exitChallenge();
     self.player.onpchallenge = false;
     self.player.pchallengecleared[
-      self.getpchallengeid(self.player.pchallenges)
+      getpchallengeid(self.player.pchallenges)
     ] = Math.max(
       self.player.pchallengecleared[
-        self.getpchallengeid(self.player.pchallenges)
+        getpchallengeid(self.player.pchallenges)
       ],
       self.player.challengecleared.length
     );
     self.player.prchallengecleared[
-      self.getpchallengeid(self.player.pchallenges)
+      getpchallengeid(self.player.pchallenges)
     ] = Math.max(
       self.player.prchallengecleared[
-        self.getpchallengeid(self.player.pchallenges)
+        getpchallengeid(self.player.pchallenges)
       ],
       self.player.rankchallengecleared.length
     );
@@ -83,7 +85,7 @@ export const exitpChallenge = (self) => {
     for (let i = 0; i < setchipnum; i++) {
       self.player.disabledchip[i] = false;
     }
-    self.countpchallengecleared();
+    countpchallengecleared(self);
   }
 };
 

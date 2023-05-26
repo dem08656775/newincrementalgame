@@ -13,7 +13,7 @@ export const resetCrown = (self, force) => {
     }
   }
 
-  let gaincrown = self.calcgaincrown();
+  let gaincrown = calcgaincrown(self);
   if (force || confirm("昇冠リセットして、冠位" + gaincrown + "を得ますか？")) {
     self.player.money = new Decimal(1);
     self.player.level = new Decimal(0);
@@ -78,10 +78,10 @@ export const resetCrown = (self, force) => {
 };
 
 export const calcgaincrown = (self) => {
-    let dv = 72;
-    return new Decimal(2).pow(self.player.money.log10() / dv).round();
-  };
-  
-  export const resetCrownborder = () => {
-    return new Decimal("1e216");
-  };
+  let dv = 72;
+  return new Decimal(2).pow(self.player.money.log10() / dv).round();
+};
+
+export const resetCrownborder = () => {
+  return new Decimal("1e216");
+};

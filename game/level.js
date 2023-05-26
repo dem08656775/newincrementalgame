@@ -1,4 +1,6 @@
 import Decimal from "../break_eternity.esm.js";
+import { calcchallengeid } from "./challenge.js";
+import { calcgainchip } from "./chip.js";
 
 export const resetLevel = (self, force, exit) => {
   if (self.player.onchallenge && self.player.challenges.includes(0)) {
@@ -10,7 +12,7 @@ export const resetLevel = (self, force, exit) => {
 
   let dividing = 19 - self.player.rank.add(2).log2();
   if (dividing < 1) dividing = 1;
-  let gainlevel = self.calcgainlevel();
+  let gainlevel = calcgainlevel(self);
   let rst = self.player.rankresettime.add(1);
   if (self.player.onpchallenge && self.player.pchallenges.includes(4)) {
     rst = rst.pow(0.1).round();
@@ -29,9 +31,9 @@ export const resetLevel = (self, force, exit) => {
       if (self.player.challenges.length >= 6) {
         self.player.trophies[3] = true;
       }
-      let id = self.calcchallengeid();
+      let id = calcchallengeid(self);
       if (!self.player.challengecleared.includes(id)) {
-        self.player.challengecleared.push(self.calcchallengeid());
+        self.player.challengecleared.push(calcchallengeid(self));
         disa = false;
       }
       self.activechallengebonuses = self.player.challengebonuses;
@@ -44,7 +46,7 @@ export const resetLevel = (self, force, exit) => {
     }
 
     if (self.player.money.greaterThan(1e80)) {
-      let gainchip = self.calcgainchip();
+      let gainchip = calcgainchip(self);
       console.log(gainchip);
       if (gainchip != -1 && self.player.chip[gainchip] < 1000000) {
         self.player.chip[gainchip] = self.player.chip[gainchip] + 1;
