@@ -1,4 +1,4 @@
-function Shinedata(){
+export function Shinedata(){
 
    this.getp = function(clear){
      if(clear>=32*8-1) return 0.20

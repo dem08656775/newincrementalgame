@@ -1,77 +1,71 @@
-function Chipdata(){
-
-
-
-  this.getcl = function(mny){
-    if(mny.greaterThanOrEqualTo("1e350")) return 22
-    if(mny.greaterThanOrEqualTo("1e325")) return 21
-    if(mny.greaterThanOrEqualTo("1e300")) return 20
-    if(mny.greaterThanOrEqualTo("1e275")) return 19
-    if(mny.greaterThanOrEqualTo("1e250")) return 18
-    if(mny.greaterThanOrEqualTo("1e240")) return 17
-    if(mny.greaterThanOrEqualTo("1e230")) return 16
-    if(mny.greaterThanOrEqualTo("1e220")) return 15
-    if(mny.greaterThanOrEqualTo("1e210")) return 14
-    if(mny.greaterThanOrEqualTo("1e200")) return 13
-    if(mny.greaterThanOrEqualTo("1e190")) return 12
-    if(mny.greaterThanOrEqualTo("1e180")) return 11
-    if(mny.greaterThanOrEqualTo("1e170")) return 10
-    if(mny.greaterThanOrEqualTo("1e160")) return 9
-    if(mny.greaterThanOrEqualTo("1e150")) return 8
-    if(mny.greaterThanOrEqualTo("1e140")) return 7
-    if(mny.greaterThanOrEqualTo("1e130")) return 6
-    if(mny.greaterThanOrEqualTo("1e120")) return 5
-    if(mny.greaterThanOrEqualTo("1e110")) return 4
-    if(mny.greaterThanOrEqualTo("1e100")) return 3
-    if(mny.greaterThanOrEqualTo("1e90")) return 2
-    if(mny.greaterThanOrEqualTo("1e80")) return 1
-    return 0
-  }
+export function Chipdata() {
+  this.getcl = function (mny) {
+    if (mny.greaterThanOrEqualTo("1e350")) return 22;
+    if (mny.greaterThanOrEqualTo("1e325")) return 21;
+    if (mny.greaterThanOrEqualTo("1e300")) return 20;
+    if (mny.greaterThanOrEqualTo("1e275")) return 19;
+    if (mny.greaterThanOrEqualTo("1e250")) return 18;
+    if (mny.greaterThanOrEqualTo("1e240")) return 17;
+    if (mny.greaterThanOrEqualTo("1e230")) return 16;
+    if (mny.greaterThanOrEqualTo("1e220")) return 15;
+    if (mny.greaterThanOrEqualTo("1e210")) return 14;
+    if (mny.greaterThanOrEqualTo("1e200")) return 13;
+    if (mny.greaterThanOrEqualTo("1e190")) return 12;
+    if (mny.greaterThanOrEqualTo("1e180")) return 11;
+    if (mny.greaterThanOrEqualTo("1e170")) return 10;
+    if (mny.greaterThanOrEqualTo("1e160")) return 9;
+    if (mny.greaterThanOrEqualTo("1e150")) return 8;
+    if (mny.greaterThanOrEqualTo("1e140")) return 7;
+    if (mny.greaterThanOrEqualTo("1e130")) return 6;
+    if (mny.greaterThanOrEqualTo("1e120")) return 5;
+    if (mny.greaterThanOrEqualTo("1e110")) return 4;
+    if (mny.greaterThanOrEqualTo("1e100")) return 3;
+    if (mny.greaterThanOrEqualTo("1e90")) return 2;
+    if (mny.greaterThanOrEqualTo("1e80")) return 1;
+    return 0;
+  };
 
   this.ptable = [
-    [1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
+    [1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.85,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.65,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.40,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.30,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.85, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.65, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.4, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.3, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.20,0.95,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.05,0.80,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.65,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.55,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.2, 0.95, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.05, 0.8, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.65, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.55, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.00,0.45,0.95,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.25,0.85,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.15,0.60,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.10,0.40,1.01,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.0, 0.45, 0.95, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.25, 0.85, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.15, 0.6, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.1, 0.4, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.00,0.00,0.20,0.95,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.15,0.85,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.10,0.70,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.05,0.60,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.00,0.50,1.01,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.0, 0.0, 0.2, 0.95, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.15, 0.85, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.1, 0.7, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.05, 0.6, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.0, 0.5, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.00,0.00,0.00,0.40,0.95,1.01,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.00,0.30,0.95,1.01,1.01,1.01,1.01,1.01,1.01],
+    [0.0, 0.0, 0.0, 0.4, 0.95, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.0, 0.3, 0.95, 1.01, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.00,0.00,0.00,0.20,0.95,0.99,1.01,1.01,1.01,1.01,1.01],
-    [0.00,0.00,0.00,0.20,0.93,0.98,1.01,1.01,1.01,1.01,1.01],
+    [0.0, 0.0, 0.0, 0.2, 0.95, 0.99, 1.01, 1.01, 1.01, 1.01, 1.01],
+    [0.0, 0.0, 0.0, 0.2, 0.93, 0.98, 1.01, 1.01, 1.01, 1.01, 1.01],
 
-    [0.00,0.00,0.00,0.20,0.90,0.97,0.995,1.01,1.01,1.01,1.01],
+    [0.0, 0.0, 0.0, 0.2, 0.9, 0.97, 0.995, 1.01, 1.01, 1.01, 1.01],
+  ];
 
-
-
-  ]
-
-  this.getchipid = function(lv){
-    let d = Math.random()
-    for(let i=0;i<=10;i++){
-      if(this.ptable[lv][i]>d){
-        return i-1
+  this.getchipid = function (lv) {
+    let d = Math.random();
+    for (let i = 0; i <= 10; i++) {
+      if (this.ptable[lv][i] > d) {
+        return i - 1;
       }
     }
-  }
+  };
 
   this.chipname = [
     "銅",
@@ -84,9 +78,9 @@ function Chipdata(){
     "翠鋼",
     "聖銀",
     "覇金",
-  ]
+  ];
 
-  this.chipbonusname =[
+  this.chipbonusname = [
     "発生器効率",
     "発生器1効率",
     "発生器2効率",
@@ -139,15 +133,5 @@ function Chipdata(){
     "煌き入手割合",
     "煌き使用効率",
     "煌き使用効率裏(工事中)",
-
-
-
-
-
-  ]
-
-
-
-
-
+  ];
 }
