@@ -1,3 +1,5 @@
+import Decimal from "../break_eternity.esm.js";
+
 export const resetLevel = (self, force, exit) => {
   if (self.player.onchallenge && self.player.challenges.includes(0)) {
     if (self.player.money.lt(new Decimal("1e24"))) {

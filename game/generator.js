@@ -55,7 +55,7 @@ export const buyGenerator = (self, index) => {
     self.player.generators[index] = self.player.generators[index].add(1);
     self.player.generatorsBought[index] =
       self.player.generatorsBought[index].add(1);
-    self.calcgncost();
+    calcgncost(self);
   }
 };
 

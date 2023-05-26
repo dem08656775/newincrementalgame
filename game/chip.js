@@ -12,7 +12,7 @@ export const chipset = (self, i, j) => {
   if (j != 0)
     self.player.chip[j - 1] =
       self.player.chip[j - 1] - (self.chipused[j - 1] + 1);
-  self.checkusedchips();
+  checkusedchips(self);
 };
 
 export const checkusedchips = (self) => {
@@ -24,7 +24,7 @@ export const checkusedchips = (self) => {
 
 export const clearsetchip = (self) => {
   for (let i = 0; i < 100; i++) {
-    self.chipset(i, 0);
+    chipset(self, i, 0);
   }
 };
 
@@ -39,7 +39,7 @@ export const setchiptype = (self) => {
 export const changechiptype = (self) => {
   self.clearsetchip();
   for (let i = 0; i < 100; i++) {
-    self.chipset(i, self.player.setchiptypefst[i]);
+    chipset(self, i, self.player.setchiptypefst[i]);
   }
 };
 

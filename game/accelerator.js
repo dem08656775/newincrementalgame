@@ -36,7 +36,7 @@ export const buyAccelerator = (self, index) => {
       self.player.accelerators[index].add(1);
     self.player.acceleratorsBought[index] =
       self.player.acceleratorsBought[index].add(1);
-    self.calcaccost();
+    calcaccost(self);
   }
 }
 

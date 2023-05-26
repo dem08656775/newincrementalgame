@@ -80,6 +80,7 @@ import { dataload, load } from "./game/load.js";
 import { update } from "./game/update.js";
 import { checkremembers } from "./game/remember.js";
 import { buytype } from "./buyType.js";
+import { calcstatuecost } from "./game/statue.js";
 
 Vue.createApp({
   data() {
@@ -330,7 +331,7 @@ Vue.createApp({
       return checkusedchips(this);
     },
     calcstatuecost(i) {
-      return (this.player.statue[i] + 1) * 10000;
+      return calcstatuecost(this, i);
     },
     buildstatue(i) {
       return buildstatue(this, i);

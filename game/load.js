@@ -1,11 +1,15 @@
-import { checkpipedsmalltrophies } from "./smalltrophy.js";
+import { checkpipedsmalltrophies, countsmalltrophies } from "./smalltrophy.js";
 import Decimal from "../break_eternity.esm.js";
 import { setchipkind, setchipnum, trophynum } from "./params.js";
 import { calclgcost } from "./lightGenerator.js";
 import { checkusedchips } from "./chip.js";
 import { calcdgcost } from "./darkGenerator.js";
 import { calcaccost } from "./accelerator.js";
-import { calcgncost } from "./generator.js";
+import { calcgncost, findhighestgenerator } from "./generator.js";
+import { calccommonmult } from "./commonmult.js";
+import { checkworlds } from "./world.js";
+import { checkmemories } from "./memory.js";
+import { checktrophies } from "./trophy.js";
 
 export const dataload = (self) => {
   if (!localStorage.getItem("playerStored")) return;
@@ -335,13 +339,12 @@ export const load = (self, world) => {
   calclgcost(self);
   checkusedchips(self);
 
-  self.checktrophies();
-  self.checkmemories();
-  self.checkworlds();
-  self.countsmalltrophies();
-  self.calccommonmult();
-  self.findhighestgenerator();
-
+  checktrophies(self);
+  checkmemories(self);
+  checkworlds(self);
+  countsmalltrophies(self);
+  calccommonmult(self);
+  findhighestgenerator(self);
   checkpipedsmalltrophies(self);
 
   self.countpchallengecleared();

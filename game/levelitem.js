@@ -14,7 +14,7 @@ export const calclevelitemcost = (self, index) => {
 };
 
 export const buylevelitems = (self, index) => {
-  let cost = self.calclevelitemcost(index);
+  let cost = calclevelitemcost(self, index);
   if (self.player.level.lessThan(cost) || self.player.levelitems[index] >= 5) {
     return;
   }

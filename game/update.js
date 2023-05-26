@@ -4,7 +4,9 @@ import { calccommonmult } from "./commonmult.js";
 import { calcdgcost } from "./darkGenerator.js";
 import { calcgncost, findhighestgenerator, updategenerators } from "./generator.js";
 import { calcbasicincrementmult } from "./incrementmult.js";
+import { buylevelitems } from "./levelitem.js";
 import { checkmemories } from "./memory.js";
+import { resetRank } from "./rank.js";
 import { calctoken } from "./rankToken.js";
 import { checkremembers } from "./remember.js";
 import { countsmalltrophies } from "./smalltrophy.js";
@@ -121,8 +123,8 @@ export const update = (self) => {
       self.player.shine >= autorankshine &&
       self.player.money.greaterThanOrEqualTo(self.resetRankborder())
     ) {
-      if (self.calcgainrank().greaterThanOrEqualTo(self.autoranknumber)) {
-        self.resetRank(true);
+      if (calcgainrank(self).greaterThanOrEqualTo(self.autoranknumber)) {
+        resetRank(self, true);
         self.player.shine -= autorankshine;
       }
     }
@@ -130,7 +132,7 @@ export const update = (self) => {
 
   if (self.player.rankchallengebonuses.includes(5) && self.litemautobuy) {
     for (let i = 0; i < 5; i++) {
-      self.buylevelitems(i);
+      buylevelitems(self, i);
     }
   }
 
@@ -143,7 +145,7 @@ export const update = (self) => {
       self.player.money.greaterThanOrEqualTo("1e18") &&
       self.player.level.lt(self.autolevelstopnumber)
     ) {
-      if (self.calcgainlevel().greaterThanOrEqualTo(self.autolevelnumber)) {
+      if (calcgainlevel(self).greaterThanOrEqualTo(self.autolevelnumber)) {
         resetLevel(self, true, false);
       }
     }

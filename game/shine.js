@@ -7,6 +7,6 @@ export const spendshine = (self, num) => {
   let val = new Decimal(11 + self.player.setchip[31]).pow(
     new Decimal(num).log10()
   );
-  self.updategenerators(new Decimal(val));
-  self.updateaccelerators(new Decimal(val));
+  updategenerators(self, new Decimal(val));
+  updateaccelerators(self, new Decimal(val));
 };
