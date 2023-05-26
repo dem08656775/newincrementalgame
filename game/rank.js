@@ -13,7 +13,7 @@ export const resetRankborder = (self) => {
 };
 export const resetRank = (self, force) => {
   if (self.player.onchallenge && self.player.challenges.includes(0)) {
-    if (self.player.money.lt(self.resetRankborder())) {
+    if (self.player.money.lt(resetRankborder(self))) {
       alert("現在挑戦1が適用されているため、まだ昇階リセットができません。");
       return;
     }
@@ -96,9 +96,10 @@ export const resetRank = (self, force) => {
 };
 
 export const calcGainRank = (self) => {
+
   let dv =
     36 -
-    0.25 * self.checkremembers() -
+    0.25 * checkremembers(self) -
     1.2 * self.player.levelitems[4] * (1 + 0.2 * self.player.setchip[29]);
   dv = Math.max(dv, 6);
   dv = dv - self.player.crown.add(2).log2() * 0.1;

@@ -1,4 +1,5 @@
 import Decimal from "../break_eternity.esm.js";
+import { checkremembers } from "./remember.js";
 import { checkpipedsmalltrophies } from "./smalltrophy.js";
 
 export const checkworlds = (self) => {
@@ -46,7 +47,7 @@ export const shrinkworld = (self, i) => {
     )
   ) {
     let u = self.trophynumber[i];
-    let r = self.checkremembers();
+    let r = checkremembers(self);
     self.players[i] = initialData();
     self.players[i].remember = u;
     if (r >= 1) self.players[i].levelresettime = new Decimal(1);

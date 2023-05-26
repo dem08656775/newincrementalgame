@@ -1,3 +1,5 @@
+import { checkremembers } from "./remember";
+
 export const tweetLink = (self) => {
   let tweetText = "";
   if (self.player.tweeting.includes("world")) {
@@ -7,7 +9,7 @@ export const tweetLink = (self) => {
     tweetText += "記憶:" + self.memory + "%0A";
   }
   if (self.player.tweeting.includes("remember")) {
-    tweetText += "思い出:" + self.checkremembers() + "%0A";
+    tweetText += "思い出:" + checkremembers(self) + "%0A";
   }
   if (self.player.tweeting.includes("money")) {
     tweetText +=

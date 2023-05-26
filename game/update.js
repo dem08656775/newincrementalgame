@@ -6,7 +6,7 @@ import { calcgncost, findhighestgenerator, updateGenerators } from "./generator.
 import { calcbasicincrementmult } from "./incrementmult.js";
 import { buylevelitems } from "./levelitem.js";
 import { checkmemories } from "./memory.js";
-import { resetRank } from "./rank.js";
+import { resetRank, resetRankborder } from "./rank.js";
 import { calctoken } from "./rankToken.js";
 import { checkremembers } from "./remember.js";
 import { countsmalltrophies } from "./smalltrophy.js";
@@ -112,7 +112,7 @@ export const update = (self) => {
     self.player.flicker += flickerget;
   }
 
-  let autorankshine = Math.max(0, 1000 - self.checkremembers() * 10);
+  let autorankshine = Math.max(0, 1000 - checkremembers(self) * 10);
 
   if (
     !self.player.onchallenge &&
@@ -121,7 +121,7 @@ export const update = (self) => {
   ) {
     if (
       self.player.shine >= autorankshine &&
-      self.player.money.greaterThanOrEqualTo(self.resetRankborder())
+      self.player.money.greaterThanOrEqualTo(resetRankborder(self))
     ) {
       if (calcgainrank(self).greaterThanOrEqualTo(self.autoranknumber)) {
         resetRank(self, true);

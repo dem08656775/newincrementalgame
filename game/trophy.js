@@ -1,4 +1,5 @@
 import { trophynum } from "./params.js";
+import { checkremembers } from "./remember.js";
 
 export const confchecktrophies = (self) => {
   self.trophycheck = !self.trophycheck;
@@ -18,7 +19,7 @@ export const checktrophies = (self) => {
   if (self.player.brightness > 0) self.player.trophies[5] = true;
   if (self.player.remember > 0) self.player.trophies[6] = true;
   if (self.world == 0) {
-    if (self.checkremembers() > 0) self.player.trophies[6] = true;
+    if (checkremembers(self) > 0) self.player.trophies[6] = true;
   }
   if (self.player.crownresettime.greaterThan(0)) self.player.trophies[7] = true;
   if (self.player.lightgenerators[0].greaterThan(0))
