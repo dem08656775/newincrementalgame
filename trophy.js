@@ -1,4 +1,4 @@
-function Trophydata(){
+export function Trophydata(){
 
   this.contents = [
     "有段者",

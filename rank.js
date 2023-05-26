@@ -1,4 +1,6 @@
-function Levelshopdata(){
+import Decimal from "./break_eternity.esm.js";
+
+export function Levelshopdata(){
   this.itemcost = [
     new Decimal('1e1'),
     new Decimal('1e2'),
@@ -13,5 +15,4 @@ function Levelshopdata(){
     "新しい時間加速器を購入可能になります。",
     "階位の入手量が少しだけ増加します。",
   ]
-
 }
