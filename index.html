@@ -91,6 +91,9 @@
 				<span id="trophy">
 					<button type="button" @click="changeTab('trophy')">実績</button>
 				</span>
+				<span id="ring" v-if="this.player.residue>=100">
+					<button type="button" @click="changeTab('ring')">輪</button>
+				</span>
 
 
 			</div>
@@ -314,6 +317,11 @@
 							未達成挑戦
 						</button>
 					</div>
+					<div>
+						<button v-if="player.rankchallengecleared.length>=1" type="button" class="showclearedchallengesbutton" @click="showunclearedrankchallenges()">
+							未達成階位挑戦
+						</button>
+					</div>
           <br>
           <div v-if="!player.onchallenge">
             <button type="button" class="challengeconfigbutton" @click="startChallenge()">
@@ -386,6 +394,21 @@
 							上位効力型適用2
 						</button>
 
+
+					</div>
+				</div>
+				<div>
+					未達成挑戦:優先度設定
+					<div  v-for="i in 20" :key="i">
+						設定 {{ i }}
+					  <button type="button"  @click="configchallengeweightkind(i-1)">
+              種類登録
+            </button>
+						<button type="button"  @click="configchallengeweightvalue(i-1)">
+              重み登録
+            </button>
+						現在種類: {{ calcchallengesarray(player.challengeweight[i-1]).map((e) => e+1) }}
+						現在重み: {{ player.challengeweightvalue[i-1] }}
 					</div>
 				</div>
 			</div>
@@ -504,6 +527,9 @@
 					<button type="button" class="spendshinebutton" v-if="player.challengecleared.length >= 224" @click="spendshine(100000)">
 						輝き消費:100000
 					</button>
+					<button type="button" class="spendshinebutton" v-if="pchallengestage>=10" @click="spendshine(1000000)">
+						輝き消費:1000000
+					</button>
 				</div>
 				<div>輝き入手率: {{ (shinepersent * 100).toFixed(1) }}%</div>
 				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
@@ -555,6 +581,9 @@
 
 					<div>瞬き入手率: {{ (flickerpersent * 100).toFixed(5) }}%</div>
 					<div>最大瞬き保有数: {{ shinedata.getmaxfl(pchallengestage) }}</div>
+				</div>
+				<div v-if="pchallengestage>=10">
+					残滓: {{ player.residue }}
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'world'">
@@ -627,6 +656,20 @@
 					</div>
 				</div>
 				<br>
+
+				<div v-show="player.setchip.some((x) => x>4)">
+					洗練:洗練とは、段位リセット時に鋳片を消費して、質の高い鋳片の入手率を向上させることです。
+					洗練度: {{ calcchipretrytime() }}
+					<div v-for= "i in 9" :key="i">
+						<div v-show = "player.statue[i-1]>0">
+							<button type="button"  @click="configspendchip(i-1)">
+								{{ chipdata.chipname[i-1] + "片" }}:消費数登録
+							</button>
+							現在消費数:{{ player.spendchip[i-1] }}
+						</div>
+					</div>
+				</div>
+
 				鋳片使用
 				<div v-for="i in 32" :key="i">
 					鋳片効力 {{ i }} : {{ chipdata.chipbonusname[i-1] }}
@@ -671,7 +714,7 @@
 			</div>
 			<div v-show="player.currenttab == 'statue'">
 				像は、対応する鋳片を使用して作成することができます。像を作成するたびに、必要な鋳片の量は増加します。
-				像は、完全挑戦に入るのに規定数が必要となり（消費はされません）、今後追加の変更で、別の用途で有効となる予定です。
+				像は、完全挑戦に入るのに規定数が必要となります。
 				<div v-for="i in 10" :key="i">
 					<div v-show = "player.chip[i-1]>0 || chipused[i-1]>0">
 						{{chipdata.chipname[i-1] + "像"}}: {{ player.statue[i-1] }}
@@ -680,6 +723,9 @@
 						</button>
 					</div>
 				</div>
+			</div>
+			<div v-show="player.currenttab == 'ring'">
+				輪:準備中
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
 				<button type="button" @click="confchecktrophies()">

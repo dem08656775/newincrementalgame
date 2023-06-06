@@ -64,10 +64,12 @@ function Chipdata(){
 
   ]
 
-  this.getchipid = function(lv){
+  this.getchipid = function(lv,time){
     let d = Math.random()
+    let table = this.ptable[lv].map((x) => Math.pow(x,time))
+    console.log(table)
     for(let i=0;i<=10;i++){
-      if(this.ptable[lv][i]>d){
+      if(table[i]>d){
         return i-1
       }
     }
