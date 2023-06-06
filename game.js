@@ -375,6 +375,7 @@ Vue.createApp({
 
       this.player = Object.assign(saveData,this.player)
 
+      this.player.currenttab = 'basic'
       if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
 
       this.checktrophies()
