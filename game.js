@@ -1598,13 +1598,7 @@ Vue.createApp({
         }
       }while(this.player.challengecleared.includes(challengeid));
 
-      let cls = [];
-      for(let i=7;i>=0;i--){
-        if(challengeid%2 == 1)cls.push(i)
-        challengeid = challengeid >>> 1
-
-      }
-      this.player.challenges = cls;
+      this.player.challenges = this.calcchallengesarray(challengeid)
     },
     showunclearedrankchallenges(){
       if(this.player.rankchallengecleared.length == 255) return;
@@ -1629,8 +1623,6 @@ Vue.createApp({
 
       challengeweightpairs.sort((a, b) => a.weight - b.weight)
 
-      console.log(challengeweightpairs)
-
       do{
         if(challengeid == 0) {
           challengeid = challengeweightpairs[0].id
@@ -1641,7 +1633,7 @@ Vue.createApp({
         }
       }while(this.player.rankchallengecleared.includes(challengeid));
 
-      this.player.challenges = calcchallengesarray(challengeid)
+      this.player.challenges = this.calcchallengesarray(challengeid)
     },
     calcchallengesarray(challengeid){
       let ans = [];
