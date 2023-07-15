@@ -91,7 +91,7 @@
 				<span id="trophy">
 					<button type="button" @click="changeTab('trophy')">実績</button>
 				</span>
-				<span id="ring" v-if="this.player.residue>=100">
+				<span id="ring" v-if="player.residue >= 100">
 					<button type="button" @click="changeTab('ring')">輪</button>
 				</span>
 
@@ -505,6 +505,25 @@
 					現在: {{ autoranknumber.toNumber() }}
 					消費輝き: {{ 1000 - checkremembers()*10 }}
 				</div>
+				<div>輪自動化器設定</div>
+				<div v-if="player.rings.clearedmission.includes(4)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': player.rings.outsideauto.autospendshine }" @click="toggleringautobuyer(0)">
+						輝き自動消費器　
+					</button>
+					<button type="button" class="autobuyerbutton" @click="configringautobuyer(0)">
+						輝き自動消費器設定
+					</button>
+					消費輝き: {{ player.rings.outsideauto.autospendshinenumber }}　ご了承:オンにすると2秒ほどゲームが停止します
+				</div>
+				<div v-if="player.rings.clearedmission.includes(11)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': player.rings.outsideauto.autospendbright }" @click="toggleringautobuyer(1)">
+						煌き自動消費器
+					</button>
+					<button type="button" class="autobuyerbutton" @click="configringautobuyer(1)">
+						煌き自動消費器設定
+					</button>
+					消費煌き: {{ player.rings.outsideauto.autospendbrightnumber }}　ご了承:オンにすると2秒ほどゲームが停止します
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">
 				<div>
@@ -657,7 +676,7 @@
 				</div>
 				<br>
 
-				<div v-show="player.setchip.some((x) => x>4)">
+				<div v-show="player.statue.some((x) => x>0)">
 					洗練:洗練とは、段位リセット時に鋳片を消費して、質の高い鋳片の入手率を向上させることです。
 					洗練度: {{ calcchipretrytime() }}
 					<div v-for= "i in 9" :key="i">
@@ -725,7 +744,71 @@
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'ring'">
-				輪:準備中
+				使用輪:{{ player.rings.setrings.map((e) => e+1) }}
+				<div>
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': player.rings.auto.doauto }" @click="configautomission()">
+						自動周回設定
+					</button>
+					周回試練:{{ ringdata.missioninfo[player.rings.missionid].name }}
+					ご了承:オンにすると2秒ほどゲームが停止します
+				</div>
+				<div v-if="!player.rings.onmission">
+					<div>
+						<div v-for="i in 13" :key="i">
+							<div v-if="isavailablering(i-1)">
+								<button type="button" @click="configsetrings(i-1)">
+									仕様輪設定 {{ i }}
+								</button>
+								輪 {{ i }}: 経験値:{{ player.rings.ringsexp[i-1] }} 級位:{{ ringdata.getlevel(player.rings,i-1) }}
+							</div>
+						</div>
+					</div>
+				  <div>試練</div>
+					<div v-for="i in ringdata.missioninfo.length" :key="i">
+						<div v-if="isavailablemission(i-1)">
+							<button type="button" v-if="isavailablemission(i-1)" @click="startmission(i-1)">
+								{{ ringdata.missioninfo[i-1].name }}開始
+							</button>
+							周期:{{ ringdata.missioninfo[i-1].turn }} 目標:{{ ringdata.missioninfo[i-1].goal }} 最小輪数:{{ ringdata.missioninfo[i-1].setsizemin }} 最大輪数:{{ ringdata.missioninfo[i-1].setsizemax }}
+						</div>
+					</div>
+				</div>
+				<div v-if="player.rings.onmission">
+					<div>試練</div>
+					<div v-if="player.rings.missionstate.fieldeffect.length>0">
+						特殊効果
+						<div v-for="i in player.rings.missionstate.fieldeffect.length" :key="i">
+							{{ ringdata.fieldeffects.find((elem) => elem.id==player.rings.missionstate.fieldeffect[i-1][0]).description }} 残存: {{ player.rings.missionstate.fieldeffect[i-1][1]==-1?"永続":player.rings.missionstate.fieldeffect[i-1][1] }}
+						</div>
+					</div>
+					<div>
+						<span>周期: {{ player.rings.missionstate.turn+1 }} / {{ ringdata.missioninfo[player.rings.missionid].turn }} </span>
+						<span>評価: {{ ringpointsum() }} / {{ ringdata.missioninfo[player.rings.missionid].goal }} </span>
+					</div>
+					<div>
+						評価詳細: 花:{{ player.rings.missionstate.flowerpoint }} 雪: {{ player.rings.missionstate.snowpoint }} 月: {{ player.rings.missionstate.moonpoint }}
+					</div>
+					<div>
+						倍率: 花:{{ player.rings.missionstate.flowermultiplier.toFixed(2) }} 雪: {{ player.rings.missionstate.snowmultiplier.toFixed(2) }} 月: {{ player.rings.missionstate.moonmultiplier.toFixed(2) }}
+					</div>
+					<div>
+						現在輪:{{ player.rings.setrings[player.rings.missionstate.activering]+1 }} 技量霊気: {{player.rings.missionstate.tps[player.rings.missionstate.activering] }}
+						<div>
+							花霊力:{{ ringdata.shortgetstatus(player.rings,0) }} 雪霊力:{{ ringdata.shortgetstatus(player.rings,1) }} 月霊力:{{ ringdata.shortgetstatus(player.rings,2) }}
+						</div>
+						<div>
+							級位:{{ ringdata.getlevel(player.rings,player.rings.setrings[player.rings.missionstate.activering]) }}
+						</div>
+						<div v-if ="!player.rings.auto.doauto" v-for="i in ringdata.availableskills(player.rings,player.rings.setrings[player.rings.missionstate.activering]).length" :key="i">
+							<button v-if="player.rings.missionstate.turn < ringdata.missioninfo[this.player.rings.missionid].turn" type="button" @click="useskill(i-1)">
+								{{ ringdata.skills[ringdata.availableskills(player.rings,player.rings.setrings[player.rings.missionstate.activering])[i-1]].name }} 消費技量霊気: {{ ringdata.skills[ringdata.availableskills(player.rings,player.rings.setrings[player.rings.missionstate.activering])[i-1]].tp }}
+							</button>
+						</div>
+					</div>
+					<button type="button" @click="endmission()">
+						{{ ringpointsum()>=ringdata.missioninfo[player.rings.missionid].goal?"完了":"撤退"　}}
+					</button>
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'trophy'">
 				<button type="button" @click="confchecktrophies()">
@@ -780,6 +863,8 @@
 		<br>
 		<div>gmail:newincremental@gmail.com</div>
 	</div>
+	<script src="https://unpkg.com/is-plain-object/dist/is-plain-object.js"></script>
+	<script src="https://unpkg.com/deepmerge/dist/umd.js"></script>
 	<script src="https://unpkg.com/vue@next"></script>
 	<script type="text/javascript" src="break_infinity.js"></script>
 	<script type="text/javascript" src="challenge.js"></script>
@@ -788,6 +873,7 @@
 	<script type="text/javascript" src="trophy.js"></script>
 	<script type="text/javascript" src="remember.js"></script>
 	<script type="text/javascript" src="chip.js"></script>
+	<script type="text/javascript" src="ring.js"></script>
 	<script type="text/javascript" src="game.js"></script>
 </body>
 </html>

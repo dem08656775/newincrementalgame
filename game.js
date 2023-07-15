@@ -2,6 +2,8 @@ const version = 2;
 const trophynum = 12;
 const setchipkind = 10;
 const setchipnum = 100;
+const ringmissionnum = 15;
+
 
 const initialData = () => {
   return {
@@ -136,7 +138,41 @@ const initialData = () => {
 
     setchiptypefst:　new Array(100).fill(setchipnum).map(() => 0),
 
-    worldpipe:new Array(10).fill(null).map(() => 0)
+    worldpipe:new Array(10).fill(null).map(() => 0),
+    rings:{
+      setrings: [],
+      ringsexp: new Array(13).fill(null).map(() => 0),
+      onmission: false,
+      missionid:0,
+      missionstate:{
+        turn:0,
+        activering:0,
+        skilllog:[],
+        flowerpoint:0,
+        snowpoint:0,
+        moonpoint:0,
+        flowermultiplier:1,
+        snowmultiplier:1,
+        moonmultiplier:1,
+        tps:[],
+        fieldeffect:[],
+      },
+      clearedmission:[],
+      auto:{
+        doauto:false,
+        automissionid:0,
+      },
+      outsideauto:{
+        autospendshine:false,
+        autospendshinenumber:0,
+        autospendbright:false,
+        autospendbrightnumber:0,
+        autodarklevelreset:false,
+        autodarklevelresetborder:2,
+        autochallenge:false
+      }
+    　
+    }
 
   }
 }
@@ -160,6 +196,7 @@ Vue.createApp({
       trophydata: new Trophydata(),
       rememberdata: new Rememberdata(),
       chipdata: new Chipdata(),
+      ringdata: new Ringdata(),
       exported: "",
       activechallengebonuses:[],
       genautobuy:false,
@@ -305,7 +342,12 @@ Vue.createApp({
 
       for(let i=0;i<10;i++){
 
-        saveData = Object.assign(initialData(),this.players[i])
+        const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+
+        saveData = deepmerge(initialData(),this.players[i],{
+          arraymerge:overwriteMerge,
+          isMergeableObject: isPlainObject
+        })
 
         while(saveData.trophies.length<trophynum){
           saveData.trophies.push(false)
@@ -324,6 +366,10 @@ Vue.createApp({
           saveData.statue.push(0)
         }
 
+        while(saveData.rings.ringsexp.length < 13){
+          saveData.rings.ringsexp.push(0)
+        }
+
 
         this.players[i] = saveData
       }
@@ -338,7 +384,7 @@ Vue.createApp({
       this.player = {
           money: new Decimal(saveData.money),
           level: new Decimal(saveData.level),
-          levelresettime: new Decimal(saveData.levelresettime),
+          levelresettime: new Decimal(saveData.levelresettime ?? 0),
           maxlevelgained: new Decimal(saveData.maxlevelgained ?? 1),
 
 
@@ -373,7 +419,15 @@ Vue.createApp({
 
       };
 
-      this.player = Object.assign(saveData,this.player)
+      const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
+
+      this.player = deepmerge(saveData,this.player,{
+        arraymerge:overwriteMerge,
+        isMergeableObject:isPlainObject
+      })
+      console.log(this.player.levelresettime)
+      console.log(typeof(this.player.levelresettime))
+      this.player.levelresettime.greaterThan(1)
 
       this.player.currenttab = 'basic'
       if(!this.player.onchallenge || this.player.challengebonuses.includes(4))this.activechallengebonuses = this.player.challengebonuses
@@ -394,6 +448,13 @@ Vue.createApp({
       this.calcdgcost()
       this.calclgcost()
       this.checkusedchips()
+
+      if(this.player.rings.auto.doauto)this.autoplaymission()
+      if(this.player.rings.outsideauto.autospendshine)this.autoshine()
+      if(this.player.rings.outsideauto.autospendbright)this.autobright()
+
+
+
     },
 
     configshowmult(){
@@ -981,6 +1042,42 @@ Vue.createApp({
       if(index==2)this.autolevel = !this.autolevel
       if(index==3)this.litemautobuy = !this.litemautobuy
       if(index==5)this.autorank = !this.autorank
+    },
+    autoshine(){
+      this.spendshine(this.player.rings.outsideauto.autospendshinenumber)
+      if(this.player.rings.outsideauto.autospendshine)setTimeout(this.autoshine,1000)
+    },
+    autobright(){
+      this.spendbrightness(this.player.rings.outsideauto.autospendbrightnumber)
+      if(this.player.rings.outsideauto.autospendbright)setTimeout(this.autobright,1000)
+    },
+    toggleringautobuyer(index){
+      if(index==0){
+        this.player.rings.outsideauto.autospendshine = !this.player.rings.outsideauto.autospendshine
+        if(this.player.rings.outsideauto.autospendshine){
+          this.sleep(2000)
+          this.autoshine()
+        }
+      }
+      if(index==1){
+        this.player.rings.outsideauto.autospendsbright= !this.player.rings.outsideauto.autospendbright
+        if(this.player.rings.outsideauto.autospendshine){
+          this.sleep(2000)
+          this.autobright()
+        }
+      }
+    },
+    configringautobuyer(index){
+      let input = window.prompt("消費量を設定:最大1000","")
+      input = parseInt(input)
+      if(isNaN(input)) return
+      if(input<0||input>1000) return
+      if(index==0){
+        this.player.rings.outsideauto.autospendshinenumber = input
+      }
+      if(index==1){
+        this.player.rings.outsideauto.autospendsbright= input
+      }
     },
     setbonusetype(index){
       if(confirm("現在の効力を登録します。よろしいですか？")){
@@ -1759,9 +1856,13 @@ Vue.createApp({
       }
       if(confirm("世界"+(i+1)+"を収縮させ、記憶を思い出に変化させますか？収縮した世界は最初からになります。")){
         let u = this.trophynumber[i]
-        let r = this.checkremembers()
+        let rg = this.players[i].rings
+        let r = this.checkremembers
+        let rd = this.players[i].residue
         this.players[i] = initialData()
         this.players[i].remember = u
+        this.players[i].rings = rg
+        this.players[i].residue = rd
         if(r>=1) this.players[i].levelresettime=new Decimal(1)
         if(r>=2) this.players[i].levelresettime=new Decimal(2)
         if(r>=3) this.players[i].levelresettime=new Decimal(3)
@@ -2171,6 +2272,124 @@ Vue.createApp({
       if(this.player.chip[i] < cost) return
       this.player.chip[i] -= cost
       this.player.statue[i] += 1
+    },
+
+    isavailablering(i){
+      if(i==0||i==1||i==2) return true
+      if(this.world>=3) return false
+      if(i==this.world+3) {
+        if(this.player.rings.clearedmission.includes(4)) return true
+      }
+      return false
+    },
+
+    configsetrings(i){
+      if(this.player.rings.onmission)return
+      if(!this.isavailablering(i))return
+      if(this.player.rings.setrings.includes(i)){
+        this.player.rings.setrings.splice(this.player.rings.setrings.indexOf(i),1)
+      }else{
+        this.player.rings.setrings.push(i)
+      }
+    },
+
+    sleep(ms){
+      var startMsec = new Date();
+      while (new Date() - startMsec < ms);
+    },
+
+    configautomission(){
+      this.player.rings.auto.doauto = !this.player.rings.auto.doauto
+      if(this.player.rings.auto.doauto){
+        this.sleep(2000)
+        this.autoplaymission()
+      }
+    },
+
+    autoplaymission(){
+      if(this.player.rings.missionstate.turn>=this.ringdata.missioninfo[this.player.rings.missionid].turn)this.endmission()
+      if(this.player.rings.onmission){
+        this.useskill(0)
+      }else {
+        this.startmission(this.player.rings.missionid)
+      }
+      if(this.player.rings.auto.doauto)setTimeout(this.autoplaymission,1000)
+    },
+
+    isavailablemission(i){
+      return this.ringdata.missioninfo[i].preventchallenge.every((v) => this.player.rings.clearedmission.includes(v))
+    },
+
+    startmission(i){
+      if(this.player.rings.setrings.length<this.ringdata.missioninfo[i].setsizemin || this.ringdata.missioninfo[i].setsizemax<this.player.rings.setrings.length)return
+      if(this.player.rings.onmission)return
+      this.player.rings.onmission = true
+      this.player.rings.missionid = i
+      this.player.rings.missionstate.turn = 0
+      this.player.rings.missionstate.activering = 0
+      this.player.rings.missionstate.flowerpoint = 0
+      this.player.rings.missionstate.snowpoint = 0
+      this.player.rings.missionstate.moonpoint = 0
+      this.player.rings.missionstate.flowermultiplier = 1
+      this.player.rings.missionstate.snowmultiplier = 1
+      this.player.rings.missionstate.moonmultiplier = 1
+      this.player.rings.missionstate.skilllog = []
+      this.player.rings.missionstate.tps = []
+      for(let r of this.player.rings.setrings){
+        let lv = this.ringdata.getlevel(this.player.rings,r)
+        this.player.rings.missionstate.tps.push(this.ringdata.getstatus(r,6,lv))
+      }
+      this.player.rings.missionstate.fieldeffect = []
+      for(let e of this.ringdata.missioninfo[i].passivefunction){
+        this.player.rings.missionstate.fieldeffect.push([e,-1])
+      }
+
+
+
+    },
+
+    useskill(i){
+
+      let ringid = this.player.rings.setrings[this.player.rings.missionstate.activering]
+      let sk = this.ringdata.skills[this.ringdata.availableskills(this.player.rings,ringid)[i]]
+      if(sk.tp>this.player.rings.missionstate.tps[this.player.rings.missionstate.activering]) return
+      sk.effect(this.player.rings)
+      this.player.rings.missionstate.tps[this.player.rings.missionstate.activering] -= sk.tp
+      this.player.rings.missionstate.skilllog.push([this.player.rings.setrings[this.player.rings.missionstate.activering],i])
+
+      this.player.rings.missionstate.activering++;
+      if(this.player.rings.missionstate.activering==this.player.rings.setrings.length){
+        this.player.rings.missionstate.activering = 0;
+        this.player.rings.missionstate.turn++;
+        //this.player.rings.missionstate.fieldeffect.forEach((item, i) => {
+          //if(item[1]>=1)item[1]--;
+        //});
+        //this.player.rings.missionstate.fieldeffect = this.player.rings.missionstate.fieldeffect.filter((e) => e[1]!=0)
+
+      }
+
+    },
+
+    endmission(){
+      let win = this.ringpointsum() >= this.ringdata.missioninfo[this.player.rings.missionid].goal
+      if((!win) && this.player.rings.missionstate.turn < this.ringdata.missioninfo[this.player.rings.missionid].turn){
+        if(!window.confirm("撤退します。よろしいですか？"))return
+      }
+      this.player.rings.onmission = false
+      if(win){
+        for(i in this.player.rings.setrings){
+          r = this.player.rings.setrings[i]
+          this.player.rings.ringsexp[r] += Math.floor(this.ringdata.missioninfo[this.player.rings.missionid].exp * (this.player.rings.setrings.length-i) / (this.player.rings.setrings.length * (this.player.rings.setrings.length+1) / 2))
+          this.player.rings.ringsexp[r] = Math.min(this.player.rings.ringsexp[r],this.ringdata.leveltable[this.ringdata.levelcap()-1])
+        }
+        if(!this.player.rings.clearedmission.includes(this.player.rings.missionid)){
+          this.player.rings.clearedmission.push(this.player.rings.missionid)
+        }
+      }
+    },
+
+    ringpointsum(){
+      return this.player.rings.missionstate.flowerpoint + this.player.rings.missionstate.snowpoint + this.player.rings.missionstate.moonpoint
     },
 
     worktime(val){
