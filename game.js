@@ -1857,7 +1857,7 @@ Vue.createApp({
       if(confirm("世界"+(i+1)+"を収縮させ、記憶を思い出に変化させますか？収縮した世界は最初からになります。")){
         let u = this.trophynumber[i]
         let rg = this.players[i].rings
-        let r = this.checkremembers
+        let r = this.checkremembers()
         let rd = this.players[i].residue
         this.players[i] = initialData()
         this.players[i].remember = u
