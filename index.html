@@ -505,7 +505,7 @@
 					現在: {{ autoranknumber.toNumber() }}
 					消費輝き: {{ 1000 - checkremembers()*10 }}
 				</div>
-				<div>輪自動化器設定</div>
+				<div v-if="player.rings.clearedmission.includes(4)">輪自動化器設定</div>
 				<div v-if="player.rings.clearedmission.includes(4)">
 					<button type="button" class="autobuyerbutton" :class="{ 'selected': player.rings.outsideauto.autospendshine }" @click="toggleringautobuyer(0)">
 						輝き自動消費器　
