@@ -1060,8 +1060,8 @@ Vue.createApp({
         }
       }
       if(index==1){
-        this.player.rings.outsideauto.autospendsbright= !this.player.rings.outsideauto.autospendbright
-        if(this.player.rings.outsideauto.autospendshine){
+        this.player.rings.outsideauto.autospendbright= !this.player.rings.outsideauto.autospendbright
+        if(this.player.rings.outsideauto.autospendbright){
           this.sleep(2000)
           this.autobright()
         }
@@ -1076,7 +1076,7 @@ Vue.createApp({
         this.player.rings.outsideauto.autospendshinenumber = input
       }
       if(index==1){
-        this.player.rings.outsideauto.autospendsbright= input
+        this.player.rings.outsideauto.autospendbrightnumber= input
       }
     },
     setbonusetype(index){
