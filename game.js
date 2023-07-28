@@ -573,7 +573,7 @@ Vue.createApp({
       //if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
-      //if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1周年キャンペーン
+      if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1(2)周年キャンペーン
 
       if(camp>7)camp=7
       mult = mult.mul(1 + 4 * camp)
