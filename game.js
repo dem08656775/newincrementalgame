@@ -208,6 +208,10 @@ Vue.createApp({
       litemautobuy:false,
       autorank:false,
 
+      automissiontimerid:0,
+      autoshinetimerid:0,
+      autobrighttimerid:0,
+
       multbyac:new Decimal(1),
 
       shinepersent:0,
@@ -449,9 +453,24 @@ Vue.createApp({
       this.calclgcost()
       this.checkusedchips()
 
-      if(this.player.rings.auto.doauto)this.autoplaymission()
-      if(this.player.rings.outsideauto.autospendshine)this.autoshine()
-      if(this.player.rings.outsideauto.autospendbright)this.autobright()
+      if(this.player.rings.auto.doauto){
+        this.automissiontimerid = setInterval(this.autoplaymission,1000)
+      }else{
+        clearInterval(this.automissiontimerid)
+        this.automissiontimerid = 0
+      }
+      if(this.player.rings.outsideauto.autospendshine){
+        this.autoshinetimerid = setInterval(this.autoshine,1000)
+      }else{
+        clearInterval(this.autoshinetimerid)
+        this.autoshinetimerid = 0
+      }
+      if(this.player.rings.outsideauto.autospendbright){
+        this.autobrighttimerid = setInterval(this.autobright,1000)
+      }else{
+        clearInterval(this.autobrighttimerid)
+        this.autobrighttimerid = 0
+      }
 
 
 
@@ -574,6 +593,7 @@ Vue.createApp({
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
       if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1(2)周年キャンペーン
+      if(d.getMonth()==8&&15<=d.getDate()&&d.getDate()<=21)camp = camp + 1
 
       if(camp>7)camp=7
       mult = mult.mul(1 + 4 * camp)
@@ -1045,25 +1065,27 @@ Vue.createApp({
     },
     autoshine(){
       this.spendshine(this.player.rings.outsideauto.autospendshinenumber)
-      if(this.player.rings.outsideauto.autospendshine)setTimeout(this.autoshine,1000)
     },
     autobright(){
       this.spendbrightness(this.player.rings.outsideauto.autospendbrightnumber)
-      if(this.player.rings.outsideauto.autospendbright)setTimeout(this.autobright,1000)
     },
     toggleringautobuyer(index){
       if(index==0){
         this.player.rings.outsideauto.autospendshine = !this.player.rings.outsideauto.autospendshine
         if(this.player.rings.outsideauto.autospendshine){
-          this.sleep(2000)
-          this.autoshine()
+          this.autoshinetimerid = setInterval(this.autoshine,1000)
+        }else{
+          clearInterval(this.autoshinetimerid)
+          this.autoshinetimerid = 0
         }
       }
       if(index==1){
         this.player.rings.outsideauto.autospendbright= !this.player.rings.outsideauto.autospendbright
         if(this.player.rings.outsideauto.autospendbright){
-          this.sleep(2000)
-          this.autobright()
+          this.autobrighttimerid = setInterval(this.autobright,1000)
+        }else{
+          clearInterval(this.autobrightimerid)
+          this.autobrghttimerid = 0
         }
       }
     },
@@ -2301,8 +2323,10 @@ Vue.createApp({
     configautomission(){
       this.player.rings.auto.doauto = !this.player.rings.auto.doauto
       if(this.player.rings.auto.doauto){
-        this.sleep(2000)
-        this.autoplaymission()
+        this.automissiontimerid = setInterval(this.autoplaymission,1000)
+      }else{
+        clearInterval(this.automissiontimerid)
+        this.automissiontimerid = 0
       }
     },
 
@@ -2313,7 +2337,6 @@ Vue.createApp({
       }else {
         this.startmission(this.player.rings.missionid)
       }
-      if(this.player.rings.auto.doauto)setTimeout(this.autoplaymission,1000)
     },
 
     isavailablemission(i){
