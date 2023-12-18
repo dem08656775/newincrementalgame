@@ -746,7 +746,7 @@ Vue.createApp({
       this.updategenerators(new Decimal(val))
       this.updateaccelerators(new Decimal(val))
       if(this.player.trophies[9]){
-        this.player.residue += Math.floor(num/1000000) * (1 + Math.round(this.pchallengestage))
+        this.player.residue += Math.floor(num * (1 + this.pchallengestage) / 1000000)
       }
     },
     spendbrightness(num){
