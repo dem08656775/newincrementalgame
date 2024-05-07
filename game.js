@@ -1442,12 +1442,16 @@ Vue.createApp({
         this.player.level = this.player.level.add(exit?new Decimal(0):gainlevel)
         this.player.levelresettime = this.player.levelresettime.add(gainlevelreset)
         this.player.maxlevelgained = this.player.maxlevelgained.max(exit?new Decimal(0):gainlevel)
-        for(let i=0;i<8;i++){
+        if(this.player.accelevel>0){
+          for(let i=0;i<8;i++){
           let crystalnum = Math.floor(this.player.accelerators[i].log10()) - 10
           if(crystalnum<0) crystalnum = 0
           if(crystalnum>100) crystalnum = 100
           this.player.timecrystal[i] = Math.max(this.player.timecrystal[i],crystalnum)
+          }
+
         }
+        
 
         this.player.generators = new Array(8).fill(null).map(() => new Decimal(0)),
         this.player.generatorsBought = new Array(8).fill(null).map(() => new Decimal(0)),
