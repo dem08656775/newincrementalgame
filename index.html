@@ -185,6 +185,15 @@
 								</span>
 							</div>
 						</div>
+						<div class="accelerator" v-show="player.levelitems[3]==5 && player.accelevel>0">
+								時間加速器{{ 8 }}: {{ toFormated(player.accelerators[7],5) }}
+								<button type="button" class="abutton" :class="{ 'unavailable': player.money.lt(player.acceleratorsCost[7]) }" @click="buyAccelerator(7)">
+        					購入 コスト: {{ player.acceleratorsCost[7].toExponential(1) }}
+      					</button>
+								<span>
+									購入数: {{ player.acceleratorsBought[7].toNumber()+' '}}
+								</span>
+							</div>
 					</div>
 				</div>
 					<div v-if="player.boughttype[0]">
@@ -265,6 +274,12 @@
 				<div v-if="player.accelevelused>=1">新年キャンペーン2022 発生器+4倍</div>
 				<div v-if="player.accelevelused>=2">バレンタインキャンペーン2022 発生器+4倍</div>
 				<div v-if="player.accelevelused>=3">ひなまつりキャンペーン 発生器+4倍</div>
+				<div class="lightgenerator" v-for="i in 8" :key="i">
+					<span>
+						時の結晶{{ i }}: {{ player.timecrystal[i-1]}}
+					</span>
+				</div>
+
 			</div>
 
 

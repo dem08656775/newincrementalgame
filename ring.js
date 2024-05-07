@@ -426,36 +426,39 @@ function Ringdata(){
     },
     //id:10
     {
-      name:"花爆発",
+      name:"花拡散",
       tp:20,
       effect:(rings) => {
         state = rings.missionstate
         ringid = rings.setrings[state.activering]
         level = this.getlevel(rings,ringid)
-        this.affect(state,'flowerpoint',Math.floor(state.flowermultiplier * this.getstatus(ringid,0,level)*12))
-        this.affect(state,'flowermultiplier',Math.max(-0.20,0.50-state.flowermultiplier))
+        this.affect(state,'flowermultiplier',-0.20)
+        this.affect(state,'snowmultiplier',0.10)
+        this.affect(state,'moonmultiplier',0.10)
       }
     },
     {
-      name:"雪爆発",
+      name:"雪拡散",
       tp:20,
       effect:(rings) => {
         state = rings.missionstate
         ringid = rings.setrings[state.activering]
         level = this.getlevel(rings,ringid)
-        this.affect(state,'snowpoint',Math.floor(state.snowmultiplier * this.getstatus(ringid,1,level)*12))
-        this.affect(state,'snowmultiplier',Math.max(-0.20,0.50-state.snowmultiplier))
+        this.affect(state,'snowmultiplier',-0.20)
+        this.affect(state,'flowermultiplier',0.10)
+        this.affect(state,'moonmultiplier',0.10)
       }
     },
     {
-      name:"月爆発",
+      name:"月拡散",
       tp:20,
       effect:(rings) => {
         state = rings.missionstate
         ringid = rings.setrings[state.activering]
         level = this.getlevel(rings,ringid)
-        this.affect(state,'moonpoint',Math.floor(state.moonmultiplier * this.getstatus(ringid,2,level)*12))
-        this.affect(state,'moonmultiplier',Math.max(-0.20,0.50-state.moonmultiplier))
+        this.affect(state,'moonmultiplier',-0.20)
+        this.affect(state,'flowermultiplier',0.10)
+        this.affect(state,'snowmultiplier',0.10)
       }
     },
   ]
