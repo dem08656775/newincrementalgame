@@ -170,7 +170,7 @@ const initialData = () => {
         autospendbrightnumber:0,
         autodarklevelreset:false,
         autodarklevelresetborder:2,
-        autochallenge:false
+        autodochallenge:false
       }
     　
     }
@@ -212,6 +212,7 @@ Vue.createApp({
       automissiontimerid:0,
       autoshinetimerid:0,
       autobrighttimerid:0,
+      autochallengetimerid:0,
 
       multbyac:new Decimal(1),
 
@@ -472,6 +473,12 @@ Vue.createApp({
         clearInterval(this.autobrighttimerid)
         this.autobrighttimerid = 0
       }
+      if(this.player.rings.outsideauto.autodochallenge){
+        this.autochallengetimerid = setInterval(this.autochallenge,1000)
+      }else{
+        clearInterval(this.autochallengetimerid)
+        this.autochallengetimerid = 0
+      }
 
 
 
@@ -598,6 +605,12 @@ Vue.createApp({
 
       if(camp>7)camp=7
       mult = mult.mul(1 + 4 * camp)
+
+      if(this.player.rings.outsideauto.autodochallenge){
+        mult = mult.mul(0.001)
+      }
+
+
 
       this.commonmult = mult
     },
@@ -926,13 +939,14 @@ Vue.createApp({
       }
 
 
-      if(!this.player.onchallenge && this.activechallengebonuses.includes(14) && this.autolevel){
-        if(this.player.money.greaterThanOrEqualTo('1e18') && this.player.level.lt(this.autolevelstopnumber)){
+      if((this.player.rings.outsideauto.autodochallenge || !this.player.onchallenge ) && this.activechallengebonuses.includes(14) && this.autolevel){
+        if(this.player.money.greaterThanOrEqualTo(this.resetLevelborder()) && this.player.level.lt(this.autolevelstopnumber)){
           if(this.calcgainlevel().greaterThanOrEqualTo(this.autolevelnumber)){
               this.resetLevel(true,false)
           }
         }
       }
+
 
       if(this.activechallengebonuses.includes(5)&&this.genautobuy){
         for(let i=7;i>=0;i--){
@@ -1076,6 +1090,15 @@ Vue.createApp({
     autobright(){
       this.spendbrightness(this.player.rings.outsideauto.autospendbrightnumber)
     },
+    autochallenge(){
+      if(this.player.challengecleared.length==255)return;
+      if(this.player.challengecleared.includes(this.getchallengeid(this.player.challenges)) || this.player.challenges.length==0){
+        this.showunclearedchallenges()
+      }
+      if(!this.player.onchallenge){
+        this.startChallenge()
+      }
+    },
     toggleringautobuyer(index){
       if(index==0){
         this.player.rings.outsideauto.autospendshine = !this.player.rings.outsideauto.autospendshine
@@ -1092,7 +1115,16 @@ Vue.createApp({
           this.autobrighttimerid = setInterval(this.autobright,1000)
         }else{
           clearInterval(this.autobrightimerid)
-          this.autobrghttimerid = 0
+          this.autobrighttimerid = 0
+        }
+      }
+      if(index==2){
+        this.player.rings.outsideauto.autodochallenge= !this.player.rings.outsideauto.autodochallenge
+        if(this.player.rings.outsideauto.autodochallenge){
+          this.autochallengetimerid = setInterval(this.autochallenge,1000)
+        }else{
+          clearInterval(this.autochallengetimerid)
+          this.autochallengetimerid = 0
         }
       }
     },
@@ -1507,6 +1539,10 @@ Vue.createApp({
       gainrank = gainrank.mul(1+this.eachpipedsmalltrophy[4]*0.2)
       return gainrank
     },
+    resetLevelborder(){
+      let p = (this.player.onchallenge && this.player.challenges.includes(0))?24:18
+      return new Decimal(10).pow(p)
+    },
     resetRankborder(){
       let p = (this.player.onchallenge && this.player.challenges.includes(0))?96:72
       let q = this.checkremembers()
@@ -1801,7 +1837,7 @@ Vue.createApp({
         }
       }
 
-      if (confirm(conf)) {
+      if (this.player.rings.outsideauto.autodochallenge || confirm(conf)) {
         if(!this.player.challengebonuses.includes(4))this.activechallengebonuses = [];
         this.resetLevel(true,true);
         this.player.onchallenge = true;

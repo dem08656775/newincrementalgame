@@ -539,6 +539,12 @@
 					</button>
 					消費煌き: {{ player.rings.outsideauto.autospendbrightnumber }}　ご了承:オンにすると2秒ほどゲームが停止します
 				</div>
+				<div v-if="player.rings.clearedmission.includes(12)">
+					<button type="button" class="autobuyerbutton" :class="{ 'selected': player.rings.outsideauto.autodochallenge }" @click="toggleringautobuyer(2)">
+						自動挑戦器
+					</button>
+					ご了承:オンにすると発生器の出力が低下します
+				</div>
 			</div>
 			<div v-show="player.currenttab == 'shine'">
 				<div>
