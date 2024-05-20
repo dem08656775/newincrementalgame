@@ -2416,6 +2416,7 @@ Vue.createApp({
         this.player.rings.missionstate.tps.push(this.ringdata.getstatus(r,6,lv))//6:tp status id
       }
       this.player.rings.missionstate.fieldeffect = []
+      console.log("Starting mission" + i)
       for(let e of this.ringdata.missioninfo[i].passivefunction){
         this.player.rings.missionstate.fieldeffect.push([e,-1])
       }

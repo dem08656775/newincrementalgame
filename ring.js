@@ -272,7 +272,7 @@ function Ringdata(){
       //id:13
       name:"試練8",
       turn:30,
-      goal:140000,
+      goal:350000,
       exp:1920,
       setsizemin:1,
       setsizemax:3,
