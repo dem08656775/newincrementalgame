@@ -516,23 +516,23 @@ function Ringdata(){
     //id:13
     {
       name:"花充満",
-      tp:55,
+      tp:45,
       effect:(rings) => {
         this.affectfield(state,4,Math.floor(state.flowermultiplier * this.getstatus(ringid,0,level)))
       }
     },
     {
       name:"雪充満",
-      tp:55,
+      tp:45,
       effect:(rings) => {
-        this.affectfield(state,5,Math.floor(state.snowmultiplier * this.getstatus(ringid,0,level)))
+        this.affectfield(state,5,Math.floor(state.snowmultiplier * this.getstatus(ringid,1,level)))
       }
     },
     {
       name:"月充満",
-      tp:55,
+      tp:45,
       effect:(rings) => {
-        this.affectfield(state,6,Math.floor(state.moonmultiplier * this.getstatus(ringid,0,level)))
+        this.affectfield(state,6,Math.floor(state.moonmultiplier * this.getstatus(ringid,2,level)))
       }
     },
   ]
