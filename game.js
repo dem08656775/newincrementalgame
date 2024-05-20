@@ -2413,7 +2413,7 @@ Vue.createApp({
       this.player.rings.missionstate.tps = []
       for(let r of this.player.rings.setrings){
         let lv = this.ringdata.getlevel(this.player.rings,r)
-        this.player.rings.missionstate.tps.push(this.ringdata.getstatus(r,6,lv))
+        this.player.rings.missionstate.tps.push(this.ringdata.getstatus(r,6,lv))//6:tp status id
       }
       this.player.rings.missionstate.fieldeffect = []
       for(let e of this.ringdata.missioninfo[i].passivefunction){
@@ -2437,6 +2437,12 @@ Vue.createApp({
       if(this.player.rings.missionstate.activering==this.player.rings.setrings.length){
         this.player.rings.missionstate.activering = 0;
         this.player.rings.missionstate.turn++;
+        for(let e of this.player.rings.missionstate.fieldeffect){
+          let eff = this.ringdata.fieldeffects.find((elem) => elem.id == e[0])
+          if(eff.timing=="turnend"){
+            eff.effect(this.player.rings.missionstate,e[1])
+          }
+        }
         //this.player.rings.missionstate.fieldeffect.forEach((item, i) => {
           //if(item[1]>=1)item[1]--;
         //});

@@ -778,7 +778,7 @@
 						<div v-for="i in 13" :key="i">
 							<div v-if="isavailablering(i-1)">
 								<button type="button" @click="configsetrings(i-1)">
-									仕様輪設定 {{ i }}
+									使用輪設定 {{ i }}
 								</button>
 								輪 {{ i }}: 経験値:{{ player.rings.ringsexp[i-1] }} 級位:{{ ringdata.getlevel(player.rings,i-1) }}
 							</div>
