@@ -600,7 +600,7 @@ Vue.createApp({
       if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
-      //if((d.getMonth()==6&&27<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<27)))camp = camp + 2//1(2)周年キャンペーン
+      if((d.getMonth()==6&&29<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<=31)))camp = camp + 2//1(2)(3)周年キャンペーン
       //if(d.getMonth()==8&&15<=d.getDate()&&d.getDate()<=21)camp = camp + 1
 
       if(camp>7)camp=7
@@ -1483,7 +1483,7 @@ Vue.createApp({
           }
 
         }
-        
+
 
         this.player.generators = new Array(8).fill(null).map(() => new Decimal(0)),
         this.player.generatorsBought = new Array(8).fill(null).map(() => new Decimal(0)),
@@ -1934,6 +1934,8 @@ Vue.createApp({
         let rg = this.players[i].rings
         let r = this.checkremembers()
         let rd = this.players[i].residue
+        let dl = this.players[i].darklevel
+        let st = this.players[i].statue
         this.players[i] = initialData()
         this.players[i].remember = u
         this.players[i].rings = rg
@@ -2098,6 +2100,20 @@ Vue.createApp({
         if(r>=70) this.players[i].chip[3] = 15;
         if(r>=71) this.players[i].chip[3] = 55;
         if(r>=72) this.players[i].chip[3] = 120;
+
+        if(r>=73) this.players[i].darklevel = new Decimal(100);
+        if(r>=74) this.players[i].brightness = 30000;
+        if(r>=75) this.players[i].darklevel = new Decimal(500);
+        if(r>=76) this.players[i].shine = 10000000;
+        if(r>=77) this.players[i].darklevel = new Decimal(2000);
+        if(r>=78) this.players[i].chip[0] += st[0] * 1000
+        if(r>=79) this.players[i].chip[1] += st[1] * 1000
+        if(r>=80) this.players[i].chip[2] += st[2] * 1000
+        if(r>=81) this.players[i].chip[3] += st[3] * 1000
+
+
+
+
 
 
         this.players[i].token = this.players[i].challengecleared.length
