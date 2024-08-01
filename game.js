@@ -1452,12 +1452,19 @@ Vue.createApp({
         if(this.player.money.greaterThan(1e80)){
           let gainchip = this.calcgainchip()
           console.log(gainchip)
-          if(gainchip!=-1 && this.player.chip[gainchip]<1000000){
-            this.player.chip[gainchip] = this.player.chip[gainchip]+1
+          if(gainchip!=-1 && this.player.chip[gainchip]<10000000){
+            let hit = 0
+            for(let i=0;i<this.chipused[gainchip];i++){
+              if(Math.random()<0.01)hit++;
+            }
+            hit = Math.min(hit,10)
+            let chipgetnum = Math.floor(Math.pow(2,hit))
+            chipgetnum = Math.min(chipgetnum,10000000-this.player.chip[gainchip])
+            this.player.chip[gainchip] = this.player.chip[gainchip]+chipgetnum
             let d = new Date()
-            if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
+            /*if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
               if(gainchip==2)this.player.chip[gainchip] = this.player.chip[gainchip]+4
-            }//ゴールデンウィークキャンペーン
+            }ゴールデンウィークキャンペーン*/
           }
           if(this.haveenoughchip()){
             for(let i=0;i<10;i++){
