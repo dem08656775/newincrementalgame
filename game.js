@@ -1114,7 +1114,7 @@ Vue.createApp({
         if(this.player.rings.outsideauto.autospendbright){
           this.autobrighttimerid = setInterval(this.autobright,1000)
         }else{
-          clearInterval(this.autobrightimerid)
+          clearInterval(this.autobrighttimerid)
           this.autobrighttimerid = 0
         }
       }
