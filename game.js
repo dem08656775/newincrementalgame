@@ -597,13 +597,18 @@ Vue.createApp({
 
       let d = new Date()
       //if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7)camp = camp + 1//ゴールデンウィークキャンペーン
-      if(d.getMonth()==0&&d.getDate()<=7)camp = camp + 1//新年キャンペーン
+      if(d.getMonth()==0&&d.getDate()<=7){
+        camp = camp + 1
+        if(this.player.onchallenge && this.player.challenges.includes(3) && this.player.challenges.includes(4)){
+         camp = camp + 10
+        }
+      }//新年キャンペーン
       //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
       //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
       if((d.getMonth()==6&&29<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<=31)))camp = camp + 2//1(2)(3)周年キャンペーン
       //if(d.getMonth()==8&&15<=d.getDate()&&d.getDate()<=21)camp = camp + 1
 
-      if(camp>7)camp=7
+      if(camp>20)camp=20
       mult = mult.mul(1 + 4 * camp)
 
       if(this.player.rings.outsideauto.autodochallenge){
