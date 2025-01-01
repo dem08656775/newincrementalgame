@@ -790,8 +790,10 @@ Vue.createApp({
     },
     buytype(num){
       if(this.player.shine<this.shinedata.shineshopcost[num] || this.player.boughttype[num]) return;
-      this.player.shine -= this.shinedata.shineshopcost[num]
-      this.player.boughttype[num] = true
+      if(confirm("本当に型を購入しますか？")){
+        this.player.shine -= this.shinedata.shineshopcost[num]
+        this.player.boughttype[num] = true
+      }
     },
     calctoken(){
 
