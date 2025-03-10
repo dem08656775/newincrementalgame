@@ -759,10 +759,16 @@
 				<div v-for="i in 10" :key="i">
 					<div v-show = "player.chip[i-1]>0 || chipused[i-1]>0">
 						{{chipdata.chipname[i-1] + "像"}}: {{ player.statue[i-1] }}
+						{{"輝" + chipdata.chipname[i-1] + "像"}}: {{ player.polishedstatue[i-1] + "/" + player.statue[i-1]}}
 						<button type="button" @click="buildstatue(i-1)">
-							設像 コスト:{{ calcstatuecost(i-1) }}
+							設像 コスト:{{ calcstatuecost(i-1) }} 片
 						</button>
+						<button type="button" @click="polishstatue(i-1)">
+							磨像 コスト:{{ calcpolishcost(i-1) }} 輝
+						</button>
+
 					</div>
+
 				</div>
 			</div>
 			<div v-show="player.currenttab == 'ring'">

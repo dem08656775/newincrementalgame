@@ -136,6 +136,9 @@ const initialData = () => {
     spendchip:new Array(setchipkind).fill(0).map(() => 0),
 
     statue: new Array(setchipkind).fill(0).map(() => 0),
+    polishedstatue: new Array(setchipkind).fill(0).map(() => 0),
+
+
 
     setchiptypefst:　new Array(100).fill(setchipnum).map(() => 0),
 
@@ -593,6 +596,10 @@ Vue.createApp({
 
       mult = mult.mul(1+this.player.setchip[0]*0.1)
 
+      for(let i=0;i<setchipkind;i++){
+        mult = mult.mul(1+this.player.polishedstatue[i]*0.01)
+      }
+
       camp = this.player.accelevelused
 
       let d = new Date()
@@ -881,6 +888,9 @@ Vue.createApp({
       this.shinepersent += 0.02 * this.player.setchip[30]
       this.shinepersent += 0.01 * this.eachpipedsmalltrophy[6] * 0.5
       this.shinepersent += 0.001 * Math.floor(Math.pow(this.player.residue,1/3))
+      for(let i=0;i<setchipkind;i++){
+        this.shinepersent += 0.01 * this.player.polishedstatue[i]
+      }
 
       if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) * rememberlevel && Math.random()<this.shinepersent){
         let shineget = 1
@@ -2341,6 +2351,8 @@ Vue.createApp({
         if(this.player.statue[4]>=64)this.player.smalltrophies2nd[52] = true
         if(this.player.statue[5]>=64)this.player.smalltrophies2nd[53] = true
         if(this.player.statue[6]>=64)this.player.smalltrophies2nd[54] = true
+        
+
 
 
 
@@ -2377,6 +2389,17 @@ Vue.createApp({
       if(this.player.chip[i] < cost) return
       this.player.chip[i] -= cost
       this.player.statue[i] += 1
+    },
+
+    calcpolishcost(i){
+      return (this.player.polishedstatue[i]+1) * 1000000
+    },
+
+    polishstatue(i){
+      let cost = this.calcpolishcost(i)
+      if(this.player.polishedstatue[i] >= this.player.statue[i] || this.player.shine < cost)return;
+      this.player.shine -= cost
+      this.player.polishedstatue[i] += 1
     },
 
     isavailablering(i){
