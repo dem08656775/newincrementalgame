@@ -129,6 +129,7 @@ const initialData = () => {
 
     remember: 0,
     rememberspent: 0,
+    rememberforgot: 0,
 
     chip: new Array(setchipkind).fill(0).map(() => 0),
     setchip: new Array(setchipnum).fill(0).map(() => 0),

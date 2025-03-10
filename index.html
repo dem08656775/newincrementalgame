@@ -46,6 +46,7 @@
 				間隙: {{ Math.round(player.tickspeed) }}毛秒
 				<span v-if="player.accelerators[0].gt(0)">
 					時間加速器効果: {{ (1000/player.tickspeed).toFixed(3) }} 倍
+					{{ player.rememberforgot }}
 				</span>
 			</div>
 			<div class="tabs">
