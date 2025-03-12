@@ -1473,14 +1473,15 @@ Vue.createApp({
           if(gainchip!=-1 && this.player.chip[gainchip]<10000000){
             let hit = 0
             for(let i=0;i<this.chipused[gainchip];i++){
-              if(Math.random()<0.01)hit++;
+              let chipdoubleprob = 0.01
+              if(Math.random()<chipdoubleprob)hit++;
             }
             hit = Math.min(hit,10)
             let chipgetnum = Math.floor(Math.pow(2,hit))
             chipgetnum = Math.min(chipgetnum,10000000-this.player.chip[gainchip])
             this.player.chip[gainchip] = this.player.chip[gainchip]+chipgetnum
-            let d = new Date()
-            /*if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
+            /*let d = new Date()
+            if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
               if(gainchip==2)this.player.chip[gainchip] = this.player.chip[gainchip]+4
             }ゴールデンウィークキャンペーン*/
           }
@@ -2556,6 +2557,9 @@ Vue.createApp({
           }
           cnt -= 75
           cnt *= this.players[i].worldpipe[this.world]
+          if(this.players[i].remember>=10){
+            cnt = Math.floor(cnt * (0.1 + this.players[i].remember / 10))
+          }
           this.eachpipedsmalltrophy[i] = cnt;
           sum += cnt
         }else{
