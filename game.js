@@ -887,7 +887,7 @@ Vue.createApp({
 
       this.shinepersent = this.shinedata.getp(this.player.challengecleared.length)
       this.shinepersent += 0.02 * this.player.setchip[30]
-      this.shinepersent += 0.01 * this.eachpipedsmalltrophy[6] * 0.5
+      this.shinepersent += 0.01 * this.eachpipedsmalltrophy[6]
       this.shinepersent += 0.001 * Math.floor(Math.pow(this.player.residue,1/3))
       for(let i=0;i<setchipkind;i++){
         this.shinepersent += 0.01 * this.player.polishedstatue[i]
@@ -907,7 +907,7 @@ Vue.createApp({
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
-      this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.2
+      this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.5
 
       if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
         let brightget = 1
@@ -1363,7 +1363,7 @@ Vue.createApp({
 
       gainlevel = gainlevel.round().max(1)
 
-      gainlevel = gainlevel.mul(1+this.eachpipedsmalltrophy[2]*0.2)
+      gainlevel = gainlevel.mul(new Decimal(this.eachpipedsmalltrophy[2]/5.0).pow_base(2))
       if(this.activechallengebonuses.includes(12)) gainlevel = gainlevel.mul(new Decimal(2))
       return gainlevel;
     },
