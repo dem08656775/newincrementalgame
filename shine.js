@@ -47,7 +47,7 @@ function Shinedata(){
     }
     value *= statuemul
 
-    return value
+    return Math.floor(value)
    }
 
    this.getmaxbr = function(clear){
