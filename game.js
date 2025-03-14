@@ -598,7 +598,7 @@ Vue.createApp({
       mult = mult.mul(1+this.player.setchip[0]*0.1)
 
       for(let i=0;i<setchipkind;i++){
-        mult = mult.mul(1+this.player.polishedstatue[i]*0.01)
+        mult = mult.mul(1+this.player.statue[i]*0.01)
       }
 
       camp = this.player.accelevelused
@@ -893,45 +893,59 @@ Vue.createApp({
         this.shinepersent += 0.01 * this.player.polishedstatue[i]
       }
 
-      if(this.player.shine<this.shinedata.getmaxshine(this.player.challengecleared.length) * rememberlevel && Math.random()<this.shinepersent){
-        let shineget = 1
-        if(this.player.rankchallengebonuses.includes(2)) shineget = 2
-        let d = new Date()
-        if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
-          if(Math.random()<=0.5){
-            shineget = shineget + 1//クリスマスキャンペーン
-          }
-        }
-        this.player.shine += shineget
+      let shineget = 0
+
+      let spint = Math.floor(this.shinepersent)
+      let spdec = this.shinepersent - spint
+
+      shineget += spint
+
+      if(Math.random()<spdec){
+        shineget += 1
       }
+
+      /*let d = new Date()
+      if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
+        if(Math.random()<=0.5){
+          shineget = shineget + 1//クリスマスキャンペーン
+        }
+      } */
+
+      if(this.player.rankchallengebonuses.includes(2)) shineget *= 2
+      shineget *= this.player.accelevelused+1
+
+      let maxshine = this.shinedata.getmaxshine(this.player.challengecleared.length,rememberlevel,this.player.polishedstatue)
+
+      this.player.shine = Math.min(this.player.shine + shineget , maxshine)
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
       this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.5
 
-      if(this.player.brightness<this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel && Math.random()<this.brightpersent){
-        let brightget = 1
-        let d = new Date()
-        if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
-          if(Math.random()<=0.5){
-            brightget = brightget + 1//クリスマスキャンペーン
-          }
-        }
-        this.player.brightness += brightget
+      let brightget = 0;
+
+      if(Math.random()<this.brightpersent){
+        brightget += 1
       }
+
+      brightget *= this.player.accelevelused+1
+
+      let maxbright = this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel
+      this.player.brightness = Math.min(this.player.brightness + brightget , maxbright);
 
       this.flickerpersent = this.shinedata.getfp(this.pchallengestage)
 
-      if(this.player.flicker<this.shinedata.getmaxfl(this.pchallengestage) && Math.random()<this.flickerpersent){
-        let flickerget = 1
-        let d = new Date()
-        if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
-          if(Math.random()<=0.5){
-            flickerget = flickerget + 1//クリスマスキャンペーン
-          }
-        }
-        this.player.flicker += flickerget
+      let flickerget = 0;
+
+      if(Math.random()<this.flickerpersent){
+        flickerget += 1
       }
+
+      flickerget *= this.player.accelevelused+1
+
+      let maxflicker = this.shinedata.getmaxfl(this.pchallengestage)
+      this.player.flicker = Math.min(this.player.flicker + flickerget , maxflicker);
+
 
 
 

@@ -28,15 +28,26 @@ function Shinedata(){
      return 1/1000000 * stage
    }
 
-   this.getmaxshine = function(clear){
-     if(clear>=32*8-1) return 10000000
-     if(clear>=32*7) return 3000000
-     if(clear>=32*6) return 1000000
-     if(clear>=32*5) return 700000
-     if(clear>=32*4) return 400000
-     if(clear>=32*3) return 200000
-     if(clear>=32*2) return 100000
-     return 0
+   this.getmaxshine = function(clear,remlv,pst){
+    console.log(pst)
+    let value = 0;
+    if(clear>=32*8-1) value =  10000000
+    else if(clear>=32*7) value = 3000000
+    else if(clear>=32*6) value = 1000000
+    else if(clear>=32*5) value = 700000
+    else if(clear>=32*4) value = 400000
+    else if(clear>=32*3) value = 200000
+    else if(clear>=32*2) value = 100000
+    else value = 0
+    value *= remlv
+
+    let statuemul = 1;
+    for(let i=0;i<10;i++){
+     statuemul += 0.1 * pst[i]
+    }
+    value *= statuemul
+
+    return value
    }
 
    this.getmaxbr = function(clear){

@@ -572,7 +572,7 @@
 					</button>
 				</div>
 				<div>輝き入手率: {{ (shinepersent * 100).toFixed(1) }}%</div>
-				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length) * Math.floor((this.checkremembers()+16)/16)}}</div>
+				<div>最大輝き保有数: {{ shinedata.getmaxshine(player.challengecleared.length,Math.floor((this.checkremembers()+16)/16),player.polishedstatue) }}</div>
 				<br>
 				<div>
 					型
