@@ -29,7 +29,6 @@ function Shinedata(){
    }
 
    this.getmaxshine = function(clear,remlv,pst){
-    console.log(pst)
     let value = 0;
     if(clear>=32*8-1) value =  10000000
     else if(clear>=32*7) value = 3000000
