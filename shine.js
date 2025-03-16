@@ -68,7 +68,7 @@ function Shinedata(){
      }
      value *= statuemul
 
-     return value
+     return Math.floor(value)
    }
 
    this.getmaxfl = function(stage){
