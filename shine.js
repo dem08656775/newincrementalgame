@@ -49,16 +49,26 @@ function Shinedata(){
     return Math.floor(value)
    }
 
-   this.getmaxbr = function(clear){
-     if(clear>=32*8-1) return 10000
-     if(clear>=32*7) return 6000
-     if(clear>=32*6) return 3500
-     if(clear>=32*5) return 2000
-     if(clear>=32*4) return 1200
-     if(clear>=32*3) return 700
-     if(clear>=32*2) return 300
-     if(clear>=32*1) return 100
-     return 0
+   this.getmaxbr = function(clear,memlv,pst){
+     let value = 0;
+     if(clear>=32*8-1) value =  10000
+     else if(clear>=32*7) value = 6000
+     else if(clear>=32*6) value = 3500
+     else if(clear>=32*5) value = 2000
+     else if(clear>=32*4) value = 1200
+     else if(clear>=32*3) value = 700
+     else if(clear>=32*2) value = 300
+     else if(clear>=32) value = 100
+     else value = 0
+     value *= memlv
+
+     let statuemul = 1;
+     for(let i=0;i<10;i++){
+      statuemul += 0.1 * Math.floor(pst[i]/10)
+     }
+     value *= statuemul
+
+     return value
    }
 
    this.getmaxfl = function(stage){

@@ -138,6 +138,7 @@ const initialData = () => {
 
     statue: new Array(setchipkind).fill(0).map(() => 0),
     polishedstatue: new Array(setchipkind).fill(0).map(() => 0),
+    polishedstatuebr: new Array(setchipkind).fill(0).map(() => 0),
 
 
 
@@ -916,11 +917,16 @@ Vue.createApp({
 
       let maxshine = this.shinedata.getmaxshine(this.player.challengecleared.length,rememberlevel,this.player.polishedstatue)
 
-      this.player.shine = Math.min(this.player.shine + shineget , maxshine)
+      if(this.player.shine<maxshine){
+        this.player.shine = Math.min(this.player.shine + shineget , maxshine)
+      }
 
       this.brightpersent = this.shinedata.getbp(this.player.rankchallengecleared.length)
       this.brightpersent += 0.001 * this.player.setchip[49]
       this.brightpersent += 0.001 * this.eachpipedsmalltrophy[9] * 0.5
+      for(let i=0;i<setchipkind;i++){
+        this.brightpersent += 0.001 * Math.floor(this.player.polishedstatuebr[i]/10) * 0.5
+      }
 
       let brightget = 0;
 
@@ -930,8 +936,11 @@ Vue.createApp({
 
       brightget *= this.player.accelevelused+1
 
-      let maxbright = this.shinedata.getmaxbr(this.player.rankchallengecleared.length) * rememberlevel
-      this.player.brightness = Math.min(this.player.brightness + brightget , maxbright);
+      let maxbright = this.shinedata.getmaxbr(this.player.rankchallengecleared.length,rememberlevel,this.player.polishedstatuebr)
+      if(this.player.brightness<maxbright){
+        this.player.brightness = Math.min(this.player.brightness + brightget , maxbright);
+      }
+      
 
       this.flickerpersent = this.shinedata.getfp(this.pchallengestage)
 
@@ -944,7 +953,9 @@ Vue.createApp({
       flickerget *= this.player.accelevelused+1
 
       let maxflicker = this.shinedata.getmaxfl(this.pchallengestage)
-      this.player.flicker = Math.min(this.player.flicker + flickerget , maxflicker);
+      if(this.player.flicker<maxflicker){
+        this.player.flicker = Math.min(this.player.flicker + flickerget , maxflicker);
+      }
 
 
 
@@ -2416,6 +2427,18 @@ Vue.createApp({
       if(this.player.polishedstatue[i] >= this.player.statue[i] || this.player.shine < cost)return;
       this.player.shine -= cost
       this.player.polishedstatue[i] += 1
+    },
+
+    calcpolishcostbr(i){
+      return (this.player.polishedstatuebr[i]+10)*100
+    },
+
+    polishstatuebr(i){
+      let cost = this.calcpolishcostbr(i)
+      if(this.player.polishedstatuebr[i] >= this.player.polishedstatue[i] *10 || this.player.brightness < cost)return;
+      this.player.brightness -= cost
+      this.player.polishedstatuebr[i] += 1
+
     },
 
     isavailablering(i){
