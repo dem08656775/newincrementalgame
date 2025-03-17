@@ -40,7 +40,7 @@ function Shinedata(){
     else value = 0
     value *= remlv
 
-    let statuemul = 1;
+    let statuemul = 0;
     for(let i=0;i<10;i++){
      statuemul += pst[i]
     }
@@ -62,7 +62,7 @@ function Shinedata(){
      else value = 0
      value *= memlv
 
-     let statuemul = 1;
+     let statuemul = 0;
      for(let i=0;i<10;i++){
       statuemul += Math.floor(pst[i]/10)
      }
