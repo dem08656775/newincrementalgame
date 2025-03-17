@@ -42,9 +42,9 @@ function Shinedata(){
 
     let statuemul = 1;
     for(let i=0;i<10;i++){
-     statuemul += 0.1 * pst[i]
+     statuemul += pst[i]
     }
-    value *= statuemul
+    value += (value/10) * statuemul
 
     return Math.floor(value)
    }
@@ -64,9 +64,9 @@ function Shinedata(){
 
      let statuemul = 1;
      for(let i=0;i<10;i++){
-      statuemul += 0.1 * Math.floor(pst[i]/10)
+      statuemul += Math.floor(pst[i]/10)
      }
-     value *= statuemul
+     value += (value/10) * statuemul
 
      return Math.floor(value)
    }
