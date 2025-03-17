@@ -2378,7 +2378,10 @@ Vue.createApp({
         if(this.player.statue[4]>=64)this.player.smalltrophies2nd[52] = true
         if(this.player.statue[5]>=64)this.player.smalltrophies2nd[53] = true
         if(this.player.statue[6]>=64)this.player.smalltrophies2nd[54] = true
-        
+        if(this.player.shine>=100000000)this.player.smalltrophies2nd[55] = true
+        if(this.player.shine>=1000000000)this.player.smalltrophies2nd[56] = true
+        if(this.player.brightness>=100000)this.player.smalltrophies2nd[57] = true
+        if(this.player.brightness>=1000000)this.player.smalltrophies2nd[58] = true        
 
 
 
