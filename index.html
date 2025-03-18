@@ -301,6 +301,10 @@
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('memory') }" @click="configtweet('memory')" v-if="worldopened[1] || worldopened[2]">記憶</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('remember') }" @click="configtweet('remember')" v-if="checkremembers()>0">思い出</button>
 					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('crown') }" @click="configtweet('crown')" v-if="player.crownresettime.gt(0)">冠位</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('statue') }" @click="configtweet('statue')" v-if="player.statue[0]>0">像</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('polishedstatue') }" @click="configtweet('polishedstatue')" v-if="player.polishedstatue[0]>0">輝像</button>
+					<button type="button" class="tweetconfigbutton" :class="{ 'selected': player.tweeting.includes('polishedstatuebr') }" @click="configtweet('polishedstatuebr')" v-if="player.polishedstatuebr[0]>0">煌像</button>
+
 				</div>
 				<div class="export">
 					データ

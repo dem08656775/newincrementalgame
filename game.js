@@ -300,6 +300,27 @@ Vue.createApp({
       if(this.player.tweeting.includes('crownresettime')){
         tweetText += '冠位リセット:' + this.player.crownresettime +　'%0A';
       }
+      if(this.player.tweeting.includes('statue')){
+        let sum = 0
+        for(let i=0;i<setchipkind;i++){
+          sum += this.player.statue[i]
+        }
+        tweetText += '像:' + sum +　'%0A';
+      }
+      if(this.player.tweeting.includes('polishedstatue')){
+        let sum = 0
+        for(let i=0;i<setchipkind;i++){
+          sum += this.player.polishedstatue[i]
+        }
+        tweetText += '輝像:' + sum +　'%0A';
+      }
+      if(this.player.tweeting.includes('polishedstatuebr')){
+        let sum = 0
+        for(let i=0;i<setchipkind;i++){
+          sum += Math.floor(this.player.polishedstatuebr[i]/10)
+        }
+        tweetText += '煌像:' + sum +　'%0A';
+      }
 
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
       let tweetHashtag = '新しい放置ゲーム';
