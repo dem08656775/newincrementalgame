@@ -760,7 +760,7 @@
 					<div v-show = "player.chip[i-1]>0 || chipused[i-1]>0 || player.statue[i-1]>0 ">
 						{{chipdata.chipname[i-1] + "像"}}: {{ player.statue[i-1] }}
 						{{"輝" + chipdata.chipname[i-1] + "像"}}: {{ player.polishedstatue[i-1] + "/" + player.statue[i-1]}}
-						{{"煌" + chipdata.chipname[i-1] + "像"}}: {{ (player.polishedstatuebr[i-1]/10).toFixed(1) + "/" + player.statue[i-1]}}
+						{{"煌" + chipdata.chipname[i-1] + "像"}}: {{ (player.polishedstatuebr[i-1]/10).toFixed(1) + "/" + player.polishedstatue[i-1]}}
 						<button type="button" @click="buildstatue(i-1)">
 							設像 コスト:{{ calcstatuecost(i-1) }} 片
 						</button>
