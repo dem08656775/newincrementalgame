@@ -319,7 +319,7 @@ Vue.createApp({
         for(let i=0;i<setchipkind;i++){
           sum += Math.floor(this.player.polishedstatuebr[i]/10)
         }
-        tweetText += '煌像:' + sum +　'%0A';
+        tweetText += '煌像:' + sumfbv  +　'%0A';
       }
 
       let tweetUrl = 'dem08656775.github.io/newincrementalgame';
@@ -2603,6 +2603,8 @@ Vue.createApp({
         if(this.players[index].trophies[i])cnt++;
       }
       this.trophynumber[index] = cnt
+
+      if(this.trophynumber[0]>=6)this.players[0].remember = Math.max(this.players[0].remember,this.trophynumber[0])
 
     },
     checkpipedsmalltrophies(){
