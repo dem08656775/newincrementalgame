@@ -626,7 +626,7 @@ Vue.createApp({
       camp = this.player.accelevelused
 
       let d = new Date()
-      //if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7)camp = camp + 1//ゴールデンウィークキャンペーン
+      if((d.getMonth()==3&&d.getDate()>=26) || (d.getMonth()==4&&d.getDate()<=6))camp = camp + 1//ゴールデンウィークキャンペーン
       if(d.getMonth()==0&&d.getDate()<=7){
         camp = camp + 1
         if(this.player.onchallenge && this.player.challenges.includes(3) && this.player.challenges.includes(4)){
@@ -1524,12 +1524,16 @@ Vue.createApp({
             }
             hit = Math.min(hit,10)
             let chipgetnum = Math.floor(Math.pow(2,hit))
+            let d = new Date()
+
+            //ゴールデンウィークキャンペーン
+            if((d.getMonth()==3&&d.getDate()>=26) || (d.getMonth()==4&&d.getDate()<=6)){
+              if(gainchip == 2)chipgetnum = chipgetnum + 4
+            }
+
             chipgetnum = Math.min(chipgetnum,10000000-this.player.chip[gainchip])
             this.player.chip[gainchip] = this.player.chip[gainchip]+chipgetnum
-            /*let d = new Date()
-            if(d.getMonth()==4&&3<=d.getDate()&&d.getDate()<=7){
-              if(gainchip==2)this.player.chip[gainchip] = this.player.chip[gainchip]+4
-            }ゴールデンウィークキャンペーン*/
+            
           }
           if(this.haveenoughchip()){
             for(let i=0;i<10;i++){
