@@ -1543,7 +1543,7 @@ Vue.createApp({
           if(gainchip!=-1 && this.player.chip[gainchip]<10000000){
             let hit = 0
             for(let i=0;i<this.chipused[gainchip];i++){
-              let chipdoubleprob = 0.01 + 0.01 * this.eachpipedsmalltrophy[11]
+              let chipdoubleprob = 0.01 * (1 + 0.1 * this.eachpipedsmalltrophy[11])
               if(Math.random()<chipdoubleprob)hit++;
             }
             hit = Math.min(hit,10)
