@@ -490,7 +490,14 @@
 			</div>
 
 			<div v-show="player.currenttab == 'spirit'">
-				精霊(準備中)
+				精霊
+				<div v-for="i in spiritdata.spiritnuma" :key="i">
+					<button type="button" class="spendshinebutton"  @click="buyspirit(i-1)">
+						精霊購入: {{spiritdata.spiritnamea[i-1]}} (準備中)
+					</button>
+					{{spiritdata.spiritnamea[i-1]}}: 等級 {{player.spiritlevela[i-1]}}
+					効果:
+				</div>
 			</div>
 
 			<div v-show="player.currenttab == 'auto'">
@@ -662,7 +669,7 @@
 
 
 				</div>
-				<div class="worlds" v-for="i in 10" :key="i">
+				<div class="worlds" v-for="i in 12" :key="i">
 					<button type="button" class="wdbutton" :class="{ 'selected': world == i-1 , 'unavailable': !worldopened[i-1] }" @click="moveworld(i-1)">
 						世界 {{ i }}
 					</button>
@@ -915,8 +922,8 @@
 	<script type="text/javascript" src="rank.js"></script>
 	<script type="text/javascript" src="shine.js"></script>
 	<script type="text/javascript" src="trophy.js"></script>
-
 	<script type="text/javascript" src="remember.js"></script>
+	<script type="text/javascript" src="spirit.js"></script>
 	<script type="text/javascript" src="chip.js"></script>
 	<script type="text/javascript" src="ring.js"></script>
 	<script type="text/javascript" src="game.js"></script>

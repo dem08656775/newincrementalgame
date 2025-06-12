@@ -4,6 +4,8 @@ const setchipkind = 10;
 const setchipnum = 100;
 const ringmissionnum = 15;
 
+const worldnum = 12
+
 
 const initialData = () => {
   return {
@@ -140,11 +142,14 @@ const initialData = () => {
     polishedstatue: new Array(setchipkind).fill(0).map(() => 0),
     polishedstatuebr: new Array(setchipkind).fill(0).map(() => 0),
 
+    spiritlevela: new Array(1).fill(0).map(() => 0),
+    spiritboughtcurrentcrown: new Array(1).fill(0).map(() => 0), 
+
 
 
     setchiptypefst:　new Array(100).fill(setchipnum).map(() => 0),
 
-    worldpipe:new Array(10).fill(null).map(() => 0),
+    worldpipe:new Array(worldnum).fill(null).map(() => 0),
     rings:{
       setrings: [],
       ringsexp: new Array(13).fill(null).map(() => 0),
@@ -188,7 +193,7 @@ Vue.createApp({
     return {
       player: initialData(),
 
-      players: new Array(10).fill(null).map(() => initialData()),
+      players: new Array(worldnum).fill(null).map(() => initialData()),
 
       highest:0,
       commonmult: new Decimal(0),
@@ -203,6 +208,7 @@ Vue.createApp({
       rememberdata: new Rememberdata(),
       chipdata: new Chipdata(),
       ringdata: new Ringdata(),
+      spiritdata: new Spiritdata(),
       exported: "",
       activechallengebonuses:[],
       genautobuy:false,
@@ -229,9 +235,9 @@ Vue.createApp({
 
       trophynumber: new Array(10).fill(null).map(() => false),
       smalltrophy:0,
-      eachpipedsmalltrophy:new Array(10).fill(null).map(() => 0),
+      eachpipedsmalltrophy:new Array(worldnum).fill(null).map(() => 0),
       pipedsmalltrophy:0,
-      worldopened:new Array(10).fill(null).map(() => false),
+      worldopened:new Array(worldnum).fill(null).map(() => false),
 
 
 
@@ -372,7 +378,11 @@ Vue.createApp({
       console.log(atob(localStorage.getItem("playerStoredb")))
       this.players = JSON.parse(atob(localStorage.getItem("playerStoredb")))
 
-      for(let i=0;i<10;i++){
+      while(this.players.length<worldnum){
+        this.players.push(initialData())
+      }
+
+      for(let i=0;i<worldnum;i++){
 
         const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 
@@ -400,6 +410,18 @@ Vue.createApp({
 
         while(saveData.rings.ringsexp.length < 13){
           saveData.rings.ringsexp.push(0)
+        }
+
+        while(saveData.spiritlevela.length < this.spiritdata.spiritnuma){
+          saveData.spiritlevela.push(0)
+        }
+
+        while(saveData.spiritboughtcurrentcrown.length < this.spiritdata.spiritnuma){
+          saveData.spiritboughtcurrentcrown.push(0)
+        }
+
+        while(saveData.worldpipe.length < worldnum){
+          saveData.worldpipe.push(0)
         }
 
 
@@ -781,9 +803,11 @@ Vue.createApp({
     },
     updatelightgenerators(mu){
 
-      this.player.lightmoney = this.player.lightmoney.add(this.player.lightgenerators[0].mul(mu))
+      let pipemult = 1+this.eachpipedsmalltrophy[10] * 0.1
+
+      this.player.lightmoney = this.player.lightmoney.add(this.player.lightgenerators[0].mul(mu).mul(pipemult))
       for (let i = 1; i < 8; i++) {
-        this.player.lightgenerators[i - 1] = this.player.lightgenerators[i - 1].add(this.player.lightgenerators[i])
+        this.player.lightgenerators[i - 1] = this.player.lightgenerators[i - 1].add(this.player.lightgenerators[i].mul(pipemult))
       }
     },
 
@@ -1369,7 +1393,7 @@ Vue.createApp({
     resetData(force) {
       if (force || confirm('これはソフトリセットではありません。\nすべてが無になり何も得られませんが、本当によろしいですか？')) {
         this.player = initialData()
-        for(let i=0;i<10;i++){
+        for(let i=0;i<worldnum;i++){
           this.players[i] = initialData()
         }
       }
@@ -1519,7 +1543,7 @@ Vue.createApp({
           if(gainchip!=-1 && this.player.chip[gainchip]<10000000){
             let hit = 0
             for(let i=0;i<this.chipused[gainchip];i++){
-              let chipdoubleprob = 0.01
+              let chipdoubleprob = 0.01 + 0.01 * this.pipedsmalltrophy[11]
               if(Math.random()<chipdoubleprob)hit++;
             }
             hit = Math.min(hit,10)
@@ -2215,7 +2239,7 @@ Vue.createApp({
       if(this.player.worldpipe[i]>=maxpipe)return
 
       let havepipe = Math.floor((this.smalltrophy-72)/3)
-      for(let j=0;j<10;j++){
+      for(let j=0;j<worldnum;j++){
         havepipe -= this.player.worldpipe[j]
       }
 
@@ -2469,6 +2493,11 @@ Vue.createApp({
 
     },
 
+    buyspirit(i){
+      return
+      this.player.spiritlevela[i] += 1;
+    },
+
     isavailablering(i){
       if(i==0||i==1||i==2) return true
       if(this.world>=3) return false
@@ -2613,7 +2642,7 @@ Vue.createApp({
     },
     checkpipedsmalltrophies(){
       let sum = 0
-      for(i=0;i<10;i++){
+      for(i=0;i<worldnum;i++){
         let cnt = 0
         if(this.players[i].worldpipe[this.world]>=1){
           for(let j=0;j<100;j++){
@@ -2648,7 +2677,7 @@ Vue.createApp({
     checkmemories(){
       let cnt = 0;
 
-      for(let i=0;i<10;i++){
+      for(let i=0;i<worldnum;i++){
         this.counttrophies(i)
         if(this.world==i) continue
         cnt += this.trophynumber[i]
@@ -2657,7 +2686,7 @@ Vue.createApp({
     },
     checkremembers(){
       let cnt = 0;
-      for(let i=this.world+1;i<10;i++){
+      for(let i=this.world+1;i<worldnum;i++){
         cnt += this.players[i].remember
       }
       return cnt
@@ -2680,6 +2709,17 @@ Vue.createApp({
       if(this.players[0].rankchallengecleared.includes(238))this.worldopened[7] = true
       if(this.players[0].challengecleared.length>=200)this.worldopened[8] = true
       if(this.players[0].rankchallengecleared.length>=200)this.worldopened[9] = true
+
+      if(new Decimal(this.players[0].crownresettime).gt(0)){
+        for(let i=1;i<10;i++){
+          this.worldopened[i] = true
+        }
+      }
+
+      if(new Decimal(this.players[0].lightmoney).greaterThanOrEqualTo('1e8'))this.worldopened[10] = true
+      if(this.player.statue[2]>=16)this.worldopened[11] = true
+
+
 
     },
 
