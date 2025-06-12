@@ -2717,7 +2717,7 @@ Vue.createApp({
       }
 
       if(new Decimal(this.players[0].lightmoney).greaterThanOrEqualTo('1e8'))this.worldopened[10] = true
-      if(this.player.statue[2]>=16)this.worldopened[11] = true
+      if(this.players[0].statue[2]>=16)this.worldopened[11] = true
 
 
 
