@@ -97,8 +97,17 @@ button.unavailable{
   width:180px;
 }
 
+.llbutton{
+  width:240px;
+}
+
 .lbutton.unavailable {
   background: #B0B0B0;
+}
+
+.llbutton.selected {
+  background: #000000;
+  color: #FFFFFF;
 }
 
 .tweetconfigbutton.selected{

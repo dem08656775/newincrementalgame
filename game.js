@@ -93,6 +93,7 @@ const initialData = () => {
     tickspeed: 1000,
     accelevel: 0,
     accelevelused:0,
+    activatedcampaigns:[],
     timecrystal:new Array(8).fill(null).map(() => 0),
     saveversion: version,
 
@@ -202,6 +203,7 @@ Vue.createApp({
       trophycheck:true,
 
       challengedata: new Challengedata(),
+      timedata: new Timedata(),
       levelshopdata: new Levelshopdata(),
       shinedata: new Shinedata(),
       trophydata: new Trophydata(),
@@ -645,22 +647,21 @@ Vue.createApp({
         mult = mult.mul(1+this.player.statue[i]*0.01)
       }
 
-      camp = this.player.accelevelused
+      camp = 0
+      if(this.player.activatedcampaigns.includes("newyear"))camp = camp + 1
+      if(this.player.activatedcampaigns.includes("vt"))camp = camp + 1
+      if(this.player.activatedcampaigns.includes("hina"))camp = camp + 1
+      if(this.player.activatedcampaigns.includes("gw"))camp = camp + 1
+      if(this.player.activatedcampaigns.includes("aniv"))camp = camp + 2
+      if(this.player.activatedcampaigns.includes("sw"))camp = camp + 1
+      if(this.player.activatedcampaigns.includes("xmas"))camp = camp + 1
 
-      let d = new Date()
-      if((d.getMonth()==3&&d.getDate()>=26) || (d.getMonth()==4&&d.getDate()<=6))camp = camp + 1//ゴールデンウィークキャンペーン
-      if(d.getMonth()==0&&d.getDate()<=7){
-        camp = camp + 1
+      if(this.player.activatedcampaigns.includes("newyear2025")){
         if(this.player.onchallenge && this.player.challenges.includes(3) && this.player.challenges.includes(4)){
-         camp = camp + 10
+          camp = camp + 10
         }
-      }//新年キャンペーン
-      //if(d.getMonth()==1&&8<=d.getDate()&&d.getDate()<=14)camp = camp + 1//バレンタインキャンペーン
-      //if((d.getMonth()==1&&25<=d.getDate()) || ((d.getMonth()==2&&d.getDate()<=3)))camp = camp + 1//桃の節句キャンペーン
-      if((d.getMonth()==6&&29<=d.getDate()) || ((d.getMonth()==7&&d.getDate()<=31)))camp = camp + 2//1(2)(3)周年キャンペーン
-      //if(d.getMonth()==8&&15<=d.getDate()&&d.getDate()<=21)camp = camp + 1
+      }
 
-      if(camp>20)camp=20
       mult = mult.mul(1 + 4 * camp)
 
       if(this.player.rings.outsideauto.autodochallenge){
@@ -950,12 +951,12 @@ Vue.createApp({
         shineget += 1
       }
 
-      /*let d = new Date()
-      if(d.getMonth()==11&&22<=d.getDate()&&d.getDate()<=28){
+      
+      if(this.player.activatedcampaigns.includes("xmas2")){
         if(Math.random()<=0.5){
           shineget = shineget + 1//クリスマスキャンペーン
         }
-      } */
+      } 
 
       if(this.player.rankchallengebonuses.includes(2)) shineget *= 2
       shineget *= this.player.accelevelused+1
@@ -979,6 +980,12 @@ Vue.createApp({
         brightget += 1
       }
 
+      if(this.player.activatedcampaigns.includes("xmas2")){
+        if(Math.random()<=0.5){
+          brightget = brightget + 1//クリスマスキャンペーン
+        }
+      } 
+
       brightget *= this.player.accelevelused+1
 
       let maxbright = this.shinedata.getmaxbr(this.player.rankchallengecleared.length,rememberlevel,this.player.polishedstatuebr)
@@ -994,6 +1001,12 @@ Vue.createApp({
       if(Math.random()<this.flickerpersent){
         flickerget += 1
       }
+
+      if(this.player.activatedcampaigns.includes("xmas2")){
+        if(Math.random()<=0.5){
+          flickerget = flickerget + 1//クリスマスキャンペーン
+        }
+      } 
 
       flickerget *= this.player.accelevelused+1
 
@@ -1551,7 +1564,7 @@ Vue.createApp({
             let d = new Date()
 
             //ゴールデンウィークキャンペーン
-            if((d.getMonth()==3&&d.getDate()>=26) || (d.getMonth()==4&&d.getDate()<=6)){
+            if(this.player.activatedcampaigns.includes("gw2")){
               if(gainchip == 2)chipgetnum = chipgetnum + 4
             }
 
@@ -2625,9 +2638,36 @@ Vue.createApp({
     },
 
     worktime(val){
-      if(0<=val&&val<=this.player.accelevel){
+      if(0<=val&&val<=this.player.accelevel && val>=this.calccampaigncosts()){
         this.player.accelevelused = val
       }
+    },
+
+    calccampaigncosts(){
+
+      let sum = 0
+      for(let i=0;i<this.timedata.campaigns.length;i++){
+        if(this.player.activatedcampaigns.includes(this.timedata.campaignnames[i])){
+          sum += this.timedata.campaigncosts[i]
+        }
+
+      }
+
+      return sum;
+
+    },
+
+    choosecampaigns(name){
+
+      if(this.player.activatedcampaigns.includes(name)){
+        this.player.activatedcampaigns.splice(this.player.activatedcampaigns.indexOf(name),1)
+      }else{
+        if(this.calccampaigncosts()+this.timedata.campaigncosts[this.timedata.campaignnames.indexOf(name)] > this.player.accelevelused)return;
+        this.player.activatedcampaigns.push(name)
+      }
+
+
+
     },
 
     counttrophies(index){

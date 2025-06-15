@@ -270,13 +270,24 @@
 			<div v-show="player.currenttab == 'time'">
 				<div>時間回帰力: {{ player.accelevel }}</div>
 				<div>起動時間回帰力: {{ player.accelevelused }}</div>
+				<div>使用中時間回帰力: {{ calccampaigncosts() }}</div>
 				<div>
 					<button type="button" @click="worktime(player.accelevelused-1)">起動-</button>
 					<button type="button" @click="worktime(player.accelevelused+1)">起動+</button>
 				</div>
-				<div v-if="player.accelevelused>=1">新年キャンペーン2022 発生器+4倍</div>
-				<div v-if="player.accelevelused>=2">バレンタインキャンペーン2022 発生器+4倍</div>
-				<div v-if="player.accelevelused>=3">ひなまつりキャンペーン 発生器+4倍</div>
+
+				時間回帰力選択
+
+				<div v-for="i in timedata.campaigns.length" :key="i">
+
+					<button type="button" class="llbutton" :class="{ 'selected': player.activatedcampaigns.includes(timedata.campaignnames[i-1])}" @click="choosecampaigns(timedata.campaignnames[i-1])">
+						{{timedata.campaigns[i-1]}}
+					</button>
+					効果: {{timedata.campaigneffects[i-1]}}
+					使用回帰力量: {{timedata.campaigncosts[i-1]}}
+				</div>
+
+				時の結晶
 				<div class="lightgenerator" v-for="i in 8" :key="i">
 					<span>
 						時の結晶{{ i }}: {{ player.timecrystal[i-1]}}
@@ -918,6 +929,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/deepmerge/dist/umd.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@3.4.5/dist/vue.global.js"></script>
 	<script type="text/javascript" src="break_infinity.js"></script>
+	<script type="text/javascript" src="time.js"></script>
 	<script type="text/javascript" src="challenge.js"></script>
 	<script type="text/javascript" src="rank.js"></script>
 	<script type="text/javascript" src="shine.js"></script>
