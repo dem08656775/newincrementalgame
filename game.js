@@ -952,7 +952,7 @@ Vue.createApp({
       }
 
       
-      if(this.player.activatedcampaigns.includes("xmas2")){
+      if(this.player.activatedcampaigns.includes("xmas2")&&shineget>=1){
         if(Math.random()<=0.5){
           shineget = shineget + 1//クリスマスキャンペーン
         }
@@ -980,7 +980,7 @@ Vue.createApp({
         brightget += 1
       }
 
-      if(this.player.activatedcampaigns.includes("xmas2")){
+      if(this.player.activatedcampaigns.includes("xmas2")&&brightget>=1){
         if(Math.random()<=0.5){
           brightget = brightget + 1//クリスマスキャンペーン
         }
@@ -1002,7 +1002,7 @@ Vue.createApp({
         flickerget += 1
       }
 
-      if(this.player.activatedcampaigns.includes("xmas2")){
+      if(this.player.activatedcampaigns.includes("xmas2")&&flickerget>=1){
         if(Math.random()<=0.5){
           flickerget = flickerget + 1//クリスマスキャンペーン
         }
