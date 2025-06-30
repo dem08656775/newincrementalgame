@@ -1,6 +1,50 @@
 function Chipdata(){
 
+  this.calcchipretrytime = function(data){
+    let retry = 0
+    for(let i=0;i<9;i++){
+      if(data.player.spendchip[i]>0){
+        retry += 1 + Math.log(data.player.spendchip[i]) / Math.log(10-i)
+      }
+    }
+    retry = Math.floor(retry)
+    return retry
+  }
 
+  this.calcgainchip = function(data){
+    let bonus = new Decimal(10).pow(data.eachpipedsmalltrophy[7]*0.4)
+    if(data.player.activatedcampaigns.includes("tanabata2")){
+      bonus = bonus.mul(data.player.lightmoney.add(1))
+    }
+    console.log("bonus"+bonus)
+    let clevel = this.getcl(data.player.money.mul(bonus))
+    return this.getchipid(clevel,1 + (this.haveenoughchip(data)?this.calcchipretrytime(data):0))
+  }
+
+  this.haveenoughchip = function(data){
+      return data.player.chip.every((x,i) => x>=data.player.spendchip[i])
+  }
+
+  this.calcchipgetnum = function(data,kind){
+
+    let hit = 0
+    for(let i=0;i<data.chipused[kind];i++){
+      let chipdoubleprob = 0.01 * (1 + 0.1 * data.eachpipedsmalltrophy[11])
+      if(Math.random()<chipdoubleprob)hit++;
+    }
+    hit = Math.min(hit,10)
+    let chipgetnum = Math.floor(Math.pow(2,hit))
+
+    //ゴールデンウィークキャンペーン
+    if(data.player.activatedcampaigns.includes("gw2")){
+      if(kind == 2)chipgetnum = chipgetnum + 4
+    }
+
+    chipgetnum = Math.min(chipgetnum,10000000-data.player.chip[kind])
+
+    return chipgetnum
+
+  }
 
   this.getcl = function(mny){
     if(mny.greaterThanOrEqualTo("1e350")) return 22
