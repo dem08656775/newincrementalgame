@@ -108,7 +108,7 @@ function Shinedata(){
 
    this.calcmaxbright = function(data){
     let rememberlevel = Math.floor((data.checkremembers()+16)/16)
-    return this.getmaxbr(data.player.challengecleared.length,rememberlevel,data.player.polishedstatue)
+    return this.getmaxbr(data.player.rankchallengecleared.length,rememberlevel,data.player.polishedstatuebr)
    }
 
    this.getbp = function(clear){
