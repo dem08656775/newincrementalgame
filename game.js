@@ -2517,6 +2517,7 @@ Vue.createApp({
 
           if(this.timedata.campaignnames[i]=="tanabata" && date.getMonth() == 6 && date.getDate() <= 7)incampaign = true
           if(this.timedata.campaignnames[i]=="tanabata2" && date.getMonth() == 6 && date.getDate() <= 7)incampaign = true
+          if(this.timedata.campaignnames[i]=="aniv" && (date.getMonth() == 6 && date.getDate() >= 30) || (date.getMonth() == 7))incampaign = true
 
           if(!incampaign)sum += this.timedata.campaigncosts[i]
         }
@@ -2550,6 +2551,11 @@ Vue.createApp({
         if(this.timedata.campaignnames[i]=="tanabata2" && date.getMonth() == 6 && date.getDate() <= 7){
           if(!this.player.activatedcampaigns.includes("tanabata2"))this.player.activatedcampaigns.push("tanabata2")
         }
+
+        if(this.timedata.campaignnames[i]=="aniv" && (date.getMonth() == 6 && date.getDate() >= 30) || (date.getMonth() == 7)){
+          if(!this.player.activatedcampaigns.includes("aniv"))this.player.activatedcampaigns.push("aniv")
+        }
+        
       }
 
 
