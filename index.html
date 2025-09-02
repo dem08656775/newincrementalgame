@@ -717,6 +717,18 @@
 					ポイントをより多く貯めるほど、鋳片が入手できる確率が上昇し、また上位の鋳片が入手しやすくなります。
 					<br>
 					<br>
+
+					<div>
+						<button type="button"  class="autobuyerbutton" :class="{ 'selected': chipthresholduse }"@click="togglechipthresholduse()">
+									閾値使用
+						</button>
+						<button type="button"  @click="configchipthresholdnumber()">
+									閾値設定
+						</button>
+
+						閾値:{{chipthreshold}}
+					</div>
+
 					入手可能鋳片
 					{{"調整中です"}}
 					<br>
@@ -727,6 +739,8 @@
 						</div>
 					</div>
 					<br>
+
+
 
 					<div v-show="player.statue.some((x) => x>0)">
 						洗練:洗練とは、段位リセット時に鋳片を消費して、質の高い鋳片の入手率を向上させることです。

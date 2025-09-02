@@ -17,7 +17,9 @@ function Chipdata(){
       bonus = bonus.mul(data.player.lightmoney.add(1))
     }
     console.log("bonus"+bonus)
-    let clevel = this.getcl(data.player.money.mul(bonus))
+    let mny = data.player.money
+    if(data.chipthresholduse)mny = mny.min(data.chipthreshold)
+    let clevel = this.getcl(mny.mul(bonus))
     return this.getchipid(clevel,1 + (this.haveenoughchip(data)?this.calcchipretrytime(data):0))
   }
 

@@ -227,6 +227,9 @@ Vue.createApp({
       litemautobuy:false,
       autorank:false,
 
+      chipthresholduse:false,
+      chipthreshold: new Decimal("1e999"),
+
       automissiontimerid:0,
       autoshinetimerid:0,
       autobrighttimerid:0,
@@ -1107,6 +1110,15 @@ Vue.createApp({
       if(index==2)this.autolevel = !this.autolevel
       if(index==3)this.litemautobuy = !this.litemautobuy
       if(index==5)this.autorank = !this.autorank
+    },
+    togglechipthresholduse(){
+      this.chipthresholduse = !this.chipthresholduse
+      console.log(this.chipthresholduse)
+    },
+    configchipthresholdnumber(){
+      let input = window.prompt("閾値を設定","")
+      input = new Decimal(input)
+      this.chipthreshold = input
     },
     autoshine(){
       this.spendshine(this.player.rings.outsideauto.autospendshinenumber)
