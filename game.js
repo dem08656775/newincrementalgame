@@ -984,6 +984,13 @@ Vue.createApp({
         }
       }
 
+      if(this.remembersum >= 100){
+        if(!(this.player.onchallenge || this.player.onpchallenge)){
+          this.player.level = this.player.level.add(1)
+          this.player.levelresettime = this.player.levelresettime.add(1)
+        }
+      }
+
 
       if((this.player.rings.outsideauto.autodochallenge || !this.player.onchallenge ) && this.activechallengebonuses.includes(14) && this.autolevel){
         if(this.player.money.greaterThanOrEqualTo(this.resetLevelborder()) && this.player.level.lt(this.autolevelstopnumber)){
@@ -1924,10 +1931,15 @@ Vue.createApp({
         let rd = this.players[i].residue
         let dl = this.players[i].darklevel
         let st = this.players[i].statue
+        let cw = this.players[i].challengeweight
+        let cwv = this.players[i].challengeweightvalue
         this.players[i] = initialData()
         this.players[i].remember = u
         this.players[i].rings = rg
         this.players[i].residue = rd
+        this.players[i].challengeweight = cw
+        this.players[i].challengeweightvalue = cwv
+
         if(r>=1) this.players[i].levelresettime=new Decimal(1)
         if(r>=2) this.players[i].levelresettime=new Decimal(2)
         if(r>=3) this.players[i].levelresettime=new Decimal(3)

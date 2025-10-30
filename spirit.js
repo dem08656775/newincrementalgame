@@ -7,7 +7,7 @@ function Spiritdata(){
 	]
 
 	this.spiritcosta = [
-		new Decimal("1e252")
+		new Decimal("1e180")
 	]
 
 }
